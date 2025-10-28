@@ -289,13 +289,23 @@ webapp/
 
 ```
 
+## Database Initialization
+
+The application **automatically initializes** the database with sample data on the first login attempt. This ensures the platform works immediately in both development and production environments without manual database setup.
+
+**Sample data includes:**
+- 4 demo users (admin, boss, 2 consultants)
+- 5 sample levels (including 1 boss level)
+- Training materials and tests
+- 15 predefined achievements
+
+Simply start the server and login - the database will be created automatically!
+
 ## Known Issues
 
-1. **Local D1 Development**: `wrangler pages dev` and `wrangler d1 execute` use separate database instances locally. For best results, restart the dev server after running migrations.
+1. **Password Hashes**: Sample passwords use bcrypt hashing. For production, ensure proper password policies are enforced.
 
-2. **Password Hashes**: Sample passwords use bcrypt hashing. For production, ensure proper password policies are enforced.
-
-3. **Static Files**: All training materials are external SharePoint links. No file uploads are supported due to Cloudflare Workers limitations.
+2. **Static Files**: All training materials are external SharePoint links. No file uploads are supported due to Cloudflare Workers limitations.
 
 ## Support
 
