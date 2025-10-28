@@ -340,6 +340,123 @@ admin.delete('/tasks/:id', async (c) => {
   return c.json({ message: 'Task deleted' });
 });
 
+// ===== BOSS-CONSULTANT RELATIONSHIP MANAGEMENT =====
+
+// Get all boss-consultant relationships
+admin.get('/boss-relationships', async (c) => {
+  const relationships = await c.env.DB.prepare(`
+    SELECT 
+      bcr.*,
+      b.name as boss_name,
+      b.email as boss_email,
+      c.name as consultant_name,
+      c.email as consultant_email
+    FROM boss_consultant_relationships bcr
+    JOIN users b ON bcr.boss_id = b.id
+    JOIN users c ON bcr.consultant_id = c.id
+    ORDER BY bcr.created_at DESC
+  `).all();
+  
+  return c.json({ relationships: relationships.results });
+});
+
+// Get relationships for a specific consultant
+admin.get('/consultants/:consultantId/bosses', async (c) => {
+  const consultantId = c.req.param('consultantId');
+  
+  const relationships = await c.env.DB.prepare(`
+    SELECT 
+      bcr.*,
+      b.name as boss_name,
+      b.email as boss_email
+    FROM boss_consultant_relationships bcr
+    JOIN users b ON bcr.boss_id = b.id
+    WHERE bcr.consultant_id = ? AND bcr.active = 1
+    ORDER BY bcr.created_at DESC
+  `).bind(consultantId).all();
+  
+  return c.json({ relationships: relationships.results });
+});
+
+// Get relationships for a specific boss
+admin.get('/bosses/:bossId/consultants', async (c) => {
+  const bossId = c.req.param('bossId');
+  
+  const relationships = await c.env.DB.prepare(`
+    SELECT 
+      bcr.*,
+      c.name as consultant_name,
+      c.email as consultant_email
+    FROM boss_consultant_relationships bcr
+    JOIN users c ON bcr.consultant_id = c.id
+    WHERE bcr.boss_id = ? AND bcr.active = 1
+    ORDER BY bcr.created_at DESC
+  `).bind(bossId).all();
+  
+  return c.json({ relationships: relationships.results });
+});
+
+// Create boss-consultant relationship
+admin.post('/boss-relationships', async (c) => {
+  try {
+    const { boss_id, consultant_id, project_name } = await c.req.json();
+
+    if (!boss_id || !consultant_id) {
+      return c.json({ error: 'Missing required fields' }, 400);
+    }
+
+    // Verify boss and consultant exist and have correct roles
+    const boss = await c.env.DB.prepare(
+      'SELECT id, role FROM users WHERE id = ? AND role = ? AND active = 1'
+    ).bind(boss_id, 'boss').first();
+
+    const consultant = await c.env.DB.prepare(
+      'SELECT id, role FROM users WHERE id = ? AND role = ? AND active = 1'
+    ).bind(consultant_id, 'consultant').first();
+
+    if (!boss) {
+      return c.json({ error: 'Boss not found or invalid role' }, 400);
+    }
+
+    if (!consultant) {
+      return c.json({ error: 'Consultant not found or invalid role' }, 400);
+    }
+
+    const result = await c.env.DB.prepare(
+      'INSERT INTO boss_consultant_relationships (boss_id, consultant_id, project_name) VALUES (?, ?, ?)'
+    ).bind(boss_id, consultant_id, project_name || null).run();
+
+    return c.json({ message: 'Relationship created', relationshipId: result.meta.last_row_id });
+  } catch (error: any) {
+    console.error('Create relationship error:', error);
+    if (error.message?.includes('UNIQUE constraint')) {
+      return c.json({ error: 'This relationship already exists' }, 400);
+    }
+    return c.json({ error: 'Failed to create relationship' }, 500);
+  }
+});
+
+// Update boss-consultant relationship
+admin.put('/boss-relationships/:id', async (c) => {
+  const id = c.req.param('id');
+  const { project_name, active } = await c.req.json();
+
+  await c.env.DB.prepare(
+    'UPDATE boss_consultant_relationships SET project_name = ?, active = ? WHERE id = ?'
+  ).bind(project_name || null, active, id).run();
+
+  return c.json({ message: 'Relationship updated' });
+});
+
+// Delete boss-consultant relationship
+admin.delete('/boss-relationships/:id', async (c) => {
+  const id = c.req.param('id');
+  
+  await c.env.DB.prepare('DELETE FROM boss_consultant_relationships WHERE id = ?').bind(id).run();
+  
+  return c.json({ message: 'Relationship deleted' });
+});
+
 // ===== REPORTING =====
 
 // Get progress report

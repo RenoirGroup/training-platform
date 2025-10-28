@@ -305,27 +305,83 @@ consultant.get('/test-history', async (c) => {
 
 // ===== BOSS LEVEL SIGN-OFFS =====
 
-// Request sign-off for boss level
+// Request sign-off for boss level (supports multiple bosses)
 consultant.post('/levels/:levelId/request-signoff', async (c) => {
   const levelId = c.req.param('levelId');
   const user = c.get('user');
-  const { evidence_notes, evidence_url } = await c.req.json();
+  const { evidence_notes, evidence_url, boss_id } = await c.req.json();
 
-  // Get user's boss
-  const userData = await c.env.DB.prepare(
-    'SELECT boss_id FROM users WHERE id = ?'
-  ).bind(user.userId).first();
+  // Check if level is a boss level
+  const level = await c.env.DB.prepare(
+    'SELECT * FROM levels WHERE id = ? AND is_boss_level = 1'
+  ).bind(levelId).first();
 
-  if (!userData || !userData.boss_id) {
+  if (!level) {
+    return c.json({ error: 'Not a boss level' }, 400);
+  }
+
+  // Check if all tests passed
+  const allPassed = await checkAllTestsPassed(c.env.DB, user.userId, parseInt(levelId));
+  if (!allPassed) {
+    return c.json({ error: 'Must pass all tests first' }, 400);
+  }
+
+  // Get consultant's bosses from many-to-many relationship
+  const bosses = await c.env.DB.prepare(`
+    SELECT bcr.boss_id, u.name as boss_name, bcr.project_name
+    FROM boss_consultant_relationships bcr
+    JOIN users u ON bcr.boss_id = u.id
+    WHERE bcr.consultant_id = ? AND bcr.active = 1
+  `).bind(user.userId).all();
+
+  if (!bosses.results || bosses.results.length === 0) {
     return c.json({ error: 'No boss assigned' }, 400);
+  }
+
+  // If boss_id provided, verify it's valid for this consultant
+  let targetBossId = boss_id;
+  if (targetBossId) {
+    const validBoss = bosses.results.find((b: any) => b.boss_id === targetBossId);
+    if (!validBoss) {
+      return c.json({ error: 'Invalid boss selection' }, 400);
+    }
+  } else {
+    // If no boss specified and consultant has only one boss, use that
+    if (bosses.results.length === 1) {
+      targetBossId = (bosses.results[0] as any).boss_id;
+    } else {
+      return c.json({ 
+        error: 'Please select a boss',
+        bosses: bosses.results 
+      }, 400);
+    }
   }
 
   // Create sign-off request
   await c.env.DB.prepare(
     'INSERT INTO signoff_requests (user_id, level_id, boss_id, evidence_notes, evidence_url, status) VALUES (?, ?, ?, ?, ?, ?)'
-  ).bind(user.userId, levelId, userData.boss_id, evidence_notes || null, evidence_url || null, 'pending').run();
+  ).bind(user.userId, levelId, targetBossId, evidence_notes || null, evidence_url || null, 'pending').run();
 
   return c.json({ message: 'Sign-off request submitted' });
+});
+
+// Get consultant's bosses
+consultant.get('/my-bosses', async (c) => {
+  const user = c.get('user');
+  
+  const bosses = await c.env.DB.prepare(`
+    SELECT 
+      bcr.boss_id,
+      bcr.project_name,
+      u.name as boss_name,
+      u.email as boss_email
+    FROM boss_consultant_relationships bcr
+    JOIN users u ON bcr.boss_id = u.id
+    WHERE bcr.consultant_id = ? AND bcr.active = 1
+    ORDER BY u.name
+  `).bind(user.userId).all();
+
+  return c.json({ bosses: bosses.results });
 });
 
 // Get sign-off requests

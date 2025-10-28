@@ -9,7 +9,7 @@ boss.use('/*', authMiddleware, bossOnly);
 
 // ===== TEAM MANAGEMENT =====
 
-// Get team members (direct reports)
+// Get team members (direct reports via many-to-many relationships)
 boss.get('/team', async (c) => {
   const user = c.get('user');
   
@@ -20,17 +20,19 @@ boss.get('/team', async (c) => {
       u.email,
       u.created_at,
       u.last_login,
+      bcr.project_name,
       COUNT(DISTINCT up.level_id) as levels_completed,
       us.total_points,
       us.current_login_streak,
       l.rank,
       l.league
-    FROM users u
+    FROM boss_consultant_relationships bcr
+    JOIN users u ON bcr.consultant_id = u.id
     LEFT JOIN user_progress up ON u.id = up.user_id AND up.status = 'completed'
     LEFT JOIN user_streaks us ON u.id = us.user_id
     LEFT JOIN leaderboard l ON u.id = l.user_id
-    WHERE u.boss_id = ? AND u.role = 'consultant' AND u.active = 1
-    GROUP BY u.id
+    WHERE bcr.boss_id = ? AND bcr.active = 1 AND u.role = 'consultant' AND u.active = 1
+    GROUP BY u.id, bcr.project_name
     ORDER BY levels_completed DESC, us.total_points DESC
   `).bind(user.userId).all();
 
@@ -42,13 +44,22 @@ boss.get('/team/:userId/progress', async (c) => {
   const userId = c.req.param('userId');
   const bossUser = c.get('user');
   
-  // Verify this user is a direct report
-  const teamMember = await c.env.DB.prepare(
-    'SELECT * FROM users WHERE id = ? AND boss_id = ?'
+  // Verify this user is a direct report via relationship table
+  const relationship = await c.env.DB.prepare(
+    'SELECT * FROM boss_consultant_relationships WHERE consultant_id = ? AND boss_id = ? AND active = 1'
   ).bind(userId, bossUser.userId).first();
 
-  if (!teamMember) {
+  if (!relationship) {
     return c.json({ error: 'Not authorized to view this user' }, 403);
+  }
+  
+  // Get team member details
+  const teamMember = await c.env.DB.prepare(
+    'SELECT * FROM users WHERE id = ?'
+  ).bind(userId).first();
+
+  if (!teamMember) {
+    return c.json({ error: 'User not found' }, 404);
   }
 
   // Get progress
@@ -263,36 +274,37 @@ boss.post('/signoff-requests/:requestId/reject', async (c) => {
 boss.get('/analytics', async (c) => {
   const user = c.get('user');
   
-  // Get team overview
+  // Get team overview using many-to-many relationships
   const teamStats = await c.env.DB.prepare(`
     SELECT 
       COUNT(DISTINCT u.id) as total_members,
       AVG(CAST(l.rungs_completed AS FLOAT)) as avg_levels_completed,
       AVG(CAST(us.total_points AS FLOAT)) as avg_points,
       AVG(CAST(us.current_login_streak AS FLOAT)) as avg_streak
-    FROM users u
+    FROM boss_consultant_relationships bcr
+    JOIN users u ON bcr.consultant_id = u.id
     LEFT JOIN leaderboard l ON u.id = l.user_id
     LEFT JOIN user_streaks us ON u.id = us.user_id
-    WHERE u.boss_id = ? AND u.role = 'consultant' AND u.active = 1
+    WHERE bcr.boss_id = ? AND bcr.active = 1 AND u.role = 'consultant' AND u.active = 1
   `).bind(user.userId).first();
 
-  // Get level completion breakdown
+  // Get level completion breakdown using many-to-many relationships
   const levelCompletion = await c.env.DB.prepare(`
     SELECT 
       l.id,
       l.title,
       COUNT(DISTINCT up.user_id) as completed_count,
-      (SELECT COUNT(*) FROM users WHERE boss_id = ? AND role = 'consultant' AND active = 1) as total_members
+      (SELECT COUNT(DISTINCT consultant_id) FROM boss_consultant_relationships WHERE boss_id = ? AND active = 1) as total_members
     FROM levels l
     LEFT JOIN user_progress up ON l.id = up.level_id 
       AND up.status = 'completed'
-      AND up.user_id IN (SELECT id FROM users WHERE boss_id = ? AND role = 'consultant' AND active = 1)
+      AND up.user_id IN (SELECT consultant_id FROM boss_consultant_relationships WHERE boss_id = ? AND active = 1)
     WHERE l.active = 1
     GROUP BY l.id
     ORDER BY l.order_index
   `).bind(user.userId, user.userId).all();
 
-  // Get recent activity
+  // Get recent activity using many-to-many relationships
   const recentActivity = await c.env.DB.prepare(`
     SELECT 
       u.name as consultant_name,
@@ -301,7 +313,8 @@ boss.get('/analytics', async (c) => {
     FROM user_progress up
     JOIN users u ON up.user_id = u.id
     JOIN levels l ON up.level_id = l.id
-    WHERE u.boss_id = ? AND up.status = 'completed'
+    JOIN boss_consultant_relationships bcr ON u.id = bcr.consultant_id
+    WHERE bcr.boss_id = ? AND bcr.active = 1 AND up.status = 'completed'
     ORDER BY up.completed_at DESC
     LIMIT 20
   `).bind(user.userId).all();
@@ -329,6 +342,7 @@ boss.get('/export/team-report', async (c) => {
     SELECT 
       u.name,
       u.email,
+      bcr.project_name,
       COUNT(DISTINCT up.level_id) as levels_completed,
       us.total_points,
       us.current_login_streak,
@@ -336,20 +350,22 @@ boss.get('/export/team-report', async (c) => {
       l.rank,
       l.league,
       u.last_login
-    FROM users u
+    FROM boss_consultant_relationships bcr
+    JOIN users u ON bcr.consultant_id = u.id
     LEFT JOIN user_progress up ON u.id = up.user_id AND up.status = 'completed'
     LEFT JOIN user_streaks us ON u.id = us.user_id
     LEFT JOIN leaderboard l ON u.id = l.user_id
-    WHERE u.boss_id = ? AND u.role = 'consultant' AND u.active = 1
-    GROUP BY u.id
+    WHERE bcr.boss_id = ? AND bcr.active = 1 AND u.role = 'consultant' AND u.active = 1
+    GROUP BY u.id, bcr.project_name
     ORDER BY levels_completed DESC
   `).bind(user.userId).all();
 
   // Convert to CSV
-  const headers = ['Name', 'Email', 'Levels Completed', 'Total Points', 'Current Streak', 'Longest Streak', 'Rank', 'League', 'Last Login'];
+  const headers = ['Name', 'Email', 'Project', 'Levels Completed', 'Total Points', 'Current Streak', 'Longest Streak', 'Rank', 'League', 'Last Login'];
   const rows = (teamData.results as any[]).map(row => [
     row.name,
     row.email,
+    row.project_name || 'N/A',
     row.levels_completed,
     row.total_points,
     row.current_login_streak,
