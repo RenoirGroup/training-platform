@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import { comparePassword, generateToken, hashPassword } from '../utils/auth';
+import { initializeDatabase } from '../utils/init-db';
 import type { Bindings } from '../types';
 
 const auth = new Hono<{ Bindings: Bindings }>();
@@ -7,6 +8,9 @@ const auth = new Hono<{ Bindings: Bindings }>();
 // Login
 auth.post('/login', async (c) => {
   try {
+    // Initialize database if needed (first request)
+    await initializeDatabase(c.env.DB);
+
     const { email, password } = await c.req.json();
 
     if (!email || !password) {
