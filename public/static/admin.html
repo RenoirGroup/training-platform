@@ -319,6 +319,37 @@
         </div>
     </div>
 
+    <!-- Create Level Modal -->
+    <div id="create-level-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" style="display: none;">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full">
+            <h2 class="text-2xl font-bold mb-4">Create New Level</h2>
+            <form onsubmit="createLevel(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Title</label>
+                    <input type="text" id="level-title" class="w-full px-3 py-2 border rounded" required />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Description (optional)</label>
+                    <textarea id="level-description" class="w-full px-3 py-2 border rounded" rows="3"></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Order Index</label>
+                    <input type="number" id="level-order" class="w-full px-3 py-2 border rounded" value="1" min="1" required />
+                </div>
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" id="level-is-boss" class="mr-2" />
+                        <span class="text-gray-700 font-bold">Boss Level (requires manager sign-off)</span>
+                    </label>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" onclick="closeCreateLevelModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">Create Level</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Create Relationship Modal -->
     <div id="create-relationship-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" style="display: none;">
         <div class="bg-white rounded-lg p-6 max-w-md w-full">
@@ -579,7 +610,45 @@
         }
 
         function showCreateLevelModal() {
-            alert('Level creation modal - implement with full form for title, description, order_index, is_boss_level');
+            // Clear form
+            document.getElementById('level-title').value = '';
+            document.getElementById('level-description').value = '';
+            document.getElementById('level-order').value = '1';
+            document.getElementById('level-is-boss').checked = false;
+            
+            const modal = document.getElementById('create-level-modal');
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+        }
+
+        function closeCreateLevelModal() {
+            const modal = document.getElementById('create-level-modal');
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
+        }
+
+        async function createLevel(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('level-title').value;
+            const description = document.getElementById('level-description').value;
+            const orderIndex = parseInt(document.getElementById('level-order').value);
+            const isBossLevel = document.getElementById('level-is-boss').checked;
+            
+            try {
+                await axios.post('/api/admin/levels', {
+                    title,
+                    description: description || null,
+                    order_index: orderIndex,
+                    is_boss_level: isBossLevel ? 1 : 0
+                });
+                
+                closeCreateLevelModal();
+                loadLevels();
+                alert('Level created successfully!');
+            } catch (error) {
+                alert('Error creating level: ' + (error.response?.data?.error || 'Unknown error'));
+            }
         }
 
         // ===== LEVEL MANAGEMENT MODAL =====
@@ -594,7 +663,10 @@
             const level = levels.data.levels.find(l => l.id === levelId);
             
             document.getElementById('manage-level-title').textContent = level.title;
-            document.getElementById('manage-level-modal').style.display = 'flex';
+            
+            const modal = document.getElementById('manage-level-modal');
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
             
             // Load materials by default
             showManageTab('materials');
@@ -602,7 +674,9 @@
         }
 
         function closeManageLevelModal() {
-            document.getElementById('manage-level-modal').style.display = 'none';
+            const modal = document.getElementById('manage-level-modal');
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
             currentLevelId = null;
         }
 
@@ -860,11 +934,16 @@
             document.getElementById('question-points').value = '1';
             document.getElementById('question-order').value = '1';
             updateQuestionTypeFields();
-            document.getElementById('add-question-modal').style.display = 'flex';
+            
+            const modal = document.getElementById('add-question-modal');
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
         }
 
         function closeAddQuestionModal() {
-            document.getElementById('add-question-modal').style.display = 'none';
+            const modal = document.getElementById('add-question-modal');
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
             currentTestId = null;
         }
 
@@ -1134,14 +1213,18 @@
                 consultantSelect.innerHTML = '<option value="">Select a consultant...</option>' + 
                     consultants.map(c => `<option value="${c.id}">${c.name} (${c.email})</option>`).join('');
                 
-                document.getElementById('create-relationship-modal').style.display = 'flex';
+                const modal = document.getElementById('create-relationship-modal');
+                modal.classList.remove('hidden');
+                modal.style.display = 'flex';
             } catch (error) {
                 alert('Error loading users: ' + (error.response?.data?.error || 'Unknown error'));
             }
         }
 
         function closeCreateRelationshipModal() {
-            document.getElementById('create-relationship-modal').style.display = 'none';
+            const modal = document.getElementById('create-relationship-modal');
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
             document.getElementById('rel-boss').value = '';
             document.getElementById('rel-consultant').value = '';
             document.getElementById('rel-project').value = '';
