@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boss Dashboard - Training Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-blue-900 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">
+                <i class="fas fa-user-tie mr-2"></i>
+                Boss Dashboard
+            </h1>
+            <div>
+                <span id="user-name" class="mr-4"></span>
+                <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Tabs -->
+        <div class="flex space-x-2 mb-6 border-b border-gray-300">
+            <button onclick="showTab('signoffs')" class="tab-btn px-6 py-3 font-semibold border-b-4 border-blue-600">
+                <i class="fas fa-clipboard-check mr-2"></i>
+                Sign-off Requests
+                <span id="pending-badge" class="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">0</span>
+            </button>
+            <button onclick="showTab('team')" class="tab-btn px-6 py-3 font-semibold text-gray-600 hover:text-blue-600">
+                <i class="fas fa-users mr-2"></i>Team Progress
+            </button>
+            <button onclick="showTab('analytics')" class="tab-btn px-6 py-3 font-semibold text-gray-600 hover:text-blue-600">
+                <i class="fas fa-chart-line mr-2"></i>Analytics
+            </button>
+        </div>
+
+        <!-- Sign-offs Tab -->
+        <div id="signoffs-tab" class="tab-content">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Pending Requests -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-2xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-hourglass-half text-yellow-500 mr-2"></i>
+                        Pending Sign-offs
+                    </h2>
+                    <div id="pending-signoffs"></div>
+                </div>
+
+                <!-- Recent Decisions -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-2xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-history text-gray-500 mr-2"></i>
+                        Recent Decisions
+                    </h2>
+                    <div id="recent-signoffs"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Tab -->
+        <div id="team-tab" class="tab-content hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">Your Team</h2>
+                    <button onclick="exportReport()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                        <i class="fas fa-download mr-2"></i>Export Report
+                    </button>
+                </div>
+                <div id="team-list"></div>
+            </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div id="analytics-tab" class="tab-content hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- Team Overview -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-bold mb-4">Team Overview</h3>
+                    <div id="team-stats"></div>
+                </div>
+
+                <!-- Level Completion -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-bold mb-4">Level Completion</h3>
+                    <div id="level-completion"></div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-bold mb-4">Recent Activity</h3>
+                <div id="recent-activity"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign-off Review Modal -->
+    <div id="review-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-8 max-w-3xl w-full max-h-screen overflow-y-auto">
+            <h3 class="text-2xl font-bold mb-4">Review Sign-off Request</h3>
+            <div id="review-content"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+    <script>
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+        if (!token || (user.role !== 'boss' && user.role !== 'admin')) {
+            window.location.href = '/';
+        }
+
+        document.getElementById('user-name').textContent = user.name;
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/';
+        }
+
+        function showTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('border-blue-600', 'text-blue-600');
+                el.classList.add('text-gray-600');
+            });
+            
+            document.getElementById(tab + '-tab').classList.remove('hidden');
+            event.target.classList.add('border-blue-600', 'text-blue-600');
+            event.target.classList.remove('text-gray-600');
+
+            if (tab === 'signoffs') loadSignoffs();
+            if (tab === 'team') loadTeam();
+            if (tab === 'analytics') loadAnalytics();
+        }
+
+        async function loadSignoffs() {
+            try {
+                const [pendingRes, allRes] = await Promise.all([
+                    axios.get('/api/boss/signoff-requests'),
+                    axios.get('/api/boss/signoff-requests/all')
+                ]);
+                
+                const pending = pendingRes.data.requests;
+                const all = allRes.data.requests;
+                
+                // Update badge
+                document.getElementById('pending-badge').textContent = pending.length;
+                
+                // Pending sign-offs
+                document.getElementById('pending-signoffs').innerHTML = pending.length > 0 ?
+                    pending.map(req => `
+                        <div class="border-l-4 border-yellow-500 bg-yellow-50 p-4 mb-4 rounded">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <p class="font-bold text-lg">${req.consultant_name}</p>
+                                    <p class="text-sm text-gray-600">${req.level_title}</p>
+                                </div>
+                                <span class="text-xs text-gray-500">${new Date(req.requested_at).toLocaleDateString()}</span>
+                            </div>
+                            <p class="text-sm mb-3">${req.evidence_notes || 'No notes provided'}</p>
+                            ${req.evidence_url ? `<a href="${req.evidence_url}" target="_blank" class="text-sm text-blue-600 hover:underline mb-3 block"><i class="fas fa-link mr-1"></i>View Evidence</a>` : ''}
+                            <button onclick="reviewSignoff(${req.id})" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm w-full">
+                                <i class="fas fa-eye mr-2"></i>Review
+                            </button>
+                        </div>
+                    `).join('') : '<p class="text-gray-500">No pending sign-off requests</p>';
+                
+                // Recent decisions
+                const recent = all.filter(r => r.status !== 'pending').slice(0, 10);
+                document.getElementById('recent-signoffs').innerHTML = recent.length > 0 ?
+                    recent.map(req => `
+                        <div class="border-l-4 ${req.status === 'approved' ? 'border-green-500' : 'border-red-500'} p-4 mb-4 rounded">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold">${req.consultant_name}</p>
+                                    <p class="text-sm text-gray-600">${req.level_title}</p>
+                                    <p class="text-xs text-gray-500 mt-1">${new Date(req.reviewed_at).toLocaleDateString()}</p>
+                                </div>
+                                <span class="text-xs px-2 py-1 rounded ${req.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                                    ${req.status.toUpperCase()}
+                                </span>
+                            </div>
+                        </div>
+                    `).join('') : '<p class="text-gray-500">No recent decisions</p>';
+            } catch (error) {
+                console.error('Error loading sign-offs:', error);
+            }
+        }
+
+        async function reviewSignoff(requestId) {
+            try {
+                const response = await axios.get(`/api/boss/signoff-requests/${requestId}`);
+                const { request, tasks, testPerformance } = response.data;
+                
+                const html = `
+                    <div class="mb-6">
+                        <h4 class="text-xl font-bold mb-2">${request.consultant_name}</h4>
+                        <h5 class="text-lg text-gray-700 mb-4">${request.level_title}</h5>
+                        <p class="text-sm text-gray-600 mb-4">${request.level_description || ''}</p>
+                    </div>
+
+                    <div class="mb-6">
+                        <h4 class="font-bold mb-2">Boss Level Tasks:</h4>
+                        <ul class="list-disc list-inside space-y-1">
+                            ${tasks.map(t => `<li>${t.task_description}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="mb-6">
+                        <h4 class="font-bold mb-2">Evidence Provided:</h4>
+                        <p class="text-sm bg-gray-50 p-3 rounded">${request.evidence_notes || 'No notes provided'}</p>
+                        ${request.evidence_url ? `<a href="${request.evidence_url}" target="_blank" class="text-blue-600 hover:underline text-sm mt-2 block"><i class="fas fa-link mr-1"></i>View Evidence</a>` : ''}
+                    </div>
+
+                    <div class="mb-6">
+                        <h4 class="font-bold mb-2">Test Performance:</h4>
+                        <div class="space-y-2">
+                            ${testPerformance.map(t => `
+                                <div class="bg-gray-50 p-3 rounded">
+                                    <p class="font-medium">${t.title}</p>
+                                    <p class="text-sm text-gray-600">Score: ${t.score}/${t.max_score} (${t.percentage.toFixed(1)}%)</p>
+                                    <p class="text-xs text-gray-500">${new Date(t.completed_at).toLocaleDateString()}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block font-bold mb-2">Your Feedback:</label>
+                        <textarea id="feedback" class="w-full px-3 py-2 border rounded" rows="4" placeholder="Provide feedback (required for rejection)"></textarea>
+                    </div>
+
+                    <div class="flex space-x-2">
+                        <button onclick="closeReviewModal()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+                            Cancel
+                        </button>
+                        <button onclick="rejectSignoff(${requestId})" class="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
+                            <i class="fas fa-times mr-2"></i>Reject
+                        </button>
+                        <button onclick="approveSignoff(${requestId})" class="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+                            <i class="fas fa-check mr-2"></i>Approve
+                        </button>
+                    </div>
+                `;
+                
+                document.getElementById('review-content').innerHTML = html;
+                document.getElementById('review-modal').classList.remove('hidden');
+            } catch (error) {
+                console.error('Error loading sign-off details:', error);
+                alert('Error loading sign-off details');
+            }
+        }
+
+        function closeReviewModal() {
+            document.getElementById('review-modal').classList.add('hidden');
+        }
+
+        async function approveSignoff(requestId) {
+            const feedback = document.getElementById('feedback').value;
+            
+            if (!confirm('Are you sure you want to approve this sign-off?')) return;
+            
+            try {
+                await axios.post(`/api/boss/signoff-requests/${requestId}/approve`, { feedback });
+                closeReviewModal();
+                alert('Sign-off approved!');
+                loadSignoffs();
+            } catch (error) {
+                console.error('Error approving sign-off:', error);
+                alert('Error approving sign-off');
+            }
+        }
+
+        async function rejectSignoff(requestId) {
+            const feedback = document.getElementById('feedback').value;
+            
+            if (!feedback) {
+                alert('Feedback is required for rejection');
+                return;
+            }
+            
+            if (!confirm('Are you sure you want to reject this sign-off?')) return;
+            
+            try {
+                await axios.post(`/api/boss/signoff-requests/${requestId}/reject`, { feedback });
+                closeReviewModal();
+                alert('Sign-off rejected with feedback');
+                loadSignoffs();
+            } catch (error) {
+                console.error('Error rejecting sign-off:', error);
+                alert('Error rejecting sign-off');
+            }
+        }
+
+        async function loadTeam() {
+            try {
+                const response = await axios.get('/api/boss/team');
+                const team = response.data.team;
+                
+                const html = `
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Levels</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Points</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Streak</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rank</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                ${team.map(member => `
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap font-medium">${member.name}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">${member.email}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">${member.levels_completed}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">${member.total_points || 0}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="text-orange-500">🔥</span> ${member.current_login_streak || 0}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">#${member.rank || '-'}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <button onclick="viewProgress(${member.id})" class="text-blue-600 hover:text-blue-800">
+                                                <i class="fas fa-chart-line mr-1"></i>View Progress
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                
+                document.getElementById('team-list').innerHTML = html || '<p class="text-gray-500">No team members</p>';
+            } catch (error) {
+                console.error('Error loading team:', error);
+            }
+        }
+
+        async function viewProgress(userId) {
+            // Could open a modal with detailed progress
+            alert(`View detailed progress for user ${userId} - implement modal with progress details`);
+        }
+
+        async function loadAnalytics() {
+            try {
+                const response = await axios.get('/api/boss/analytics');
+                const { teamStats, levelCompletion, recentActivity, pendingSignoffs } = response.data;
+                
+                // Team stats
+                document.getElementById('team-stats').innerHTML = `
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-sm text-gray-600">Total Team Members</p>
+                            <p class="text-3xl font-bold">${teamStats.total_members}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Avg Levels Completed</p>
+                            <p class="text-3xl font-bold">${(teamStats.avg_levels_completed || 0).toFixed(1)}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Avg Points</p>
+                            <p class="text-3xl font-bold">${(teamStats.avg_points || 0).toFixed(0)}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Avg Streak</p>
+                            <p class="text-3xl font-bold">${(teamStats.avg_streak || 0).toFixed(1)} days</p>
+                        </div>
+                        <div class="pt-4 border-t">
+                            <p class="text-sm text-gray-600">Pending Sign-offs</p>
+                            <p class="text-3xl font-bold text-yellow-600">${pendingSignoffs}</p>
+                        </div>
+                    </div>
+                `;
+                
+                // Level completion
+                document.getElementById('level-completion').innerHTML = levelCompletion.map(level => `
+                    <div class="mb-4">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium">${level.title}</span>
+                            <span class="text-sm">${level.completed_count}/${level.total_members}</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-blue-600 h-2.5 rounded-full" 
+                                 style="width: ${(level.completed_count / level.total_members * 100)}%"></div>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Recent activity
+                document.getElementById('recent-activity').innerHTML = `
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-sm">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-2 text-left">Consultant</th>
+                                    <th class="px-4 py-2 text-left">Level</th>
+                                    <th class="px-4 py-2 text-left">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${recentActivity.map(a => `
+                                    <tr class="border-b">
+                                        <td class="px-4 py-2">${a.consultant_name}</td>
+                                        <td class="px-4 py-2">${a.level_title}</td>
+                                        <td class="px-4 py-2">${new Date(a.completed_at).toLocaleDateString()}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+            }
+        }
+
+        async function exportReport() {
+            try {
+                const response = await axios.get('/api/boss/export/team-report');
+                const csv = response.data.csv;
+                
+                // Download CSV
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `team-report-${new Date().toISOString().split('T')[0]}.csv`;
+                a.click();
+            } catch (error) {
+                console.error('Error exporting report:', error);
+                alert('Error exporting report');
+            }
+        }
+
+        // Initial load
+        loadSignoffs();
+    </script>
+</body>
+</html>

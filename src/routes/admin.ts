@@ -1,0 +1,390 @@
+import { Hono } from 'hono';
+import { adminOnly, authMiddleware } from '../utils/middleware';
+import { hashPassword } from '../utils/auth';
+import type { Bindings } from '../types';
+
+const admin = new Hono<{ Bindings: Bindings }>();
+
+// Apply authentication and admin-only middleware to all routes
+admin.use('/*', authMiddleware, adminOnly);
+
+// ===== USER MANAGEMENT =====
+
+// Get all users
+admin.get('/users', async (c) => {
+  const users = await c.env.DB.prepare(`
+    SELECT u.*, b.name as boss_name 
+    FROM users u 
+    LEFT JOIN users b ON u.boss_id = b.id 
+    ORDER BY u.created_at DESC
+  `).all();
+  
+  return c.json({ users: users.results });
+});
+
+// Create user
+admin.post('/users', async (c) => {
+  try {
+    const { email, password, name, role, boss_id } = await c.req.json();
+
+    if (!email || !password || !name || !role) {
+      return c.json({ error: 'Missing required fields' }, 400);
+    }
+
+    const passwordHash = await hashPassword(password);
+
+    const result = await c.env.DB.prepare(
+      'INSERT INTO users (email, password_hash, name, role, boss_id) VALUES (?, ?, ?, ?, ?)'
+    ).bind(email, passwordHash, name, role, boss_id || null).run();
+
+    const userId = result.meta.last_row_id;
+
+    // Initialize streaks
+    await c.env.DB.prepare(
+      'INSERT INTO user_streaks (user_id) VALUES (?)'
+    ).bind(userId).run();
+
+    // Initialize leaderboard
+    await c.env.DB.prepare(
+      'INSERT INTO leaderboard (user_id, league) VALUES (?, ?)'
+    ).bind(userId, 'bronze').run();
+
+    // If consultant, initialize progress for first level
+    if (role === 'consultant') {
+      const firstLevel = await c.env.DB.prepare(
+        'SELECT id FROM levels WHERE active = 1 ORDER BY order_index LIMIT 1'
+      ).first();
+
+      if (firstLevel) {
+        await c.env.DB.prepare(
+          'INSERT INTO user_progress (user_id, level_id, status) VALUES (?, ?, ?)'
+        ).bind(userId, firstLevel.id, 'unlocked').run();
+      }
+    }
+
+    return c.json({ message: 'User created', userId });
+  } catch (error) {
+    console.error('Create user error:', error);
+    return c.json({ error: 'Failed to create user' }, 500);
+  }
+});
+
+// Update user
+admin.put('/users/:id', async (c) => {
+  const id = c.req.param('id');
+  const { name, role, boss_id, active } = await c.req.json();
+
+  await c.env.DB.prepare(
+    'UPDATE users SET name = ?, role = ?, boss_id = ?, active = ? WHERE id = ?'
+  ).bind(name, role, boss_id || null, active, id).run();
+
+  return c.json({ message: 'User updated' });
+});
+
+// Delete user
+admin.delete('/users/:id', async (c) => {
+  const id = c.req.param('id');
+  
+  await c.env.DB.prepare('DELETE FROM users WHERE id = ?').bind(id).run();
+  
+  return c.json({ message: 'User deleted' });
+});
+
+// ===== LEVEL MANAGEMENT =====
+
+// Get all levels
+admin.get('/levels', async (c) => {
+  const levels = await c.env.DB.prepare(
+    'SELECT * FROM levels ORDER BY order_index'
+  ).all();
+  
+  return c.json({ levels: levels.results });
+});
+
+// Create level
+admin.post('/levels', async (c) => {
+  const { title, description, order_index, is_boss_level } = await c.req.json();
+
+  const result = await c.env.DB.prepare(
+    'INSERT INTO levels (title, description, order_index, is_boss_level) VALUES (?, ?, ?, ?)'
+  ).bind(title, description || null, order_index, is_boss_level ? 1 : 0).run();
+
+  return c.json({ message: 'Level created', levelId: result.meta.last_row_id });
+});
+
+// Update level
+admin.put('/levels/:id', async (c) => {
+  const id = c.req.param('id');
+  const { title, description, order_index, is_boss_level, active } = await c.req.json();
+
+  await c.env.DB.prepare(
+    'UPDATE levels SET title = ?, description = ?, order_index = ?, is_boss_level = ?, active = ? WHERE id = ?'
+  ).bind(title, description || null, order_index, is_boss_level ? 1 : 0, active, id).run();
+
+  return c.json({ message: 'Level updated' });
+});
+
+// Delete level
+admin.delete('/levels/:id', async (c) => {
+  const id = c.req.param('id');
+  
+  await c.env.DB.prepare('DELETE FROM levels WHERE id = ?').bind(id).run();
+  
+  return c.json({ message: 'Level deleted' });
+});
+
+// ===== TRAINING MATERIAL MANAGEMENT =====
+
+// Get materials for a level
+admin.get('/levels/:levelId/materials', async (c) => {
+  const levelId = c.req.param('levelId');
+  
+  const materials = await c.env.DB.prepare(
+    'SELECT * FROM training_materials WHERE level_id = ? ORDER BY order_index'
+  ).bind(levelId).all();
+  
+  return c.json({ materials: materials.results });
+});
+
+// Create material
+admin.post('/levels/:levelId/materials', async (c) => {
+  const levelId = c.req.param('levelId');
+  const { title, description, material_type, sharepoint_url, order_index } = await c.req.json();
+
+  const result = await c.env.DB.prepare(
+    'INSERT INTO training_materials (level_id, title, description, material_type, sharepoint_url, order_index) VALUES (?, ?, ?, ?, ?, ?)'
+  ).bind(levelId, title, description || null, material_type, sharepoint_url, order_index).run();
+
+  return c.json({ message: 'Material created', materialId: result.meta.last_row_id });
+});
+
+// Update material
+admin.put('/materials/:id', async (c) => {
+  const id = c.req.param('id');
+  const { title, description, material_type, sharepoint_url, order_index } = await c.req.json();
+
+  await c.env.DB.prepare(
+    'UPDATE training_materials SET title = ?, description = ?, material_type = ?, sharepoint_url = ?, order_index = ? WHERE id = ?'
+  ).bind(title, description || null, material_type, sharepoint_url, order_index, id).run();
+
+  return c.json({ message: 'Material updated' });
+});
+
+// Delete material
+admin.delete('/materials/:id', async (c) => {
+  const id = c.req.param('id');
+  
+  await c.env.DB.prepare('DELETE FROM training_materials WHERE id = ?').bind(id).run();
+  
+  return c.json({ message: 'Material deleted' });
+});
+
+// ===== TEST MANAGEMENT =====
+
+// Get tests for a level
+admin.get('/levels/:levelId/tests', async (c) => {
+  const levelId = c.req.param('levelId');
+  
+  const tests = await c.env.DB.prepare(
+    'SELECT * FROM tests WHERE level_id = ?'
+  ).bind(levelId).all();
+  
+  return c.json({ tests: tests.results });
+});
+
+// Create test
+admin.post('/levels/:levelId/tests', async (c) => {
+  const levelId = c.req.param('levelId');
+  const { title, description, pass_percentage, time_limit_minutes } = await c.req.json();
+
+  const result = await c.env.DB.prepare(
+    'INSERT INTO tests (level_id, title, description, pass_percentage, time_limit_minutes) VALUES (?, ?, ?, ?, ?)'
+  ).bind(levelId, title, description || null, pass_percentage || 80, time_limit_minutes || null).run();
+
+  return c.json({ message: 'Test created', testId: result.meta.last_row_id });
+});
+
+// Update test
+admin.put('/tests/:id', async (c) => {
+  const id = c.req.param('id');
+  const { title, description, pass_percentage, time_limit_minutes } = await c.req.json();
+
+  await c.env.DB.prepare(
+    'UPDATE tests SET title = ?, description = ?, pass_percentage = ?, time_limit_minutes = ? WHERE id = ?'
+  ).bind(title, description || null, pass_percentage, time_limit_minutes || null, id).run();
+
+  return c.json({ message: 'Test updated' });
+});
+
+// Delete test
+admin.delete('/tests/:id', async (c) => {
+  const id = c.req.param('id');
+  
+  await c.env.DB.prepare('DELETE FROM tests WHERE id = ?').bind(id).run();
+  
+  return c.json({ message: 'Test deleted' });
+});
+
+// ===== QUESTION MANAGEMENT =====
+
+// Get questions for a test
+admin.get('/tests/:testId/questions', async (c) => {
+  const testId = c.req.param('testId');
+  
+  const questions = await c.env.DB.prepare(`
+    SELECT q.*, 
+      (SELECT json_group_array(json_object(
+        'id', ao.id,
+        'option_text', ao.option_text,
+        'is_correct', ao.is_correct,
+        'order_index', ao.order_index
+      ))
+      FROM answer_options ao 
+      WHERE ao.question_id = q.id 
+      ORDER BY ao.order_index) as options
+    FROM questions q
+    WHERE q.test_id = ?
+    ORDER BY q.order_index
+  `).bind(testId).all();
+  
+  return c.json({ questions: questions.results });
+});
+
+// Create question
+admin.post('/tests/:testId/questions', async (c) => {
+  const testId = c.req.param('testId');
+  const { question_text, question_type, order_index, points, options } = await c.req.json();
+
+  const result = await c.env.DB.prepare(
+    'INSERT INTO questions (test_id, question_text, question_type, order_index, points) VALUES (?, ?, ?, ?, ?)'
+  ).bind(testId, question_text, question_type, order_index, points || 1).run();
+
+  const questionId = result.meta.last_row_id;
+
+  // Add answer options
+  if (options && Array.isArray(options)) {
+    for (const option of options) {
+      await c.env.DB.prepare(
+        'INSERT INTO answer_options (question_id, option_text, is_correct, order_index) VALUES (?, ?, ?, ?)'
+      ).bind(questionId, option.option_text, option.is_correct ? 1 : 0, option.order_index).run();
+    }
+  }
+
+  return c.json({ message: 'Question created', questionId });
+});
+
+// Update question
+admin.put('/questions/:id', async (c) => {
+  const id = c.req.param('id');
+  const { question_text, question_type, order_index, points } = await c.req.json();
+
+  await c.env.DB.prepare(
+    'UPDATE questions SET question_text = ?, question_type = ?, order_index = ?, points = ? WHERE id = ?'
+  ).bind(question_text, question_type, order_index, points, id).run();
+
+  return c.json({ message: 'Question updated' });
+});
+
+// Delete question
+admin.delete('/questions/:id', async (c) => {
+  const id = c.req.param('id');
+  
+  await c.env.DB.prepare('DELETE FROM questions WHERE id = ?').bind(id).run();
+  
+  return c.json({ message: 'Question deleted' });
+});
+
+// ===== BOSS LEVEL TASK MANAGEMENT =====
+
+// Get tasks for a boss level
+admin.get('/levels/:levelId/tasks', async (c) => {
+  const levelId = c.req.param('levelId');
+  
+  const tasks = await c.env.DB.prepare(
+    'SELECT * FROM boss_level_tasks WHERE level_id = ? ORDER BY order_index'
+  ).bind(levelId).all();
+  
+  return c.json({ tasks: tasks.results });
+});
+
+// Create boss level task
+admin.post('/levels/:levelId/tasks', async (c) => {
+  const levelId = c.req.param('levelId');
+  const { task_description, order_index } = await c.req.json();
+
+  const result = await c.env.DB.prepare(
+    'INSERT INTO boss_level_tasks (level_id, task_description, order_index) VALUES (?, ?, ?)'
+  ).bind(levelId, task_description, order_index).run();
+
+  return c.json({ message: 'Task created', taskId: result.meta.last_row_id });
+});
+
+// Update boss level task
+admin.put('/tasks/:id', async (c) => {
+  const id = c.req.param('id');
+  const { task_description, order_index } = await c.req.json();
+
+  await c.env.DB.prepare(
+    'UPDATE boss_level_tasks SET task_description = ?, order_index = ? WHERE id = ?'
+  ).bind(task_description, order_index, id).run();
+
+  return c.json({ message: 'Task updated' });
+});
+
+// Delete boss level task
+admin.delete('/tasks/:id', async (c) => {
+  const id = c.req.param('id');
+  
+  await c.env.DB.prepare('DELETE FROM boss_level_tasks WHERE id = ?').bind(id).run();
+  
+  return c.json({ message: 'Task deleted' });
+});
+
+// ===== REPORTING =====
+
+// Get progress report
+admin.get('/reports/progress', async (c) => {
+  const report = await c.env.DB.prepare(`
+    SELECT 
+      u.id,
+      u.name,
+      u.email,
+      u.role,
+      COUNT(DISTINCT up.level_id) as levels_completed,
+      us.total_points,
+      us.current_login_streak,
+      l.rank,
+      l.league
+    FROM users u
+    LEFT JOIN user_progress up ON u.id = up.user_id AND up.status = 'completed'
+    LEFT JOIN user_streaks us ON u.id = us.user_id
+    LEFT JOIN leaderboard l ON u.id = l.user_id
+    WHERE u.role = 'consultant' AND u.active = 1
+    GROUP BY u.id
+    ORDER BY levels_completed DESC, us.total_points DESC
+  `).all();
+  
+  return c.json({ report: report.results });
+});
+
+// Get completion rates
+admin.get('/reports/completion', async (c) => {
+  const stats = await c.env.DB.prepare(`
+    SELECT 
+      l.id,
+      l.title,
+      COUNT(DISTINCT up.user_id) as users_completed,
+      (SELECT COUNT(*) FROM users WHERE role = 'consultant' AND active = 1) as total_users,
+      ROUND(COUNT(DISTINCT up.user_id) * 100.0 / 
+        (SELECT COUNT(*) FROM users WHERE role = 'consultant' AND active = 1), 2) as completion_rate
+    FROM levels l
+    LEFT JOIN user_progress up ON l.id = up.level_id AND up.status = 'completed'
+    WHERE l.active = 1
+    GROUP BY l.id
+    ORDER BY l.order_index
+  `).all();
+  
+  return c.json({ stats: stats.results });
+});
+
+export default admin;
