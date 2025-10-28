@@ -1,5 +1,4 @@
 name = "training-platform"
-main = "src/index.tsx"
 compatibility_date = "2025-10-28"
 pages_build_output_dir = "./dist"
 compatibility_flags = ["nodejs_compat"]
