@@ -42,13 +42,19 @@ This is a full-stack training management system designed for consulting firms. I
 - `PUT /api/admin/tests/:id` - Update test
 - `DELETE /api/admin/tests/:id` - Delete test
 - `GET /api/admin/tests/:testId/questions` - Get questions
-- `POST /api/admin/tests/:testId/questions` - Create question
+- `POST /api/admin/tests/:testId/questions` - Create question with answer options
 - `PUT /api/admin/questions/:id` - Update question
 - `DELETE /api/admin/questions/:id` - Delete question
 - `GET /api/admin/levels/:levelId/tasks` - Get boss level tasks
 - `POST /api/admin/levels/:levelId/tasks` - Create task
 - `PUT /api/admin/tasks/:id` - Update task
 - `DELETE /api/admin/tasks/:id` - Delete task
+- `GET /api/admin/boss-relationships` - Get all boss-consultant relationships
+- `GET /api/admin/consultants/:consultantId/bosses` - Get bosses for a consultant
+- `GET /api/admin/bosses/:bossId/consultants` - Get consultants for a boss
+- `POST /api/admin/boss-relationships` - Create boss-consultant relationship
+- `PUT /api/admin/boss-relationships/:id` - Update relationship
+- `DELETE /api/admin/boss-relationships/:id` - Delete relationship
 - `GET /api/admin/reports/progress` - Get progress report
 - `GET /api/admin/reports/completion` - Get completion rates
 
@@ -59,7 +65,8 @@ This is a full-stack training management system designed for consulting firms. I
 - `GET /api/consultant/tests/:testId` - Get test with questions
 - `POST /api/consultant/tests/:testId/submit` - Submit test answers
 - `GET /api/consultant/test-history` - Get test attempt history
-- `POST /api/consultant/levels/:levelId/request-signoff` - Request boss sign-off
+- `GET /api/consultant/my-bosses` - Get list of assigned bosses
+- `POST /api/consultant/levels/:levelId/request-signoff` - Request boss sign-off (supports multiple bosses)
 - `GET /api/consultant/signoff-requests` - Get sign-off request status
 - `GET /api/consultant/stats` - Get streaks, achievements, and stats
 - `GET /api/consultant/leaderboard` - Get leaderboard rankings
@@ -81,6 +88,10 @@ This is a full-stack training management system designed for consulting firms. I
    - Role-based access control (Admin, Boss, Consultant)
    - JWT authentication
    - User creation and management
+   - **Many-to-many boss-consultant relationships** (NEW)
+     - Consultants can report to multiple bosses
+     - Bosses can manage multiple consultants
+     - Project-specific assignments
 
 2. ✅ **Level System**
    - Regular training levels
@@ -100,6 +111,7 @@ This is a full-stack training management system designed for consulting firms. I
    - Evidence submission (notes + URLs)
    - Approval/rejection workflow
    - Feedback system
+   - **Multi-boss support** (NEW) - Consultants can request sign-off from any assigned boss
 
 5. ✅ **Gamification**
    - Login streaks
@@ -111,10 +123,10 @@ This is a full-stack training management system designed for consulting firms. I
    - League system (Bronze, Silver, Gold, Platinum, Diamond)
 
 6. ✅ **Boss Dashboard**
-   - Team progress monitoring
+   - Team progress monitoring (now supports many-to-many relationships)
    - Sign-off request management
    - Team analytics
-   - CSV export for reports
+   - CSV export for reports (includes project assignments)
 
 7. ✅ **Consultant Dashboard**
    - Duolingo-style training ladder
@@ -122,6 +134,20 @@ This is a full-stack training management system designed for consulting firms. I
    - Material access
    - Test taking interface
    - Streak and achievement tracking
+
+8. ✅ **Admin Dashboard** (ENHANCED)
+   - User management
+   - **Level Management Modal** (NEW)
+     - Add/edit/delete training materials with SharePoint links
+     - Create tests with pass percentage and time limits
+     - Add questions with multiple question types
+     - Manage answer options for multiple choice questions
+     - Configure boss level tasks
+   - **Boss-Consultant Relationships Tab** (NEW)
+     - Assign consultants to multiple bosses
+     - Manage project-specific assignments
+     - Activate/deactivate relationships
+   - Progress and completion reports
 
 ### Features Not Yet Implemented
 
@@ -151,12 +177,14 @@ This is a full-stack training management system designed for consulting firms. I
 
 **Core Entities:**
 - Users (consultants, bosses, admins)
+- **Boss-Consultant Relationships** (NEW) - Many-to-many with project assignments
 - Levels (training rungs with regular and boss levels)
 - Training Materials (SharePoint links to documents)
 - Tests & Questions
+- Answer Options (for multiple choice and true/false questions)
 - User Progress (level completion tracking)
 - Test Attempts (scoring and history)
-- Sign-off Requests (boss approval workflow)
+- Sign-off Requests (boss approval workflow with multi-boss support)
 
 **Gamification:**
 - User Streaks (login, test, practice)
@@ -167,7 +195,7 @@ This is a full-stack training management system designed for consulting firms. I
 ### Storage Services
 
 - **Cloudflare D1 (SQLite)**: All relational data
-  - 18 tables with comprehensive indexing
+  - 19 tables with comprehensive indexing (including boss_consultant_relationships)
   - Full ACID compliance
   - Automatic replication across Cloudflare's global network
 
@@ -281,7 +309,8 @@ webapp/
 │   └── boss.html          # Boss dashboard
 ├── migrations/
 │   ├── 0001_initial_schema.sql
-│   └── 0002_seed_achievements.sql
+│   ├── 0002_seed_achievements.sql
+│   └── 0003_boss_consultant_relationships.sql
 ├── seed.sql               # Sample data
 ├── wrangler.toml          # Cloudflare configuration
 ├── package.json
