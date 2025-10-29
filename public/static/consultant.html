@@ -878,16 +878,20 @@
             const canvas = document.getElementById(`hotspot-${questionId}`);
             const labelsContainer = document.getElementById(`hotspot-${questionId}-labels`);
             
-            // Get available labels (not yet placed)
-            const availableLabels = Array.from(labelsContainer.children).filter(label => 
-                label.style.display !== 'none'
-            );
+            // Get all label data from the original pool
+            const allLabelData = [];
+            Array.from(labelsContainer.children).forEach(label => {
+                allLabelData.push({
+                    text: label.getAttribute('data-label'),
+                    isPlaced: label.style.display === 'none'
+                });
+            });
             
             // Create fullscreen modal with diagram on top and labels at bottom
             const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4';
+            modal.className = 'fixed inset-0 bg-black bg-opacity-90 z-50 flex flex-col p-4';
             modal.innerHTML = `
-                <div class="relative w-full h-full flex flex-col">
+                <div class="flex flex-col h-full">
                     <!-- Header -->
                     <div class="flex justify-between items-center mb-3">
                         <h3 class="text-white text-xl font-bold">
@@ -899,24 +903,24 @@
                         </button>
                     </div>
                     
-                    <!-- Diagram Container (75% height) -->
-                    <div class="flex-1 bg-white rounded-lg overflow-hidden mb-3" style="max-height: 75%;">
-                        <div class="relative w-full h-full" id="hotspot-expanded-wrapper-${questionId}">
+                    <!-- Diagram Container (grows to fill space) -->
+                    <div class="flex-1 bg-white rounded-lg overflow-hidden mb-3 flex items-center justify-center">
+                        <div class="relative" style="max-width: 100%; max-height: 100%;" id="hotspot-expanded-wrapper-${questionId}">
                             <img src="${document.getElementById(`hotspot-img-${questionId}`).src}" 
                                  alt="Diagram" 
-                                 class="w-full h-full object-contain"
+                                 style="max-width: 100%; max-height: calc(100vh - 200px); width: auto; height: auto; display: block;"
                                  id="hotspot-expanded-img-${questionId}" />
                             <div class="hotspot-canvas" id="hotspot-expanded-canvas-${questionId}" 
                                  style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></div>
                         </div>
                     </div>
                     
-                    <!-- Labels Pool (25% height) -->
-                    <div class="bg-gray-800 rounded-lg p-4" style="min-height: 120px; max-height: 25%;">
+                    <!-- Labels Pool (fixed height at bottom) -->
+                    <div class="bg-gray-800 rounded-lg p-4" style="min-height: 120px;">
                         <p class="text-white font-semibold mb-2">
                             <i class="fas fa-tags mr-2"></i>Available Labels (drag onto diagram above):
                         </p>
-                        <div id="hotspot-expanded-labels-${questionId}" class="flex flex-wrap gap-2 overflow-y-auto" style="max-height: 100px;">
+                        <div id="hotspot-expanded-labels-${questionId}" class="flex flex-wrap gap-2" style="max-height: 80px; overflow-y: auto;">
                             <!-- Labels will be added here -->
                         </div>
                     </div>
@@ -930,25 +934,117 @@
             const expandedLabelsPool = modal.querySelector(`#hotspot-expanded-labels-${questionId}`);
             const expandedWrapper = modal.querySelector(`#hotspot-expanded-wrapper-${questionId}`);
             
-            // Copy existing placed labels to expanded canvas
+            // Copy existing placed labels to expanded canvas with proper events
             const placedLabels = canvas.querySelectorAll('.hotspot-label.placed');
             placedLabels.forEach(label => {
-                const clonedLabel = label.cloneNode(true);
-                expandedCanvas.appendChild(clonedLabel);
+                const newLabel = createPlacedLabel(
+                    label.getAttribute('data-label'),
+                    parseInt(label.style.left),
+                    parseInt(label.style.top),
+                    questionId,
+                    expandedCanvas
+                );
+                expandedCanvas.appendChild(newLabel);
             });
             
-            // Copy available labels to expanded pool
-            availableLabels.forEach(label => {
-                const clonedLabel = label.cloneNode(true);
-                clonedLabel.id = clonedLabel.id + '-expanded';
-                expandedLabelsPool.appendChild(clonedLabel);
+            // Add available labels to expanded pool with proper drag events
+            allLabelData.forEach((labelData, idx) => {
+                if (!labelData.isPlaced) {
+                    const labelDiv = document.createElement('div');
+                    labelDiv.className = 'hotspot-label bg-blue-500 text-white px-3 py-2 rounded-lg cursor-move hover:bg-blue-600 transition-colors';
+                    labelDiv.draggable = true;
+                    labelDiv.setAttribute('data-label', labelData.text);
+                    labelDiv.textContent = labelData.text;
+                    labelDiv.id = `hotspot-${questionId}-label-${idx}-expanded`;
+                    
+                    labelDiv.addEventListener('dragstart', (e) => {
+                        draggedElement = labelDiv;
+                        labelDiv.style.opacity = '0.5';
+                    });
+                    
+                    labelDiv.addEventListener('dragend', (e) => {
+                        labelDiv.style.opacity = '1';
+                    });
+                    
+                    expandedLabelsPool.appendChild(labelDiv);
+                }
             });
             
             // Make expanded wrapper droppable
             initHotspotQuestion(questionId, null, expandedWrapper, expandedCanvas);
             
             // Store modal reference for closing
-            window.currentExpandedModal = { modal, questionId, expandedCanvas, canvas };
+            window.currentExpandedModal = { modal, questionId, expandedCanvas, canvas, labelsContainer };
+        }
+        
+        function createPlacedLabel(labelText, x, y, questionId, targetCanvas) {
+            const label = document.createElement('div');
+            label.className = 'hotspot-label placed';
+            label.style.position = 'absolute';
+            label.style.left = x + 'px';
+            label.style.top = y + 'px';
+            label.style.transform = 'translate(-50%, -50%)';
+            label.style.backgroundColor = '#7CB342';
+            label.style.color = 'white';
+            label.style.padding = '6px 12px';
+            label.style.borderRadius = '8px';
+            label.style.fontSize = '12px';
+            label.style.fontWeight = 'bold';
+            label.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+            label.style.cursor = 'move';
+            label.style.pointerEvents = 'all';
+            label.style.whiteSpace = 'normal';
+            label.style.maxWidth = '180px';
+            label.style.lineHeight = '1.2';
+            label.style.border = '2px solid rgba(255,255,255,0.5)';
+            label.style.zIndex = '10';
+            label.draggable = true;
+            label.setAttribute('data-label', labelText);
+            
+            // Remove button
+            const removeBtn = document.createElement('span');
+            removeBtn.innerHTML = ' ×';
+            removeBtn.className = 'cursor-pointer text-red-600 font-bold ml-1';
+            removeBtn.style.fontSize = '16px';
+            removeBtn.onclick = (e) => {
+                e.stopPropagation();
+                label.remove();
+                // Add label back to pool
+                const pool = document.getElementById(`hotspot-expanded-labels-${questionId}`);
+                if (pool) {
+                    const labelDiv = document.createElement('div');
+                    labelDiv.className = 'hotspot-label bg-blue-500 text-white px-3 py-2 rounded-lg cursor-move hover:bg-blue-600 transition-colors';
+                    labelDiv.draggable = true;
+                    labelDiv.setAttribute('data-label', labelText);
+                    labelDiv.textContent = labelText;
+                    
+                    labelDiv.addEventListener('dragstart', (e) => {
+                        draggedElement = labelDiv;
+                        labelDiv.style.opacity = '0.5';
+                    });
+                    
+                    labelDiv.addEventListener('dragend', (e) => {
+                        labelDiv.style.opacity = '1';
+                    });
+                    
+                    pool.appendChild(labelDiv);
+                }
+            };
+            
+            label.textContent = labelText;
+            label.appendChild(removeBtn);
+            
+            // Drag events for repositioning
+            label.addEventListener('dragstart', (e) => {
+                draggedElement = label;
+                label.style.opacity = '0.5';
+            });
+            
+            label.addEventListener('dragend', (e) => {
+                label.style.opacity = '1';
+            });
+            
+            return label;
         }
         
         function closeExpandedHotspot(questionId) {
