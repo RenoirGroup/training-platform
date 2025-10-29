@@ -490,6 +490,9 @@
                     `;
                 
                 case 'matching':
+                    if (!q.answer_data || !q.answer_data.pairs) {
+                        return `<div class="mb-6 p-4 border rounded bg-white"><p>Error: Matching question data is incomplete</p></div>`;
+                    }
                     const pairs = q.answer_data.pairs;
                     const leftItems = pairs.map(p => p.left);
                     const rightItems = pairs.map(p => p.right).sort(() => Math.random() - 0.5); // Shuffle right items
@@ -548,6 +551,9 @@
                     `;
                 
                 case 'ranking':
+                    if (!q.answer_data || !q.answer_data.items) {
+                        return `<div class="mb-6 p-4 border rounded bg-white"><p>Error: Ranking question data is incomplete</p></div>`;
+                    }
                     const items = q.answer_data.items.map(item => item.text).sort(() => Math.random() - 0.5); // Shuffle
                     return `
                         <div class="mb-6 p-4 border rounded bg-white">
@@ -569,6 +575,9 @@
                     `;
                 
                 case 'odd_one_out':
+                    if (!q.answer_data || !q.answer_data.items) {
+                        return `<div class="mb-6 p-4 border rounded bg-white"><p>Error: Odd One Out question data is incomplete</p></div>`;
+                    }
                     const oddItems = q.answer_data.items;
                     return `
                         <div class="mb-6 p-4 border rounded bg-white">
@@ -584,7 +593,10 @@
                     `;
                 
                 case 'hotspot':
-                    const regions = q.answer_data.regions;
+                    if (!q.answer_data || !q.answer_data.placements || !q.answer_data.imageUrl) {
+                        return `<div class="mb-6 p-4 border rounded bg-white"><p>Error: Hotspot question data is incomplete</p></div>`;
+                    }
+                    const placements = q.answer_data.placements;
                     const imageUrl = q.answer_data.imageUrl;
                     return `
                         <div class="mb-6 p-4 border rounded bg-white">
@@ -597,13 +609,13 @@
                             <div class="p-3 bg-gray-50 rounded">
                                 <p class="text-sm font-semibold mb-2">Labels (drag onto diagram):</p>
                                 <div id="hotspot-${q.id}-labels" class="flex flex-wrap gap-2">
-                                    ${regions.map((region, i) => `
+                                    ${placements.map((placement, i) => `
                                         <div class="hotspot-label draggable" 
                                              draggable="true"
                                              ondragstart="dragStart(event)"
-                                             data-label="${region.label}"
+                                             data-label="${placement.label}"
                                              id="hotspot-${q.id}-label-${i}">
-                                            ${region.label}
+                                            ${placement.label}
                                         </div>
                                     `).join('')}
                                 </div>
