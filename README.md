@@ -1,17 +1,23 @@
-# Training Platform
+# The Renoir Academy
 
-A comprehensive consultant training platform with gamification, built with Hono and Cloudflare Pages.
+A comprehensive consultant training platform with gamification, built with Hono and Cloudflare Pages for Renoir Consulting.
 
 ## Project Overview
 
-This is a full-stack training management system designed for consulting firms. It features:
+This is a full-stack training management system designed for Renoir Consulting. It features:
 
 - **Admin Dashboard**: Manage users, levels, tests, training materials, and boss levels
 - **Consultant Portal**: Duolingo-style training ladder with tests, progress tracking, and gamification
 - **Boss Dashboard**: Review sign-off requests, monitor team progress, and analytics
 
+**Brand Identity:**
+- Primary Color: Renoir Green (#7CB342)
+- Secondary Color: Teal (#00ACC1)
+- Logo: Renoir Consulting branding throughout the application
+
 ## URLs
 
+- **Development**: https://3000-i5jt5upplbv2n9drgj7lj-0e616f0a.sandbox.novita.ai
 - **Production**: (To be deployed to Cloudflare Pages)
 - **Local Development**: http://localhost:3000
 
@@ -140,7 +146,17 @@ This is a full-stack training management system designed for consulting firms. I
    - **Level Management Modal** (NEW)
      - Add/edit/delete training materials with SharePoint links
      - Create tests with pass percentage and time limits
-     - Add questions with multiple question types
+     - **Inline editing** for test titles, pass %, and time limits
+     - Add questions with **8 question types**:
+       1. Multiple Choice
+       2. True/False
+       3. Open Text
+       4. **Matching** (drag-and-drop pairs)
+       5. **Fill-in-the-blank** (fuzzy matching)
+       6. **Ranking/Ordering** (exact sequence)
+       7. **Odd one out** (select incorrect item)
+       8. **Hotspot/Diagram labelling** (coordinate-based)
+     - All questions use all-or-nothing scoring
      - Manage answer options for multiple choice questions
      - Configure boss level tasks
    - **Boss-Consultant Relationships Tab** (NEW)
@@ -148,6 +164,12 @@ This is a full-stack training management system designed for consulting firms. I
      - Manage project-specific assignments
      - Activate/deactivate relationships
    - Progress and completion reports
+
+9. ✅ **Rebranding to The Renoir Academy** (NEW)
+   - Renoir Consulting logos integrated
+   - Corporate color scheme (Green #7CB342, Teal #00ACC1)
+   - All pages updated with new branding
+   - Professional consulting firm identity
 
 ### Features Not Yet Implemented
 
@@ -349,6 +371,7 @@ Proprietary - Internal use only
 
 ---
 
-**Last Updated**: 2025-10-28  
-**Status**: ✅ Development Complete - Ready for Production Deployment  
-**Deployment Platform**: Cloudflare Pages
+**Last Updated**: 2025-10-29  
+**Status**: ✅ Development Complete - Rebranded as The Renoir Academy  
+**Deployment Platform**: Cloudflare Pages  
+**Brand**: Renoir Consulting
