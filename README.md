@@ -17,8 +17,9 @@ This is a full-stack training management system designed for Renoir Consulting. 
 
 ## URLs
 
-- **Development**: https://3000-i5jt5upplbv2n9drgj7lj-0e616f0a.sandbox.novita.ai
-- **Production**: (To be deployed to Cloudflare Pages)
+- **Production**: https://10c6bca7.training-platform-257.pages.dev
+- **GitHub**: https://github.com/RenoirGroup/renoir-training26
+- **Development Sandbox**: https://3000-i5jt5upplbv2n9drgj7lj-0e616f0a.sandbox.novita.ai
 - **Local Development**: http://localhost:3000
 
 ## Features
@@ -372,6 +373,7 @@ Proprietary - Internal use only
 ---
 
 **Last Updated**: 2025-10-29  
-**Status**: ✅ Development Complete - Rebranded as The Renoir Academy  
+**Status**: ✅ Production Deployed - Live on Cloudflare Pages  
+**Production URL**: https://10c6bca7.training-platform-257.pages.dev  
 **Deployment Platform**: Cloudflare Pages  
 **Brand**: Renoir Consulting
