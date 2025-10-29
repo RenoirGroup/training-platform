@@ -268,18 +268,20 @@ consultant.post('/tests/:testId/submit', async (c) => {
         // Parse answer_data and user placements
         const hotspotData = JSON.parse(question.answer_data || '{}');
         const userPlacements = JSON.parse(userAnswer || '[]');
+        const tolerance = hotspotData.tolerance || 50; // pixels of tolerance
         
-        // Check if all labels are placed within their correct regions
-        isCorrect = hotspotData.regions && userPlacements.length === hotspotData.regions.length &&
-          userPlacements.every((placement: any) => {
-            const region = hotspotData.regions.find((r: any) => r.label === placement.label);
-            if (!region) return false;
+        // Check if all labels are placed within tolerance of correct positions
+        isCorrect = hotspotData.placements && userPlacements.length === hotspotData.placements.length &&
+          userPlacements.every((userPlacement: any) => {
+            const correctPlacement = hotspotData.placements.find((p: any) => p.label === userPlacement.label);
+            if (!correctPlacement) return false;
             
-            // Check if placement coordinates are within the region bounds
-            return placement.x >= region.x && 
-                   placement.x <= region.x + region.width &&
-                   placement.y >= region.y && 
-                   placement.y <= region.y + region.height;
+            // Check if placement is within tolerance distance of correct position
+            const distance = Math.sqrt(
+              Math.pow(userPlacement.x - correctPlacement.x, 2) + 
+              Math.pow(userPlacement.y - correctPlacement.y, 2)
+            );
+            return distance <= tolerance;
           });
         break;
 

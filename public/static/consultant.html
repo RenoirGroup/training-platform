@@ -96,22 +96,20 @@
             gap: 0.5rem;
         }
         .hotspot-canvas {
-            position: relative;
-            display: inline-block;
-            max-width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
         }
         .hotspot-label {
-            padding: 0.5rem;
-            background: #fff;
-            border: 2px solid #ccc;
-            border-radius: 0.25rem;
-            cursor: move;
-            font-size: 0.875rem;
+            display: inline-block;
+            user-select: none;
         }
         .hotspot-label.placed {
             position: absolute;
-            background: #dcfce7;
-            border-color: #16a34a;
+            pointer-events: all;
         }
     </style>
 </head>
@@ -601,16 +599,27 @@
                     return `
                         <div class="mb-6 p-4 border rounded bg-white">
                             <p class="font-bold mb-3">${qNum}. ${q.question_text} (${q.points} points)</p>
-                            <p class="text-sm text-gray-600 mb-3">Drag labels onto the correct areas of the diagram</p>
+                            <p class="text-sm text-gray-600 mb-3"><i class="fas fa-hand-pointer mr-1"></i>Drag labels onto the correct areas of the diagram</p>
                             <input type="hidden" name="q${q.id}" id="q${q.id}-answer" />
-                            <div class="hotspot-canvas border rounded overflow-hidden mb-4" id="hotspot-${q.id}">
-                                <img src="${imageUrl}" alt="Diagram" class="max-w-full" id="hotspot-img-${q.id}" />
+                            
+                            <!-- Diagram Container (Full Width) -->
+                            <div class="mb-4 bg-gray-100 p-4 rounded border-2 border-gray-300">
+                                <div class="relative w-full bg-white" id="hotspot-wrapper-${q.id}">
+                                    <img src="${imageUrl}" 
+                                         alt="Diagram" 
+                                         class="w-full border-2 border-gray-400" 
+                                         style="max-height: 60vh; object-fit: contain; display: block; margin: 0 auto;"
+                                         id="hotspot-img-${q.id}" />
+                                    <div class="hotspot-canvas" id="hotspot-${q.id}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></div>
+                                </div>
                             </div>
-                            <div class="p-3 bg-gray-50 rounded">
-                                <p class="text-sm font-semibold mb-2">Labels (drag onto diagram):</p>
+                            
+                            <!-- Labels Pool (Below Diagram) -->
+                            <div class="p-3 bg-gray-50 rounded border border-gray-300">
+                                <p class="text-sm font-semibold mb-2"><i class="fas fa-tags mr-1"></i>Available Labels:</p>
                                 <div id="hotspot-${q.id}-labels" class="flex flex-wrap gap-2">
                                     ${placements.map((placement, i) => `
-                                        <div class="hotspot-label draggable" 
+                                        <div class="hotspot-label bg-blue-500 text-white px-3 py-2 rounded-lg cursor-move hover:bg-blue-600 transition-colors" 
                                              draggable="true"
                                              ondragstart="dragStart(event)"
                                              data-label="${placement.label}"
@@ -742,52 +751,98 @@
 
         // ===== HOTSPOT QUESTION =====
         function initHotspotQuestion(questionId, answerData) {
+            const wrapper = document.getElementById(`hotspot-wrapper-${questionId}`);
             const canvas = document.getElementById(`hotspot-${questionId}`);
             const img = document.getElementById(`hotspot-img-${questionId}`);
             
-            if (!canvas || !img) return;
+            if (!canvas || !img || !wrapper) return;
             
             // Wait for image to load
             img.onload = () => {
-                canvas.style.position = 'relative';
-                
-                canvas.addEventListener('dragover', (e) => {
+                // Make wrapper accept drops
+                wrapper.addEventListener('dragover', (e) => {
                     e.preventDefault();
                 });
                 
-                canvas.addEventListener('drop', (e) => {
+                wrapper.addEventListener('drop', (e) => {
                     e.preventDefault();
                     
-                    if (!draggedElement || !draggedElement.classList.contains('hotspot-label')) return;
+                    if (!draggedElement || !draggedElement.getAttribute('data-label')) return;
                     
-                    const rect = canvas.getBoundingClientRect();
+                    // Get drop position relative to wrapper
+                    const rect = wrapper.getBoundingClientRect();
                     const x = e.clientX - rect.left;
                     const y = e.clientY - rect.top;
                     
-                    // Clone the label and place it
-                    const label = draggedElement.cloneNode(true);
-                    label.classList.add('placed');
-                    label.style.left = x + 'px';
-                    label.style.top = y + 'px';
-                    label.draggable = false;
+                    // Check if this is a repositioning or new placement
+                    if (draggedElement.classList.contains('placed')) {
+                        // Repositioning existing label
+                        draggedElement.style.left = x + 'px';
+                        draggedElement.style.top = y + 'px';
+                    } else {
+                        // New placement - clone the label and place it
+                        const label = document.createElement('div');
+                        label.className = 'hotspot-label placed';
+                        label.style.position = 'absolute';
+                        label.style.left = x + 'px';
+                        label.style.top = y + 'px';
+                        label.style.transform = 'translate(-50%, -50%)';
+                        label.style.backgroundColor = '#7CB342';
+                        label.style.color = 'white';
+                        label.style.padding = '6px 12px';
+                        label.style.borderRadius = '8px';
+                        label.style.fontSize = '12px';
+                        label.style.fontWeight = 'bold';
+                        label.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+                        label.style.cursor = 'move';
+                        label.style.pointerEvents = 'all';
+                        label.style.whiteSpace = 'normal';
+                        label.style.maxWidth = '180px';
+                        label.style.lineHeight = '1.2';
+                        label.style.border = '2px solid rgba(255,255,255,0.5)';
+                        label.style.zIndex = '10';
+                        label.draggable = true;
+                        label.setAttribute('data-label', draggedElement.getAttribute('data-label'));
+                        
+                        // Add remove button
+                        const removeBtn = document.createElement('span');
+                        removeBtn.innerHTML = ' ×';
+                        removeBtn.className = 'cursor-pointer text-red-600 font-bold ml-1';
+                        removeBtn.style.fontSize = '16px';
+                        removeBtn.onclick = (e) => {
+                            e.stopPropagation();
+                            const labelText = label.getAttribute('data-label');
+                            label.remove();
+                            // Show the original label in pool
+                            draggedElement.style.display = '';
+                            updateHotspotAnswer(questionId);
+                        };
+                        
+                        label.textContent = draggedElement.getAttribute('data-label');
+                        label.appendChild(removeBtn);
+                        
+                        // Add drag event for repositioning
+                        label.addEventListener('dragstart', (e) => {
+                            draggedElement = label;
+                            label.style.opacity = '0.5';
+                        });
+                        
+                        label.addEventListener('dragend', (e) => {
+                            label.style.opacity = '1';
+                            draggedElement = null;
+                        });
+                        
+                        canvas.appendChild(label);
+                        
+                        // Hide the original in pool
+                        draggedElement.style.display = 'none';
+                    }
                     
-                    // Add remove button
-                    const removeBtn = document.createElement('span');
-                    removeBtn.innerHTML = ' ×';
-                    removeBtn.className = 'cursor-pointer text-red-600 font-bold ml-1';
-                    removeBtn.onclick = () => {
-                        label.remove();
-                        draggedElement.style.display = '';
-                        updateHotspotAnswer(questionId);
-                    };
-                    label.appendChild(removeBtn);
-                    
-                    canvas.appendChild(label);
-                    
-                    // Hide the original
-                    draggedElement.style.display = 'none';
-                    draggedElement.classList.remove('dragging');
-                    draggedElement = null;
+                    if (draggedElement) {
+                        draggedElement.style.opacity = '1';
+                        draggedElement.classList.remove('dragging');
+                        draggedElement = null;
+                    }
                     
                     updateHotspotAnswer(questionId);
                 });

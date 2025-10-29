@@ -1450,27 +1450,37 @@
         function handleLabelDrop(event) {
             event.preventDefault();
             
-            const label = event.dataTransfer.getData('text/plain');
-            const labelId = event.dataTransfer.getData('label-id');
-            
-            if (!label) return;
-            
-            // Get drop position relative to image
+            const isReposition = event.dataTransfer.getData('reposition') === 'true';
             const img = event.target;
             const rect = img.getBoundingClientRect();
             const x = Math.round(event.clientX - rect.left);
             const y = Math.round(event.clientY - rect.top);
             
-            // Remove label from pool
-            const poolLabel = document.querySelector(`[data-label-id="${labelId}"]`);
-            if (poolLabel && poolLabel.parentElement.id === 'hotspot-labels-pool') {
-                poolLabel.remove();
+            if (isReposition) {
+                // Repositioning existing label
+                const idx = parseInt(event.dataTransfer.getData('index'));
+                if (idx >= 0 && idx < hotspotPlacedLabels.length) {
+                    hotspotPlacedLabels[idx].x = x;
+                    hotspotPlacedLabels[idx].y = y;
+                }
+            } else {
+                // New placement
+                const label = event.dataTransfer.getData('text/plain');
+                const labelId = event.dataTransfer.getData('label-id');
+                
+                if (!label) return;
+                
+                // Remove label from pool
+                const poolLabel = document.querySelector(`[data-label-id="${labelId}"]`);
+                if (poolLabel && poolLabel.parentElement.id === 'hotspot-labels-pool') {
+                    poolLabel.remove();
+                }
+                
+                // Add to placed labels array
+                hotspotPlacedLabels.push({ label, x, y });
             }
             
-            // Add to placed labels array
-            hotspotPlacedLabels.push({ label, x, y });
-            
-            // Render placed label on diagram
+            // Re-render placed labels
             renderPlacedLabels();
             updateAnswerSummary();
         }
@@ -1496,18 +1506,40 @@
                 labelDiv.style.fontSize = '12px';
                 labelDiv.style.fontWeight = 'bold';
                 labelDiv.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
-                labelDiv.style.cursor = 'pointer';
+                labelDiv.style.cursor = 'move';  // Changed to 'move' to indicate draggable
                 labelDiv.style.pointerEvents = 'all';
-                labelDiv.style.whiteSpace = 'normal';  // Allow text wrapping for long labels
-                labelDiv.style.maxWidth = '180px';     // Maximum width before wrapping
-                labelDiv.style.lineHeight = '1.2';     // Tighter line spacing
-                labelDiv.style.zIndex = (1000 + idx).toString(); // Allow stacking/overlapping
-                labelDiv.style.border = '2px solid rgba(255,255,255,0.5)'; // Border for better visibility
-                labelDiv.title = 'Click X to remove';
-                labelDiv.innerHTML = `
-                    ${placement.label}
-                    <i class="fas fa-times ml-2 text-xs" onclick="removePlacedLabel(${idx})" style="cursor: pointer;"></i>
-                `;
+                labelDiv.style.whiteSpace = 'normal';
+                labelDiv.style.maxWidth = '180px';
+                labelDiv.style.lineHeight = '1.2';
+                labelDiv.style.zIndex = (1000 + idx).toString();
+                labelDiv.style.border = '2px solid rgba(255,255,255,0.5)';
+                labelDiv.draggable = true;  // Make it draggable
+                labelDiv.setAttribute('data-label', placement.label);
+                labelDiv.setAttribute('data-index', idx.toString());
+                labelDiv.title = 'Drag to reposition, click X to remove';
+                
+                // Remove button
+                const removeBtn = document.createElement('i');
+                removeBtn.className = 'fas fa-times ml-2 text-xs';
+                removeBtn.style.cursor = 'pointer';
+                removeBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    removePlacedLabel(idx);
+                };
+                
+                labelDiv.textContent = placement.label;
+                labelDiv.appendChild(removeBtn);
+                
+                // Drag events for repositioning
+                labelDiv.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('reposition', 'true');
+                    e.dataTransfer.setData('index', idx.toString());
+                    labelDiv.style.opacity = '0.5';
+                });
+                
+                labelDiv.addEventListener('dragend', (e) => {
+                    labelDiv.style.opacity = '1';
+                });
                 
                 overlayEl.appendChild(labelDiv);
             });
