@@ -291,6 +291,11 @@
                     <option value="multiple_choice">Multiple Choice</option>
                     <option value="true_false">True/False</option>
                     <option value="open_text">Open Text</option>
+                    <option value="matching">Matching (Pairing Concepts)</option>
+                    <option value="fill_blank">Fill in the Blank</option>
+                    <option value="ranking">Ranking / Ordering</option>
+                    <option value="odd_one_out">Odd One Out</option>
+                    <option value="hotspot">Hotspot / Diagram Labelling</option>
                 </select>
             </div>
 
@@ -830,12 +835,39 @@
                     return `
                         <div class="bg-white border rounded p-4">
                             <div class="flex justify-between items-start mb-3">
-                                <div>
-                                    <h4 class="font-bold text-lg">${test.title}</h4>
-                                    <p class="text-sm text-gray-600">
-                                        Pass: ${test.pass_percentage}% | 
-                                        Time Limit: ${test.time_limit_minutes ? test.time_limit_minutes + ' min' : 'None'}
-                                    </p>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <input type="text" 
+                                               id="test-title-${test.id}" 
+                                               value="${test.title}" 
+                                               onblur="updateTestField(${test.id}, 'title', this.value)"
+                                               class="font-bold text-lg border-b border-transparent hover:border-gray-300 focus:border-indigo-500 outline-none px-1 -mx-1 flex-1" />
+                                        <button onclick="saveTestField(${test.id}, 'title')" class="text-indigo-600 hover:text-indigo-800 text-sm">
+                                            <i class="fas fa-save"></i>
+                                        </button>
+                                    </div>
+                                    <div class="flex items-center gap-4 text-sm text-gray-600">
+                                        <div class="flex items-center gap-1">
+                                            <span>Pass:</span>
+                                            <input type="number" 
+                                                   id="test-pass-${test.id}" 
+                                                   value="${test.pass_percentage}" 
+                                                   min="0" max="100"
+                                                   onblur="updateTestField(${test.id}, 'pass_percentage', this.value)"
+                                                   class="w-12 border-b border-transparent hover:border-gray-300 focus:border-indigo-500 outline-none px-1" />
+                                            <span>%</span>
+                                        </div>
+                                        <div class="flex items-center gap-1">
+                                            <span>Time Limit:</span>
+                                            <input type="number" 
+                                                   id="test-time-${test.id}" 
+                                                   value="${test.time_limit_minutes || ''}" 
+                                                   placeholder="None"
+                                                   onblur="updateTestField(${test.id}, 'time_limit_minutes', this.value)"
+                                                   class="w-16 border-b border-transparent hover:border-gray-300 focus:border-indigo-500 outline-none px-1" />
+                                            <span>min</span>
+                                        </div>
+                                    </div>
                                 </div>
                                 <button onclick="deleteTest(${test.id})" class="text-red-600 hover:text-red-800">
                                     <i class="fas fa-trash"></i>
@@ -852,6 +884,32 @@
                                 ${questions.length === 0 ? '<p class="text-sm text-gray-500">No questions yet</p>' : 
                                     questions.map((q, idx) => {
                                         const options = JSON.parse(q.options || '[]');
+                                        const answerData = q.answer_data ? JSON.parse(q.answer_data) : null;
+                                        let answerDetails = '';
+                                        
+                                        // Display answer details based on question type
+                                        if (q.question_type === 'matching' && answerData?.pairs) {
+                                            answerDetails = `<ul class="mt-2 ml-4 text-xs">${answerData.pairs.map(p => 
+                                                `<li>${p.left} ↔ ${p.right}</li>`
+                                            ).join('')}</ul>`;
+                                        } else if (q.question_type === 'fill_blank' && answerData?.blanks) {
+                                            answerDetails = `<p class="mt-2 text-xs"><strong>Answers:</strong> ${answerData.blanks.join(', ')}</p>`;
+                                        } else if (q.question_type === 'ranking' && answerData?.items) {
+                                            answerDetails = `<ol class="mt-2 ml-4 text-xs list-decimal">${answerData.items.map(item => 
+                                                `<li>${item.text}</li>`
+                                            ).join('')}</ol>`;
+                                        } else if (q.question_type === 'odd_one_out' && answerData?.items) {
+                                            answerDetails = `<ul class="mt-2 ml-4 text-xs">${answerData.items.map((item, i) => 
+                                                `<li class="${i === answerData.oddIndex ? 'text-green-600 font-bold' : ''}">${i === answerData.oddIndex ? '✓' : '○'} ${item}</li>`
+                                            ).join('')}</ul>`;
+                                        } else if (q.question_type === 'hotspot' && answerData?.regions) {
+                                            answerDetails = `<div class="mt-2 text-xs"><strong>Image:</strong> ${answerData.imageUrl}<br><strong>Regions:</strong> ${answerData.regions.length}</div>`;
+                                        } else if (options.length > 0) {
+                                            answerDetails = `<ul class="mt-2 ml-4 text-xs">${options.map(o => 
+                                                `<li class="${o.is_correct ? 'text-green-600 font-bold' : ''}">${o.is_correct ? '✓' : '○'} ${o.option_text}</li>`
+                                            ).join('')}</ul>`;
+                                        }
+                                        
                                         return `
                                             <div class="bg-gray-50 p-3 rounded text-sm">
                                                 <div class="flex justify-between">
@@ -862,15 +920,7 @@
                                                 </div>
                                                 <p class="mt-1">${q.question_text}</p>
                                                 <p class="text-xs text-gray-600 mt-1">Type: ${q.question_type} | Points: ${q.points}</p>
-                                                ${options.length > 0 ? `
-                                                    <ul class="mt-2 ml-4 text-xs">
-                                                        ${options.map(o => `
-                                                            <li class="${o.is_correct ? 'text-green-600 font-bold' : ''}">
-                                                                ${o.is_correct ? '✓' : '○'} ${o.option_text}
-                                                            </li>
-                                                        `).join('')}
-                                                    </ul>
-                                                ` : ''}
+                                                ${answerDetails}
                                             </div>
                                         `;
                                     }).join('')
@@ -908,6 +958,36 @@
                 alert('Test created successfully!');
             } catch (error) {
                 alert('Error saving test: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+
+        async function updateTestField(testId, field, value) {
+            // Store the value for later save
+            if (!window.testUpdates) window.testUpdates = {};
+            if (!window.testUpdates[testId]) window.testUpdates[testId] = {};
+            window.testUpdates[testId][field] = value;
+        }
+
+        async function saveTestField(testId, field) {
+            if (!window.testUpdates || !window.testUpdates[testId]) return;
+            
+            try {
+                const updates = window.testUpdates[testId];
+                const titleInput = document.getElementById(`test-title-${testId}`);
+                const passInput = document.getElementById(`test-pass-${testId}`);
+                const timeInput = document.getElementById(`test-time-${testId}`);
+                
+                await axios.put(`/api/admin/tests/${testId}`, {
+                    title: titleInput.value,
+                    pass_percentage: parseInt(passInput.value),
+                    time_limit_minutes: timeInput.value ? parseInt(timeInput.value) : null,
+                    description: null // Keep existing description
+                });
+                
+                delete window.testUpdates[testId];
+                alert('Test updated successfully!');
+            } catch (error) {
+                alert('Error updating test: ' + (error.response?.data?.error || 'Unknown error'));
             }
         }
 
@@ -952,22 +1032,109 @@
             const container = document.getElementById('answer-options-container');
             const listEl = document.getElementById('answer-options-list');
             
-            if (type === 'open_text') {
-                container.style.display = 'none';
-            } else {
-                container.style.display = 'block';
-                listEl.innerHTML = '';
-                answerOptionCount = 0;
-                
-                if (type === 'true_false') {
+            // Change label based on type
+            const label = container.querySelector('label');
+            container.style.display = 'block';
+            listEl.innerHTML = '';
+            answerOptionCount = 0;
+            
+            switch(type) {
+                case 'open_text':
+                    container.style.display = 'none';
+                    break;
+                    
+                case 'true_false':
+                    label.textContent = 'Answer Options';
                     addAnswerOption('True');
                     addAnswerOption('False');
-                } else {
-                    // Multiple choice - add 4 default options
+                    break;
+                    
+                case 'multiple_choice':
+                    label.textContent = 'Answer Options';
                     for (let i = 0; i < 4; i++) {
                         addAnswerOption();
                     }
-                }
+                    break;
+                    
+                case 'matching':
+                    label.textContent = 'Matching Pairs (Left items will be shown, right items to match)';
+                    listEl.innerHTML = `
+                        <p class="text-sm text-gray-600 mb-2">Create pairs that students will match. Add at least 3 pairs.</p>
+                        <div id="matching-pairs-list" class="space-y-2"></div>
+                        <button type="button" onclick="addMatchingPair()" class="mt-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                            <i class="fas fa-plus mr-1"></i>Add Pair
+                        </button>
+                    `;
+                    // Add 3 default pairs
+                    for (let i = 0; i < 3; i++) {
+                        setTimeout(() => addMatchingPair(), 10);
+                    }
+                    break;
+                    
+                case 'fill_blank':
+                    label.textContent = 'Fill in the Blank Setup';
+                    listEl.innerHTML = `
+                        <p class="text-sm text-gray-600 mb-2">Use ___ (three underscores) to mark blanks in the question text above.</p>
+                        <p class="text-sm text-gray-600 mb-3">Example: "The capital of France is ___"</p>
+                        <div id="blank-answers-list" class="space-y-2">
+                            <p class="text-sm font-semibold mb-2">Correct Answers (one per blank, in order):</p>
+                        </div>
+                        <button type="button" onclick="addBlankAnswer()" class="mt-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                            <i class="fas fa-plus mr-1"></i>Add Answer
+                        </button>
+                    `;
+                    addBlankAnswer();
+                    break;
+                    
+                case 'ranking':
+                    label.textContent = 'Items to Rank (in correct order)';
+                    listEl.innerHTML = `
+                        <p class="text-sm text-gray-600 mb-2">Add items in the CORRECT order. Students will drag to reorder them.</p>
+                        <div id="ranking-items-list" class="space-y-2"></div>
+                        <button type="button" onclick="addRankingItem()" class="mt-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                            <i class="fas fa-plus mr-1"></i>Add Item
+                        </button>
+                    `;
+                    // Add 4 default items
+                    for (let i = 0; i < 4; i++) {
+                        setTimeout(() => addRankingItem(), 10);
+                    }
+                    break;
+                    
+                case 'odd_one_out':
+                    label.textContent = 'List of Items (mark the odd one out)';
+                    listEl.innerHTML = `
+                        <p class="text-sm text-gray-600 mb-2">Add 4-6 items. Mark ONE as the odd one out (correct answer).</p>
+                        <div id="odd-items-list" class="space-y-2"></div>
+                        <button type="button" onclick="addOddItem()" class="mt-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                            <i class="fas fa-plus mr-1"></i>Add Item
+                        </button>
+                    `;
+                    // Add 4 default items
+                    for (let i = 0; i < 4; i++) {
+                        setTimeout(() => addOddItem(), 10);
+                    }
+                    break;
+                    
+                case 'hotspot':
+                    label.textContent = 'Hotspot / Diagram Setup';
+                    listEl.innerHTML = `
+                        <div class="mb-3">
+                            <label class="block text-sm font-semibold mb-1">Diagram Image URL (SharePoint link)</label>
+                            <input type="url" id="hotspot-image-url" class="w-full px-3 py-2 border rounded" 
+                                   placeholder="https://..." required />
+                        </div>
+                        <p class="text-sm text-gray-600 mb-2">Define rectangular regions and labels. Students will drag labels onto the diagram.</p>
+                        <div id="hotspot-regions-list" class="space-y-3"></div>
+                        <button type="button" onclick="addHotspotRegion()" class="mt-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                            <i class="fas fa-plus mr-1"></i>Add Region
+                        </button>
+                    `;
+                    // Add 2 default regions
+                    for (let i = 0; i < 2; i++) {
+                        setTimeout(() => addHotspotRegion(), 10);
+                    }
+                    break;
             }
         }
 
@@ -986,6 +1153,126 @@
             answerOptionCount++;
         }
 
+        // ===== MATCHING QUESTION TYPE =====
+        function addMatchingPair() {
+            const listEl = document.getElementById('matching-pairs-list');
+            if (!listEl) return;
+            
+            const pairDiv = document.createElement('div');
+            pairDiv.className = 'flex items-center space-x-2 bg-gray-50 p-2 rounded';
+            pairDiv.innerHTML = `
+                <input type="text" class="matching-left flex-1 px-3 py-2 border rounded" placeholder="Left item" required>
+                <span class="text-gray-400">↔</span>
+                <input type="text" class="matching-right flex-1 px-3 py-2 border rounded" placeholder="Right item (to match)" required>
+                <button type="button" onclick="this.parentElement.remove()" class="text-red-600 hover:text-red-800">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            listEl.appendChild(pairDiv);
+        }
+
+        // ===== FILL IN THE BLANK =====
+        function addBlankAnswer() {
+            const listEl = document.getElementById('blank-answers-list');
+            if (!listEl) return;
+            
+            const answerDiv = document.createElement('div');
+            answerDiv.className = 'flex items-center space-x-2';
+            const count = listEl.querySelectorAll('.blank-answer').length + 1;
+            answerDiv.innerHTML = `
+                <span class="text-sm font-semibold w-16">Blank ${count}:</span>
+                <input type="text" class="blank-answer flex-1 px-3 py-2 border rounded" placeholder="Correct answer" required>
+                <button type="button" onclick="this.parentElement.remove(); renumberBlanks();" class="text-red-600 hover:text-red-800">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            listEl.appendChild(answerDiv);
+        }
+
+        function renumberBlanks() {
+            const blanks = document.querySelectorAll('#blank-answers-list > div');
+            blanks.forEach((div, idx) => {
+                div.querySelector('span').textContent = `Blank ${idx + 1}:`;
+            });
+        }
+
+        // ===== RANKING QUESTION TYPE =====
+        function addRankingItem() {
+            const listEl = document.getElementById('ranking-items-list');
+            if (!listEl) return;
+            
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'flex items-center space-x-2';
+            const count = listEl.querySelectorAll('.ranking-item').length + 1;
+            itemDiv.innerHTML = `
+                <span class="text-sm font-semibold w-12">${count}.</span>
+                <input type="text" class="ranking-item flex-1 px-3 py-2 border rounded" placeholder="Item text" required>
+                <button type="button" onclick="this.parentElement.remove(); renumberRanking();" class="text-red-600 hover:text-red-800">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            listEl.appendChild(itemDiv);
+        }
+
+        function renumberRanking() {
+            const items = document.querySelectorAll('#ranking-items-list > div');
+            items.forEach((div, idx) => {
+                div.querySelector('span').textContent = `${idx + 1}.`;
+            });
+        }
+
+        // ===== ODD ONE OUT =====
+        function addOddItem() {
+            const listEl = document.getElementById('odd-items-list');
+            if (!listEl) return;
+            
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'flex items-center space-x-2';
+            itemDiv.innerHTML = `
+                <input type="radio" name="odd-one-out" class="odd-correct" title="Mark as odd one out">
+                <input type="text" class="odd-item flex-1 px-3 py-2 border rounded" placeholder="Item text" required>
+                <button type="button" onclick="this.parentElement.remove()" class="text-red-600 hover:text-red-800">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            listEl.appendChild(itemDiv);
+        }
+
+        // ===== HOTSPOT QUESTION TYPE =====
+        function addHotspotRegion() {
+            const listEl = document.getElementById('hotspot-regions-list');
+            if (!listEl) return;
+            
+            const regionDiv = document.createElement('div');
+            regionDiv.className = 'border rounded p-3 bg-gray-50';
+            const count = listEl.querySelectorAll('.hotspot-region').length + 1;
+            regionDiv.innerHTML = `
+                <div class="hotspot-region">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-semibold text-sm">Region ${count}</span>
+                        <button type="button" onclick="this.closest('.hotspot-region').parentElement.remove(); renumberHotspots();" class="text-red-600 hover:text-red-800">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mb-2">
+                        <input type="number" class="hotspot-x px-2 py-1 border rounded text-sm" placeholder="X (left)" required>
+                        <input type="number" class="hotspot-y px-2 py-1 border rounded text-sm" placeholder="Y (top)" required>
+                        <input type="number" class="hotspot-width px-2 py-1 border rounded text-sm" placeholder="Width" required>
+                        <input type="number" class="hotspot-height px-2 py-1 border rounded text-sm" placeholder="Height" required>
+                    </div>
+                    <input type="text" class="hotspot-label w-full px-3 py-2 border rounded" placeholder="Label text" required>
+                </div>
+            `;
+            listEl.appendChild(regionDiv);
+        }
+
+        function renumberHotspots() {
+            const regions = document.querySelectorAll('#hotspot-regions-list .hotspot-region');
+            regions.forEach((region, idx) => {
+                region.querySelector('span').textContent = `Region ${idx + 1}`;
+            });
+        }
+
         async function saveQuestion() {
             const text = document.getElementById('question-text').value;
             const type = document.getElementById('question-type').value;
@@ -997,32 +1284,139 @@
                 return;
             }
 
-            // Collect answer options
-            const options = [];
-            if (type !== 'open_text') {
-                const optionEls = document.querySelectorAll('#answer-options-list > div');
-                optionEls.forEach((el, idx) => {
-                    const optionText = el.querySelector('.answer-text').value;
-                    const isCorrect = el.querySelector('.answer-correct').checked;
-                    
-                    if (optionText) {
-                        options.push({
-                            option_text: optionText,
-                            is_correct: isCorrect,
-                            order_index: idx + 1
-                        });
+            // Collect answer data based on question type
+            let options = [];
+            let answerData = {};
+
+            switch(type) {
+                case 'multiple_choice':
+                case 'true_false':
+                    const optionEls = document.querySelectorAll('#answer-options-list > div');
+                    optionEls.forEach((el, idx) => {
+                        const optionText = el.querySelector('.answer-text').value;
+                        const isCorrect = el.querySelector('.answer-correct').checked;
+                        
+                        if (optionText) {
+                            options.push({
+                                option_text: optionText,
+                                is_correct: isCorrect,
+                                order_index: idx + 1
+                            });
+                        }
+                    });
+
+                    if (options.length === 0) {
+                        alert('Please add at least one answer option');
+                        return;
                     }
-                });
+                    if (!options.some(o => o.is_correct)) {
+                        alert('Please mark at least one answer as correct');
+                        return;
+                    }
+                    break;
 
-                if (options.length === 0) {
-                    alert('Please add at least one answer option');
-                    return;
-                }
+                case 'matching':
+                    const pairs = [];
+                    document.querySelectorAll('#matching-pairs-list > div').forEach((el, idx) => {
+                        const left = el.querySelector('.matching-left').value;
+                        const right = el.querySelector('.matching-right').value;
+                        if (left && right) {
+                            pairs.push({ left, right, order: idx + 1 });
+                        }
+                    });
+                    if (pairs.length < 2) {
+                        alert('Please add at least 2 matching pairs');
+                        return;
+                    }
+                    answerData.pairs = pairs;
+                    break;
 
-                if (!options.some(o => o.is_correct)) {
-                    alert('Please mark at least one answer as correct');
-                    return;
-                }
+                case 'fill_blank':
+                    const blanks = [];
+                    document.querySelectorAll('.blank-answer').forEach(input => {
+                        if (input.value) {
+                            blanks.push(input.value.trim());
+                        }
+                    });
+                    if (blanks.length === 0) {
+                        alert('Please add at least one blank answer');
+                        return;
+                    }
+                    // Count blanks in question text
+                    const blankCount = (text.match(/___/g) || []).length;
+                    if (blankCount !== blanks.length) {
+                        alert(`Question has ${blankCount} blank(s) but ${blanks.length} answer(s) provided. They must match.`);
+                        return;
+                    }
+                    answerData.blanks = blanks;
+                    break;
+
+                case 'ranking':
+                    const items = [];
+                    document.querySelectorAll('.ranking-item').forEach((input, idx) => {
+                        if (input.value) {
+                            items.push({ text: input.value, correctOrder: idx + 1 });
+                        }
+                    });
+                    if (items.length < 2) {
+                        alert('Please add at least 2 items to rank');
+                        return;
+                    }
+                    answerData.items = items;
+                    break;
+
+                case 'odd_one_out':
+                    const oddItems = [];
+                    let oddIndex = -1;
+                    document.querySelectorAll('#odd-items-list > div').forEach((el, idx) => {
+                        const itemText = el.querySelector('.odd-item').value;
+                        const isOdd = el.querySelector('.odd-correct').checked;
+                        if (itemText) {
+                            oddItems.push(itemText);
+                            if (isOdd) oddIndex = idx;
+                        }
+                    });
+                    if (oddItems.length < 3) {
+                        alert('Please add at least 3 items');
+                        return;
+                    }
+                    if (oddIndex === -1) {
+                        alert('Please mark one item as the odd one out');
+                        return;
+                    }
+                    answerData.items = oddItems;
+                    answerData.oddIndex = oddIndex;
+                    break;
+
+                case 'hotspot':
+                    const imageUrl = document.getElementById('hotspot-image-url').value;
+                    if (!imageUrl) {
+                        alert('Please provide diagram image URL');
+                        return;
+                    }
+                    const regions = [];
+                    document.querySelectorAll('.hotspot-region').forEach(el => {
+                        const x = parseInt(el.querySelector('.hotspot-x').value);
+                        const y = parseInt(el.querySelector('.hotspot-y').value);
+                        const width = parseInt(el.querySelector('.hotspot-width').value);
+                        const height = parseInt(el.querySelector('.hotspot-height').value);
+                        const label = el.querySelector('.hotspot-label').value;
+                        
+                        if (!isNaN(x) && !isNaN(y) && !isNaN(width) && !isNaN(height) && label) {
+                            regions.push({ x, y, width, height, label });
+                        }
+                    });
+                    if (regions.length === 0) {
+                        alert('Please add at least one region');
+                        return;
+                    }
+                    answerData.imageUrl = imageUrl;
+                    answerData.regions = regions;
+                    break;
+
+                case 'open_text':
+                    // No validation needed for open text
+                    break;
             }
 
             try {
@@ -1031,7 +1425,8 @@
                     question_type: type,
                     order_index: order,
                     points,
-                    options
+                    options,
+                    answer_data: Object.keys(answerData).length > 0 ? JSON.stringify(answerData) : null
                 });
                 
                 closeAddQuestionModal();
