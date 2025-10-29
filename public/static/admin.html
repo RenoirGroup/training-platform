@@ -904,8 +904,24 @@
                             <div class="space-y-2">
                                 ${questions.length === 0 ? '<p class="text-sm text-gray-500">No questions yet</p>' : 
                                     questions.map((q, idx) => {
-                                        const options = JSON.parse(q.options || '[]');
-                                        const answerData = q.answer_data ? JSON.parse(q.answer_data) : null;
+                                        let options = [];
+                                        let answerData = null;
+                                        
+                                        try {
+                                            // Parse options - could be string or already parsed
+                                            options = typeof q.options === 'string' ? JSON.parse(q.options) : (q.options || []);
+                                        } catch (e) {
+                                            console.error('Error parsing options for question', q.id, e);
+                                            options = [];
+                                        }
+                                        
+                                        try {
+                                            // Parse answer_data - could be string or already parsed
+                                            answerData = q.answer_data ? (typeof q.answer_data === 'string' ? JSON.parse(q.answer_data) : q.answer_data) : null;
+                                        } catch (e) {
+                                            console.error('Error parsing answer_data for question', q.id, e);
+                                            answerData = null;
+                                        }
                                         let answerDetails = '';
                                         
                                         // Display answer details based on question type
