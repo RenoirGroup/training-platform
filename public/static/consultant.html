@@ -467,6 +467,20 @@
                         </div>
                     `;
                 
+                case 'multiple_response':
+                    return `
+                        <div class="mb-6 p-4 border rounded bg-white">
+                            <p class="font-bold mb-3">${qNum}. ${q.question_text} (${q.points} points)</p>
+                            <p class="text-sm text-gray-600 mb-2"><i class="fas fa-info-circle mr-1"></i>Select ALL correct answers</p>
+                            ${q.options.map(opt => `
+                                <label class="block mb-2 p-2 hover:bg-gray-50 rounded cursor-pointer">
+                                    <input type="checkbox" name="q${q.id}[]" value="${opt.id}" class="mr-2" />
+                                    ${opt.option_text}
+                                </label>
+                            `).join('')}
+                        </div>
+                    `;
+                
                 case 'open_text':
                     return `
                         <div class="mb-6 p-4 border rounded bg-white">
@@ -803,8 +817,17 @@
             const answers = {};
             
             for (let [key, value] of formData.entries()) {
-                const questionId = key.substring(1); // Remove 'q' prefix
-                answers[questionId] = value;
+                // Handle checkbox arrays (multiple_response questions)
+                if (key.endsWith('[]')) {
+                    const questionId = key.substring(1, key.length - 2); // Remove 'q' prefix and '[]' suffix
+                    if (!answers[questionId]) {
+                        answers[questionId] = [];
+                    }
+                    answers[questionId].push(value);
+                } else {
+                    const questionId = key.substring(1); // Remove 'q' prefix
+                    answers[questionId] = value;
+                }
             }
             
             try {

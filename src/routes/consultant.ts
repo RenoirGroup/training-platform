@@ -191,6 +191,24 @@ consultant.post('/tests/:testId/submit', async (c) => {
         ).bind(userAnswer).first();
         isCorrect = selectedOption ? selectedOption.is_correct === 1 : false;
         break;
+      
+      case 'multiple_response':
+        // Get all correct answer IDs
+        const correctOptions = await c.env.DB.prepare(
+          'SELECT id FROM answer_options WHERE question_id = ? AND is_correct = 1'
+        ).bind(question.id).all();
+        const correctIds = new Set(correctOptions.results.map((o: any) => o.id.toString()));
+        
+        // Parse user's selected answers (comes as array)
+        const userSelectedIds = new Set(
+          Array.isArray(userAnswer) ? userAnswer.map((id: any) => id.toString()) : 
+          typeof userAnswer === 'string' ? [userAnswer] : []
+        );
+        
+        // All-or-nothing: must select exactly the correct answers (no more, no less)
+        isCorrect = correctIds.size === userSelectedIds.size &&
+                    [...correctIds].every(id => userSelectedIds.has(id));
+        break;
 
       case 'open_text':
         // For open text, fuzzy matching (case-insensitive)

@@ -298,7 +298,8 @@
             <div class="mb-4">
                 <label class="block text-gray-700 font-bold mb-2">Question Type</label>
                 <select id="question-type" onchange="updateQuestionTypeFields()" class="w-full px-3 py-2 border rounded" required>
-                    <option value="multiple_choice">Multiple Choice</option>
+                    <option value="multiple_choice">Multiple Choice (Single Answer)</option>
+                    <option value="multiple_response">Multiple Response (Select All That Apply)</option>
                     <option value="true_false">True/False</option>
                     <option value="open_text">Open Text</option>
                     <option value="matching">Matching (Pairing Concepts)</option>
@@ -1060,7 +1061,14 @@
                     break;
                     
                 case 'multiple_choice':
-                    label.textContent = 'Answer Options';
+                    label.textContent = 'Answer Options (check one correct answer)';
+                    for (let i = 0; i < 4; i++) {
+                        addAnswerOption();
+                    }
+                    break;
+                    
+                case 'multiple_response':
+                    label.textContent = 'Answer Options (check ALL correct answers - students must select all)';
                     for (let i = 0; i < 4; i++) {
                         addAnswerOption();
                     }
@@ -1541,6 +1549,7 @@
             switch(type) {
                 case 'multiple_choice':
                 case 'true_false':
+                case 'multiple_response':
                     const optionEls = document.querySelectorAll('#answer-options-list > div');
                     optionEls.forEach((el, idx) => {
                         const optionText = el.querySelector('.answer-text').value;
