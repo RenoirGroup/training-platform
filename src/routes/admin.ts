@@ -250,14 +250,38 @@ admin.get('/tests/:testId/questions', async (c) => {
   return c.json({ questions: questions.results });
 });
 
+// Get single question with all details (for editing)
+admin.get('/questions/:id', async (c) => {
+  const id = c.req.param('id');
+  
+  const question = await c.env.DB.prepare(
+    'SELECT * FROM questions WHERE id = ?'
+  ).bind(id).first();
+  
+  if (!question) {
+    return c.json({ error: 'Question not found' }, 404);
+  }
+  
+  const options = await c.env.DB.prepare(
+    'SELECT * FROM answer_options WHERE question_id = ? ORDER BY order_index'
+  ).bind(id).all();
+  
+  return c.json({ 
+    question: {
+      ...question,
+      options: options.results 
+    }
+  });
+});
+
 // Create question
 admin.post('/tests/:testId/questions', async (c) => {
   const testId = c.req.param('testId');
-  const { question_text, question_type, order_index, points, options } = await c.req.json();
+  const { question_text, question_type, order_index, points, options, answer_data } = await c.req.json();
 
   const result = await c.env.DB.prepare(
-    'INSERT INTO questions (test_id, question_text, question_type, order_index, points) VALUES (?, ?, ?, ?, ?)'
-  ).bind(testId, question_text, question_type, order_index, points || 1).run();
+    'INSERT INTO questions (test_id, question_text, question_type, order_index, points, answer_data) VALUES (?, ?, ?, ?, ?, ?)'
+  ).bind(testId, question_text, question_type, order_index, points || 1, answer_data || null).run();
 
   const questionId = result.meta.last_row_id;
 
@@ -276,11 +300,26 @@ admin.post('/tests/:testId/questions', async (c) => {
 // Update question
 admin.put('/questions/:id', async (c) => {
   const id = c.req.param('id');
-  const { question_text, question_type, order_index, points } = await c.req.json();
+  const { question_text, question_type, order_index, points, options, answer_data } = await c.req.json();
 
   await c.env.DB.prepare(
-    'UPDATE questions SET question_text = ?, question_type = ?, order_index = ?, points = ? WHERE id = ?'
-  ).bind(question_text, question_type, order_index, points, id).run();
+    'UPDATE questions SET question_text = ?, question_type = ?, order_index = ?, points = ?, answer_data = ? WHERE id = ?'
+  ).bind(question_text, question_type, order_index, points, answer_data || null, id).run();
+
+  // Update options if provided
+  if (options && Array.isArray(options)) {
+    // Delete existing options
+    await c.env.DB.prepare(
+      'DELETE FROM answer_options WHERE question_id = ?'
+    ).bind(id).run();
+    
+    // Insert new options
+    for (const option of options) {
+      await c.env.DB.prepare(
+        'INSERT INTO answer_options (question_id, option_text, is_correct, order_index) VALUES (?, ?, ?, ?)'
+      ).bind(id, option.option_text, option.is_correct ? 1 : 0, option.order_index).run();
+    }
+  }
 
   return c.json({ message: 'Question updated' });
 });

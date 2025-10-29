@@ -70,9 +70,20 @@ export async function initializeDatabase(db: D1Database) {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       test_id INTEGER NOT NULL,
       question_text TEXT NOT NULL,
-      question_type TEXT NOT NULL CHECK(question_type IN ('multiple_choice', 'true_false', 'open_text')),
+      question_type TEXT NOT NULL CHECK(question_type IN (
+        'multiple_choice', 
+        'multiple_response',
+        'true_false', 
+        'open_text',
+        'matching',
+        'fill_blank',
+        'ranking',
+        'odd_one_out',
+        'hotspot'
+      )),
       order_index INTEGER NOT NULL,
       points INTEGER DEFAULT 1,
+      answer_data TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (test_id) REFERENCES tests(id) ON DELETE CASCADE
     )`),

@@ -288,7 +288,7 @@
     <!-- Add Question Modal -->
     <div id="add-question-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4" style="display: none;">
         <div id="question-modal-content" class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <h2 class="text-2xl font-bold mb-4">Add Question to Test</h2>
+            <h2 id="question-modal-title" class="text-2xl font-bold mb-4">Add Question to Test</h2>
             
             <div class="mb-4">
                 <label class="block text-gray-700 font-bold mb-2">Question Text</label>
@@ -925,9 +925,14 @@
                                             <div class="bg-gray-50 p-3 rounded text-sm">
                                                 <div class="flex justify-between">
                                                     <strong>Q${idx + 1}:</strong>
-                                                    <button onclick="deleteQuestion(${q.id})" class="text-red-600 hover:text-red-800 text-xs">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
+                                                    <div class="space-x-2">
+                                                        <button onclick="editQuestion(${q.id})" class="text-blue-600 hover:text-blue-800 text-xs">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <button onclick="deleteQuestion(${q.id})" class="text-red-600 hover:text-red-800 text-xs">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                                 <p class="mt-1">${q.question_text}</p>
                                                 <p class="text-xs text-gray-600 mt-1">Type: ${q.question_type} | Points: ${q.points}</p>
@@ -1036,6 +1041,16 @@
             modal.classList.add('hidden');
             modal.style.display = 'none';
             currentTestId = null;
+            editingQuestionId = null;
+            
+            // Reset modal title
+            document.getElementById('question-modal-title').textContent = 'Add Question';
+            
+            // Clear form
+            document.getElementById('question-text').value = '';
+            document.getElementById('question-type').value = 'multiple_choice';
+            document.getElementById('question-points').value = '1';
+            updateQuestionTypeFields();
         }
 
         function updateQuestionTypeFields() {
@@ -1696,20 +1711,165 @@
             }
 
             try {
-                await axios.post(`/api/admin/tests/${currentTestId}/questions`, {
+                const payload = {
                     question_text: text,
                     question_type: type,
                     order_index: order,
                     points,
                     options,
                     answer_data: Object.keys(answerData).length > 0 ? JSON.stringify(answerData) : null
-                });
+                };
+                
+                if (editingQuestionId) {
+                    // Update existing question
+                    await axios.put(`/api/admin/questions/${editingQuestionId}`, payload);
+                    alert('Question updated successfully!');
+                } else {
+                    // Create new question
+                    await axios.post(`/api/admin/tests/${currentTestId}/questions`, payload);
+                    alert('Question added successfully!');
+                }
                 
                 closeAddQuestionModal();
                 await loadTests();
-                alert('Question added successfully!');
             } catch (error) {
                 alert('Error saving question: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+
+        let editingQuestionId = null;
+
+        async function editQuestion(questionId) {
+            try {
+                // Fetch question data
+                const response = await axios.get(`/api/admin/questions/${questionId}`);
+                const { question } = response.data;
+                
+                editingQuestionId = questionId;
+                
+                // Open modal
+                const modal = document.getElementById('add-question-modal');
+                modal.classList.remove('hidden');
+                modal.style.display = 'flex';
+                
+                // Populate basic fields
+                document.getElementById('question-text').value = question.question_text;
+                document.getElementById('question-type').value = question.question_type;
+                document.getElementById('question-points').value = question.points;
+                
+                // Change modal title and button
+                document.getElementById('question-modal-title').textContent = 'Edit Question';
+                
+                // Update question type fields
+                updateQuestionTypeFields();
+                
+                // Populate type-specific data
+                setTimeout(() => {
+                    populateQuestionData(question);
+                }, 100);
+                
+            } catch (error) {
+                alert('Error loading question: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+
+        function populateQuestionData(question) {
+            const type = question.question_type;
+            
+            // Parse answer_data if it exists
+            let answerData = null;
+            if (question.answer_data) {
+                try {
+                    answerData = JSON.parse(question.answer_data);
+                } catch (e) {
+                    console.error('Error parsing answer_data:', e);
+                }
+            }
+            
+            switch(type) {
+                case 'multiple_choice':
+                case 'true_false':
+                case 'multiple_response':
+                    // Populate options
+                    const optionsHtml = question.options.map(opt => `
+                        <div class="flex gap-2 mb-2 option-row">
+                            <input type="text" class="flex-1 px-3 py-2 border rounded option-text" value="${opt.option_text}" placeholder="Option text" />
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-1 option-correct" ${opt.is_correct ? 'checked' : ''} />
+                                <span class="text-sm">Correct</span>
+                            </label>
+                            <button type="button" onclick="this.parentElement.remove()" class="text-red-600 hover:text-red-800 px-2">
+                                <i class="fas fa-trash"></i> Remove
+                            </button>
+                        </div>
+                    `).join('');
+                    document.getElementById('question-options').innerHTML = optionsHtml;
+                    break;
+                    
+                case 'matching':
+                    if (answerData && answerData.pairs) {
+                        const pairsHtml = answerData.pairs.map(pair => `
+                            <div class="flex gap-2 mb-2">
+                                <input type="text" class="flex-1 px-3 py-2 border rounded matching-left" value="${pair.left}" placeholder="Left item" />
+                                <input type="text" class="flex-1 px-3 py-2 border rounded matching-right" value="${pair.right}" placeholder="Right item" />
+                                <button type="button" onclick="this.parentElement.remove()" class="text-red-600 hover:text-red-800 px-2">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        `).join('');
+                        document.getElementById('matching-pairs-list').innerHTML = pairsHtml;
+                    }
+                    break;
+                    
+                case 'ranking':
+                    if (answerData && answerData.items) {
+                        const itemsHtml = answerData.items.map(item => `
+                            <div class="mb-2">
+                                <input type="text" class="w-full px-3 py-2 border rounded ranking-item" value="${item.text}" placeholder="Item in correct order" />
+                            </div>
+                        `).join('');
+                        document.getElementById('ranking-items-list').innerHTML = itemsHtml;
+                    }
+                    break;
+                    
+                case 'odd_one_out':
+                    if (answerData && answerData.items) {
+                        const oddHtml = answerData.items.map((item, idx) => `
+                            <div class="flex gap-2 mb-2 items-center">
+                                <input type="text" class="flex-1 px-3 py-2 border rounded odd-item" value="${item}" placeholder="Item" />
+                                <label class="flex items-center">
+                                    <input type="radio" name="odd-correct-edit" class="mr-1 odd-correct" ${idx === answerData.oddIndex ? 'checked' : ''} />
+                                    <span class="text-sm">Odd one</span>
+                                </label>
+                                <button type="button" onclick="this.parentElement.remove()" class="text-red-600 hover:text-red-800 px-2">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        `).join('');
+                        document.getElementById('odd-items-list').innerHTML = oddHtml;
+                    }
+                    break;
+                    
+                case 'hotspot':
+                    if (answerData && answerData.imageUrl && answerData.placements) {
+                        hotspotImageDataUrl = answerData.imageUrl;
+                        hotspotPlacedLabels = [...answerData.placements];
+                        document.getElementById('hotspot-preview').classList.remove('hidden');
+                        document.getElementById('hotspot-preview-image').src = answerData.imageUrl;
+                        updateHotspotPlacedLabels();
+                    }
+                    break;
+                    
+                case 'fill_blank':
+                    if (answerData && answerData.blanks) {
+                        const blanksHtml = answerData.blanks.map(blank => `
+                            <div class="mb-2">
+                                <input type="text" class="w-full px-3 py-2 border rounded blank-answer" value="${blank}" placeholder="Answer" />
+                            </div>
+                        `).join('');
+                        document.getElementById('blank-answers-list').innerHTML = blanksHtml;
+                    }
+                    break;
             }
         }
 
