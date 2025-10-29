@@ -850,8 +850,14 @@
                 
                 listEl.innerHTML = await Promise.all(tests.map(async test => {
                     // Get questions for this test
-                    const qResponse = await axios.get(`/api/admin/tests/${test.id}/questions`);
-                    const questions = qResponse.data.questions;
+                    let questions = [];
+                    try {
+                        const qResponse = await axios.get(`/api/admin/tests/${test.id}/questions`);
+                        questions = qResponse.data.questions || [];
+                    } catch (qError) {
+                        console.error(`Error loading questions for test ${test.id}:`, qError);
+                        questions = [];
+                    }
                     
                     return `
                         <div class="bg-white border rounded p-4">
@@ -973,6 +979,8 @@
                 })).then(html => html.join(''));
             } catch (error) {
                 console.error('Error loading tests:', error);
+                console.error('Error details:', error.response?.data);
+                console.error('Error status:', error.response?.status);
                 alert('Error loading tests: ' + (error.response?.data?.error || error.message));
             }
         }
