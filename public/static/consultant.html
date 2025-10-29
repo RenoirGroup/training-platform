@@ -861,12 +861,24 @@
             const canvas = document.getElementById(`hotspot-${questionId}`);
             const placedLabels = canvas.querySelectorAll('.hotspot-label.placed');
             
+            // Get image dimensions for percentage calculation
+            const wrapper = document.getElementById(`hotspot-wrapper-${questionId}`);
+            const img = wrapper.querySelector('img');
+            const imgWidth = img.offsetWidth;
+            const imgHeight = img.offsetHeight;
+            
             const placements = Array.from(placedLabels).map(label => {
                 const labelText = label.getAttribute('data-label');
+                const xPx = parseInt(label.style.left);
+                const yPx = parseInt(label.style.top);
+                
+                // Store as percentage for scaling
                 return {
                     label: labelText,
-                    x: parseInt(label.style.left),
-                    y: parseInt(label.style.top)
+                    x: xPx,
+                    y: yPx,
+                    xPercent: (xPx / imgWidth) * 100,
+                    yPercent: (yPx / imgHeight) * 100
                 };
             });
             
@@ -1073,14 +1085,39 @@
         }
         
         function syncExpandedLabels(questionId, fromCanvas, toCanvas) {
+            // Get image dimensions for both canvases
+            const expandedWrapper = document.getElementById(`hotspot-expanded-wrapper-${questionId}`);
+            const mainWrapper = document.getElementById(`hotspot-wrapper-${questionId}`);
+            
+            const expandedImg = expandedWrapper.querySelector('img');
+            const mainImg = mainWrapper.querySelector('img');
+            
+            const expandedWidth = expandedImg.offsetWidth;
+            const expandedHeight = expandedImg.offsetHeight;
+            const mainWidth = mainImg.offsetWidth;
+            const mainHeight = mainImg.offsetHeight;
+            
             // Clear main canvas
             toCanvas.innerHTML = '';
             
-            // Copy labels from expanded to main
+            // Copy labels from expanded to main with scaled coordinates
             const expandedLabels = fromCanvas.querySelectorAll('.hotspot-label.placed');
             expandedLabels.forEach(label => {
-                const clonedLabel = label.cloneNode(true);
-                toCanvas.appendChild(clonedLabel);
+                const labelText = label.getAttribute('data-label');
+                const expandedX = parseInt(label.style.left);
+                const expandedY = parseInt(label.style.top);
+                
+                // Calculate percentage position from expanded view
+                const xPercent = (expandedX / expandedWidth) * 100;
+                const yPercent = (expandedY / expandedHeight) * 100;
+                
+                // Apply percentage to main view dimensions
+                const mainX = (xPercent / 100) * mainWidth;
+                const mainY = (yPercent / 100) * mainHeight;
+                
+                // Create label with scaled position
+                const newLabel = createPlacedLabel(labelText, mainX, mainY, questionId, toCanvas);
+                toCanvas.appendChild(newLabel);
             });
             
             updateHotspotAnswer(questionId);

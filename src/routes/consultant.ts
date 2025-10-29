@@ -268,7 +268,7 @@ consultant.post('/tests/:testId/submit', async (c) => {
         // Parse answer_data and user placements
         const hotspotData = JSON.parse(question.answer_data || '{}');
         const userPlacements = JSON.parse(userAnswer || '[]');
-        const tolerance = hotspotData.tolerance || 50; // pixels of tolerance
+        const tolerance = hotspotData.tolerance || 5; // percentage tolerance (5% default)
         
         // Check if all labels are placed within tolerance of correct positions
         isCorrect = hotspotData.placements && userPlacements.length === hotspotData.placements.length &&
@@ -276,10 +276,16 @@ consultant.post('/tests/:testId/submit', async (c) => {
             const correctPlacement = hotspotData.placements.find((p: any) => p.label === userPlacement.label);
             if (!correctPlacement) return false;
             
-            // Check if placement is within tolerance distance of correct position
+            // Use percentage-based comparison for resolution independence
+            const userXPercent = userPlacement.xPercent || 0;
+            const userYPercent = userPlacement.yPercent || 0;
+            const correctXPercent = correctPlacement.xPercent || 0;
+            const correctYPercent = correctPlacement.yPercent || 0;
+            
+            // Calculate distance as percentage of image
             const distance = Math.sqrt(
-              Math.pow(userPlacement.x - correctPlacement.x, 2) + 
-              Math.pow(userPlacement.y - correctPlacement.y, 2)
+              Math.pow(userXPercent - correctXPercent, 2) + 
+              Math.pow(userYPercent - correctYPercent, 2)
             );
             return distance <= tolerance;
           });
