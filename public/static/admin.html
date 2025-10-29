@@ -1132,17 +1132,64 @@
                         <div class="mb-3">
                             <label class="block text-sm font-semibold mb-1">Diagram Image URL (SharePoint link)</label>
                             <input type="url" id="hotspot-image-url" class="w-full px-3 py-2 border rounded" 
-                                   placeholder="https://..." required />
+                                   placeholder="https://..." 
+                                   onchange="loadHotspotImage()"
+                                   required />
+                            <p class="text-xs text-gray-500 mt-1">Paste the SharePoint link to your diagram image, then click on the image to define answer regions</p>
                         </div>
-                        <p class="text-sm text-gray-600 mb-2">Define rectangular regions and labels. Students will drag labels onto the diagram.</p>
-                        <div id="hotspot-regions-list" class="space-y-3"></div>
-                        <button type="button" onclick="addHotspotRegion()" class="mt-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
-                            <i class="fas fa-plus mr-1"></i>Add Region
-                        </button>
+                        
+                        <!-- Interactive Canvas -->
+                        <div id="hotspot-canvas-container" class="hidden mb-4">
+                            <div class="bg-gray-100 p-4 rounded border-2 border-dashed border-gray-300">
+                                <p class="text-sm font-semibold mb-2 text-green-700">
+                                    <i class="fas fa-mouse-pointer mr-1"></i>
+                                    Click on each box in the diagram to define answer regions
+                                </p>
+                                <div class="relative inline-block" id="hotspot-image-wrapper">
+                                    <img id="hotspot-preview-image" src="" alt="Diagram" class="max-w-full border border-gray-400 cursor-crosshair" 
+                                         onclick="handleHotspotClick(event)" 
+                                         style="max-height: 500px; object-fit: contain;" />
+                                    <!-- Regions will be overlaid here -->
+                                    <div id="hotspot-overlay-regions"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Labels List -->
+                        <div class="mb-3">
+                            <label class="block text-sm font-semibold mb-1">Labels (terms students will drag)</label>
+                            <p class="text-xs text-gray-500 mb-2">Enter all the labels that students will need to place on the diagram</p>
+                            <div id="hotspot-labels-list" class="space-y-2 mb-2"></div>
+                            <button type="button" onclick="addHotspotLabel()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                                <i class="fas fa-plus mr-1"></i>Add Label
+                            </button>
+                        </div>
+                        
+                        <!-- Defined Regions List -->
+                        <div id="hotspot-defined-regions" class="hidden">
+                            <label class="block text-sm font-semibold mb-2 text-green-700">
+                                <i class="fas fa-check-circle mr-1"></i>Defined Answer Regions
+                            </label>
+                            <div id="hotspot-regions-list" class="space-y-2 mb-2"></div>
+                        </div>
+                        
+                        <!-- Manual Entry Option -->
+                        <details class="mt-4">
+                            <summary class="cursor-pointer text-sm text-gray-600 hover:text-gray-800">
+                                <i class="fas fa-keyboard mr-1"></i>Advanced: Manual Region Entry
+                            </summary>
+                            <div class="mt-2 p-3 bg-gray-50 rounded">
+                                <p class="text-xs text-gray-500 mb-2">For precise control, you can manually enter coordinates</p>
+                                <button type="button" onclick="addHotspotRegionManual()" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm">
+                                    <i class="fas fa-plus mr-1"></i>Add Region Manually
+                                </button>
+                                <div id="hotspot-manual-regions" class="space-y-2 mt-2"></div>
+                            </div>
+                        </details>
                     `;
-                    // Add 2 default regions
-                    for (let i = 0; i < 2; i++) {
-                        setTimeout(() => addHotspotRegion(), 10);
+                    // Add 3 default labels
+                    for (let i = 0; i < 3; i++) {
+                        setTimeout(() => addHotspotLabel(), 10);
                     }
                     break;
             }
@@ -1249,38 +1296,231 @@
         }
 
         // ===== HOTSPOT QUESTION TYPE =====
-        function addHotspotRegion() {
+        let hotspotRegions = [];
+        let hotspotClickMode = false;
+        let pendingHotspotRegion = null;
+        
+        function addHotspotLabel() {
+            const listEl = document.getElementById('hotspot-labels-list');
+            if (!listEl) return;
+            
+            const labelDiv = document.createElement('div');
+            labelDiv.className = 'flex items-center space-x-2';
+            labelDiv.innerHTML = `
+                <input type="text" class="hotspot-available-label flex-1 px-3 py-2 border rounded" placeholder="Label text (e.g., Evaluation, Audit)" required>
+                <button type="button" onclick="this.parentElement.remove()" class="text-red-600 hover:text-red-800">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            listEl.appendChild(labelDiv);
+        }
+        
+        function loadHotspotImage() {
+            const imageUrl = document.getElementById('hotspot-image-url').value;
+            if (!imageUrl) return;
+            
+            const img = document.getElementById('hotspot-preview-image');
+            const container = document.getElementById('hotspot-canvas-container');
+            
+            img.src = imageUrl;
+            img.onload = () => {
+                container.classList.remove('hidden');
+                hotspotClickMode = true;
+                hotspotRegions = [];
+                renderHotspotOverlay();
+            };
+            img.onerror = () => {
+                alert('Failed to load image. Please check the URL and ensure it\'s publicly accessible.');
+                container.classList.add('hidden');
+            };
+        }
+        
+        function handleHotspotClick(event) {
+            if (!hotspotClickMode) return;
+            
+            const img = event.target;
+            const rect = img.getBoundingClientRect();
+            const x = Math.round(event.clientX - rect.left);
+            const y = Math.round(event.clientY - rect.top);
+            
+            // Get available labels
+            const labelInputs = document.querySelectorAll('.hotspot-available-label');
+            const availableLabels = Array.from(labelInputs)
+                .map(input => input.value.trim())
+                .filter(label => label && !hotspotRegions.find(r => r.label === label));
+            
+            if (availableLabels.length === 0) {
+                alert('Please add labels first, or all labels have been assigned to regions.');
+                return;
+            }
+            
+            // Show label selection modal
+            showLabelSelectionModal(x, y, availableLabels);
+        }
+        
+        function showLabelSelectionModal(x, y, availableLabels) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg p-6 max-w-md w-full">
+                    <h3 class="text-lg font-bold mb-4">Select Label for This Region</h3>
+                    <p class="text-sm text-gray-600 mb-3">Clicked at position: (${x}, ${y})</p>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold mb-2">Which label goes here?</label>
+                        <select id="region-label-select" class="w-full px-3 py-2 border rounded">
+                            ${availableLabels.map(label => `<option value="${label}">${label}</option>`).join('')}
+                        </select>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3 mb-4">
+                        <div>
+                            <label class="block text-xs text-gray-600 mb-1">Region Width (px)</label>
+                            <input type="number" id="region-width-input" value="100" min="20" class="w-full px-3 py-2 border rounded" />
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-600 mb-1">Region Height (px)</label>
+                            <input type="number" id="region-height-input" value="50" min="20" class="w-full px-3 py-2 border rounded" />
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-2">
+                        <button onclick="this.closest('.fixed').remove()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+                            Cancel
+                        </button>
+                        <button onclick="confirmHotspotRegion(${x}, ${y})" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded">
+                            Add Region
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function confirmHotspotRegion(x, y) {
+            const labelSelect = document.getElementById('region-label-select');
+            const widthInput = document.getElementById('region-width-input');
+            const heightInput = document.getElementById('region-height-input');
+            
+            const label = labelSelect.value;
+            const width = parseInt(widthInput.value);
+            const height = parseInt(heightInput.value);
+            
+            // Add region
+            hotspotRegions.push({
+                label: label,
+                x: x,
+                y: y,
+                width: width,
+                height: height
+            });
+            
+            // Close modal
+            document.querySelector('.fixed.inset-0.bg-black').remove();
+            
+            // Update display
+            renderHotspotOverlay();
+            updateHotspotRegionsList();
+        }
+        
+        function renderHotspotOverlay() {
+            const overlay = document.getElementById('hotspot-overlay-regions');
+            const img = document.getElementById('hotspot-preview-image');
+            
+            if (!overlay || !img) return;
+            
+            overlay.innerHTML = '';
+            overlay.style.position = 'absolute';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = img.width + 'px';
+            overlay.style.height = img.height + 'px';
+            overlay.style.pointerEvents = 'none';
+            
+            hotspotRegions.forEach((region, idx) => {
+                const regionDiv = document.createElement('div');
+                regionDiv.style.position = 'absolute';
+                regionDiv.style.left = region.x + 'px';
+                regionDiv.style.top = region.y + 'px';
+                regionDiv.style.width = region.width + 'px';
+                regionDiv.style.height = region.height + 'px';
+                regionDiv.style.border = '3px solid #7CB342';
+                regionDiv.style.backgroundColor = 'rgba(124, 179, 66, 0.2)';
+                regionDiv.style.display = 'flex';
+                regionDiv.style.alignItems = 'center';
+                regionDiv.style.justifyContent = 'center';
+                regionDiv.style.fontSize = '12px';
+                regionDiv.style.fontWeight = 'bold';
+                regionDiv.style.color = '#2d5016';
+                regionDiv.textContent = region.label;
+                overlay.appendChild(regionDiv);
+            });
+        }
+        
+        function updateHotspotRegionsList() {
             const listEl = document.getElementById('hotspot-regions-list');
+            const containerEl = document.getElementById('hotspot-defined-regions');
+            
+            if (!listEl || !containerEl) return;
+            
+            if (hotspotRegions.length === 0) {
+                containerEl.classList.add('hidden');
+                return;
+            }
+            
+            containerEl.classList.remove('hidden');
+            listEl.innerHTML = '';
+            
+            hotspotRegions.forEach((region, idx) => {
+                const regionDiv = document.createElement('div');
+                regionDiv.className = 'flex items-center justify-between bg-green-50 border border-green-300 rounded p-2';
+                regionDiv.innerHTML = `
+                    <div class="flex-1">
+                        <span class="font-semibold text-green-800">${region.label}</span>
+                        <span class="text-xs text-gray-600 ml-2">
+                            (x:${region.x}, y:${region.y}, ${region.width}×${region.height}px)
+                        </span>
+                    </div>
+                    <button type="button" onclick="removeHotspotRegion(${idx})" class="text-red-600 hover:text-red-800">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                listEl.appendChild(regionDiv);
+            });
+        }
+        
+        function removeHotspotRegion(idx) {
+            hotspotRegions.splice(idx, 1);
+            renderHotspotOverlay();
+            updateHotspotRegionsList();
+        }
+        
+        // Manual region entry (advanced option)
+        function addHotspotRegionManual() {
+            const listEl = document.getElementById('hotspot-manual-regions');
             if (!listEl) return;
             
             const regionDiv = document.createElement('div');
-            regionDiv.className = 'border rounded p-3 bg-gray-50';
-            const count = listEl.querySelectorAll('.hotspot-region').length + 1;
+            regionDiv.className = 'border rounded p-3 bg-white mt-2';
+            const count = listEl.querySelectorAll('.hotspot-manual-region').length + 1;
             regionDiv.innerHTML = `
-                <div class="hotspot-region">
+                <div class="hotspot-manual-region">
                     <div class="flex justify-between items-center mb-2">
-                        <span class="font-semibold text-sm">Region ${count}</span>
-                        <button type="button" onclick="this.closest('.hotspot-region').parentElement.remove(); renumberHotspots();" class="text-red-600 hover:text-red-800">
+                        <span class="font-semibold text-sm">Manual Region ${count}</span>
+                        <button type="button" onclick="this.closest('.hotspot-manual-region').parentElement.remove()" class="text-red-600 hover:text-red-800">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
                     <div class="grid grid-cols-2 gap-2 mb-2">
-                        <input type="number" class="hotspot-x px-2 py-1 border rounded text-sm" placeholder="X (left)" required>
-                        <input type="number" class="hotspot-y px-2 py-1 border rounded text-sm" placeholder="Y (top)" required>
-                        <input type="number" class="hotspot-width px-2 py-1 border rounded text-sm" placeholder="Width" required>
-                        <input type="number" class="hotspot-height px-2 py-1 border rounded text-sm" placeholder="Height" required>
+                        <input type="number" class="hotspot-manual-x px-2 py-1 border rounded text-sm" placeholder="X (left)" required>
+                        <input type="number" class="hotspot-manual-y px-2 py-1 border rounded text-sm" placeholder="Y (top)" required>
+                        <input type="number" class="hotspot-manual-width px-2 py-1 border rounded text-sm" placeholder="Width" required>
+                        <input type="number" class="hotspot-manual-height px-2 py-1 border rounded text-sm" placeholder="Height" required>
                     </div>
-                    <input type="text" class="hotspot-label w-full px-3 py-2 border rounded" placeholder="Label text" required>
+                    <input type="text" class="hotspot-manual-label w-full px-3 py-2 border rounded" placeholder="Label text" required>
                 </div>
             `;
             listEl.appendChild(regionDiv);
-        }
-
-        function renumberHotspots() {
-            const regions = document.querySelectorAll('#hotspot-regions-list .hotspot-region');
-            regions.forEach((region, idx) => {
-                region.querySelector('span').textContent = `Region ${idx + 1}`;
-            });
         }
 
         async function saveQuestion() {
@@ -1404,23 +1644,46 @@
                         alert('Please provide diagram image URL');
                         return;
                     }
-                    const regions = [];
-                    document.querySelectorAll('.hotspot-region').forEach(el => {
-                        const x = parseInt(el.querySelector('.hotspot-x').value);
-                        const y = parseInt(el.querySelector('.hotspot-y').value);
-                        const width = parseInt(el.querySelector('.hotspot-width').value);
-                        const height = parseInt(el.querySelector('.hotspot-height').value);
-                        const label = el.querySelector('.hotspot-label').value;
+                    
+                    // Collect labels
+                    const labels = [];
+                    document.querySelectorAll('.hotspot-available-label').forEach(input => {
+                        const label = input.value.trim();
+                        if (label) labels.push(label);
+                    });
+                    
+                    // Collect regions from interactive canvas (primary method)
+                    let regions = [...hotspotRegions];
+                    
+                    // Also collect manually entered regions (if any)
+                    document.querySelectorAll('.hotspot-manual-region').forEach(el => {
+                        const x = parseInt(el.querySelector('.hotspot-manual-x').value);
+                        const y = parseInt(el.querySelector('.hotspot-manual-y').value);
+                        const width = parseInt(el.querySelector('.hotspot-manual-width').value);
+                        const height = parseInt(el.querySelector('.hotspot-manual-height').value);
+                        const label = el.querySelector('.hotspot-manual-label').value;
                         
                         if (!isNaN(x) && !isNaN(y) && !isNaN(width) && !isNaN(height) && label) {
                             regions.push({ x, y, width, height, label });
                         }
                     });
-                    if (regions.length === 0) {
-                        alert('Please add at least one region');
+                    
+                    if (labels.length === 0) {
+                        alert('Please add at least one label');
                         return;
                     }
+                    
+                    if (regions.length === 0) {
+                        alert('Please define at least one region by clicking on the diagram or using manual entry');
+                        return;
+                    }
+                    
+                    if (regions.length !== labels.length) {
+                        alert(`Warning: You have ${labels.length} labels but only ${regions.length} regions defined. Students will need to match all labels.`);
+                    }
+                    
                     answerData.imageUrl = imageUrl;
+                    answerData.labels = labels;
                     answerData.regions = regions;
                     break;
 
