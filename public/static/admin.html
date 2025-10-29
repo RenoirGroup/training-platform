@@ -947,6 +947,7 @@
                 })).then(html => html.join(''));
             } catch (error) {
                 console.error('Error loading tests:', error);
+                alert('Error loading tests: ' + (error.response?.data?.error || error.message));
             }
         }
 
@@ -969,9 +970,9 @@
                     time_limit_minutes: timeLimit ? parseInt(timeLimit) : null
                 });
                 
+                alert('Test created successfully!');
                 hideAddTestForm();
                 await loadTests();
-                alert('Test created successfully!');
             } catch (error) {
                 alert('Error saving test: ' + (error.response?.data?.error || 'Unknown error'));
             }
