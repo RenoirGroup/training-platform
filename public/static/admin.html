@@ -829,14 +829,24 @@
 
         async function loadTests() {
             try {
+                console.log('Loading tests for level:', currentLevelId);
                 const response = await axios.get(`/api/admin/levels/${currentLevelId}/tests`);
                 const tests = response.data.tests;
+                console.log('Loaded tests:', tests.length, tests);
                 
                 const listEl = document.getElementById('tests-list');
+                if (!listEl) {
+                    console.error('tests-list element not found!');
+                    return;
+                }
+                
                 if (tests.length === 0) {
+                    console.log('No tests found, showing empty message');
                     listEl.innerHTML = '<p class="text-gray-500">No tests yet. Create one above.</p>';
                     return;
                 }
+                
+                console.log('Rendering', tests.length, 'tests...');
                 
                 listEl.innerHTML = await Promise.all(tests.map(async test => {
                     // Get questions for this test
