@@ -31,19 +31,20 @@ app.get('/', (c) => {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Training Platform - Login</title>
+        <title>The Renoir Academy - Login</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+        <link rel="icon" type="image/png" href="/static/renoir-logo-light.png">
     </head>
-    <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <body class="bg-gradient-to-br from-teal-50 to-green-100 min-h-screen">
         <div class="container mx-auto px-4 py-8">
             <div class="max-w-md mx-auto">
                 <div class="text-center mb-8">
-                    <h1 class="text-4xl font-bold text-indigo-900 mb-2">
-                        <i class="fas fa-graduation-cap mr-2"></i>
-                        Training Platform
+                    <img src="/static/renoir-logo-light.png" alt="Renoir Consulting" class="h-20 mx-auto mb-4">
+                    <h1 class="text-4xl font-bold text-gray-900 mb-2">
+                        The Renoir Academy
                     </h1>
-                    <p class="text-gray-600">Climb the ladder of knowledge</p>
+                    <p class="text-gray-600">Excellence in Consulting Training</p>
                 </div>
 
                 <div class="bg-white rounded-lg shadow-xl p-8">
@@ -59,7 +60,7 @@ app.get('/', (c) => {
                             <input 
                                 type="email" 
                                 id="email" 
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500"
                                 required
                             />
                         </div>
@@ -71,14 +72,17 @@ app.get('/', (c) => {
                             <input 
                                 type="password" 
                                 id="password" 
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500"
                                 required
                             />
                         </div>
                         
                         <button 
                             type="submit" 
-                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors"
+                            style="background-color: #7CB342;"
+                            onmouseover="this.style.backgroundColor='#689F38'"
+                            onmouseout="this.style.backgroundColor='#7CB342'"
                         >
                             Sign In
                         </button>

@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Training Ladder - Consultant Dashboard</title>
+    <title>The Renoir Academy - Consultant Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/static/renoir-logo-light.png">
     <style>
         .ladder-step {
             position: relative;
@@ -33,14 +34,14 @@
             cursor: not-allowed;
         }
         .ladder-step.unlocked {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #7CB342 0%, #558B2F 100%);
             color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 15px rgba(124, 179, 66, 0.4);
         }
         .ladder-step.in_progress {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, #00ACC1 0%, #0097A7 100%);
             color: white;
-            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 172, 193, 0.4);
         }
         .ladder-step.completed {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
@@ -114,27 +115,30 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-purple-50 to-blue-100 min-h-screen">
+<body class="bg-gradient-to-br from-teal-50 to-green-100 min-h-screen">
     <!-- Navigation -->
-    <nav class="bg-indigo-900 text-white p-4 shadow-lg">
+    <nav class="bg-gray-900 text-white p-4 shadow-lg">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold">
-                <i class="fas fa-graduation-cap mr-2"></i>
-                Training Ladder
-            </h1>
+            <div class="flex items-center gap-4">
+                <img src="/static/renoir-logo-dark.png" alt="Renoir Consulting" class="h-10">
+                <div>
+                    <h1 class="text-2xl font-bold">The Renoir Academy</h1>
+                    <p class="text-sm text-gray-300">Consultant Training</p>
+                </div>
+            </div>
             <div class="flex items-center space-x-4">
-                <div class="bg-indigo-800 px-4 py-2 rounded-lg">
+                <div class="bg-gray-800 px-4 py-2 rounded-lg">
                     <i class="fas fa-fire text-orange-500 mr-2"></i>
                     <span id="streak-count" class="font-bold">0</span> day streak
                 </div>
-                <div class="bg-indigo-800 px-4 py-2 rounded-lg">
+                <div class="bg-gray-800 px-4 py-2 rounded-lg">
                     <i class="fas fa-star text-yellow-500 mr-2"></i>
                     <span id="points-count" class="font-bold">0</span> points
                 </div>
-                <button onclick="showTab('profile')" class="bg-indigo-800 hover:bg-indigo-700 px-4 py-2 rounded">
+                <button onclick="showTab('profile')" class="bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded transition-colors">
                     <i class="fas fa-user mr-2"></i><span id="user-name"></span>
                 </button>
-                <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded">
+                <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded transition-colors">
                     <i class="fas fa-sign-out-alt"></i>
                 </button>
             </div>
@@ -183,7 +187,7 @@
             <!-- Level Details View (hidden initially) -->
             <div class="lg:col-span-2 hidden" id="level-detail-view">
                 <div class="bg-white rounded-lg shadow-lg p-6">
-                    <button onclick="backToLadder()" class="mb-4 text-indigo-600 hover:text-indigo-800">
+                    <button onclick="backToLadder()" class="mb-4 text-green-700 hover:text-indigo-800">
                         <i class="fas fa-arrow-left mr-2"></i>Back to Ladder
                     </button>
                     <div id="level-detail-content"></div>
@@ -193,7 +197,7 @@
             <!-- Test View (hidden initially) -->
             <div class="lg:col-span-2 hidden" id="test-view">
                 <div class="bg-white rounded-lg shadow-lg p-6">
-                    <button onclick="backToLevel()" class="mb-4 text-indigo-600 hover:text-indigo-800">
+                    <button onclick="backToLevel()" class="mb-4 text-green-700 hover:text-indigo-800">
                         <i class="fas fa-arrow-left mr-2"></i>Back to Level
                     </button>
                     <div id="test-content"></div>
@@ -317,7 +321,7 @@
                                     <a href="${m.sharepoint_url}" target="_blank" 
                                        class="block p-4 border rounded hover:bg-gray-50">
                                         <div class="flex items-center">
-                                            <i class="fas ${getMaterialIcon(m.material_type)} text-2xl mr-3 text-indigo-600"></i>
+                                            <i class="fas ${getMaterialIcon(m.material_type)} text-2xl mr-3 text-green-700"></i>
                                             <div>
                                                 <p class="font-bold">${m.title}</p>
                                                 <p class="text-sm text-gray-600">${m.description || ''}</p>
@@ -371,7 +375,7 @@
                                 </div>
                             ` : `
                                 <button onclick="showSignoffModal()" 
-                                        class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg w-full">
+                                        class="mt-4 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg w-full">
                                     <i class="fas fa-check-circle mr-2"></i>Request Sign-off
                                 </button>
                             `}
@@ -417,7 +421,7 @@
                     <form id="test-form">
                         ${questions.map((q, idx) => renderQuestion(q, idx)).join('')}
                         
-                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg w-full">
+                        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg w-full">
                             <i class="fas fa-paper-plane mr-2"></i>Submit Test
                         </button>
                     </form>

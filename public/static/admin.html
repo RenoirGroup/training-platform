@@ -3,21 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Training Platform</title>
+    <title>Admin Dashboard - The Renoir Academy</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/static/renoir-logo-light.png">
+    <style>
+        .renoir-green { background-color: #7CB342; }
+        .renoir-green-hover:hover { background-color: #689F38; }
+        .renoir-teal { background-color: #00ACC1; }
+        .renoir-teal-hover:hover { background-color: #0097A7; }
+    </style>
 </head>
 <body class="bg-gray-100">
     <!-- Navigation -->
-    <nav class="bg-indigo-900 text-white p-4">
+    <nav class="bg-gray-900 text-white p-4 shadow-lg">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold">
-                <i class="fas fa-shield-alt mr-2"></i>
-                Admin Dashboard
-            </h1>
+            <div class="flex items-center gap-4">
+                <img src="/static/renoir-logo-dark.png" alt="Renoir Consulting" class="h-10">
+                <div>
+                    <h1 class="text-2xl font-bold">The Renoir Academy</h1>
+                    <p class="text-sm text-gray-300">Admin Dashboard</p>
+                </div>
+            </div>
             <div>
                 <span id="user-name" class="mr-4"></span>
-                <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded">
+                <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded transition-colors">
                     <i class="fas fa-sign-out-alt mr-2"></i>Logout
                 </button>
             </div>
@@ -27,16 +37,16 @@
     <div class="container mx-auto px-4 py-8">
         <!-- Tabs -->
         <div class="flex space-x-2 mb-6 border-b border-gray-300">
-            <button onclick="showTab('users')" class="tab-btn px-6 py-3 font-semibold border-b-4 border-indigo-600">
+            <button onclick="showTab('users')" class="tab-btn px-6 py-3 font-semibold border-b-4" style="border-color: #7CB342; color: #7CB342;">
                 <i class="fas fa-users mr-2"></i>Users
             </button>
-            <button onclick="showTab('levels')" class="tab-btn px-6 py-3 font-semibold text-gray-600 hover:text-indigo-600">
+            <button onclick="showTab('levels')" class="tab-btn px-6 py-3 font-semibold text-gray-600 hover:text-gray-900">
                 <i class="fas fa-layer-group mr-2"></i>Levels
             </button>
-            <button onclick="showTab('relationships')" class="tab-btn px-6 py-3 font-semibold text-gray-600 hover:text-indigo-600">
+            <button onclick="showTab('relationships')" class="tab-btn px-6 py-3 font-semibold text-gray-600 hover:text-gray-900">
                 <i class="fas fa-sitemap mr-2"></i>Boss-Consultant
             </button>
-            <button onclick="showTab('reports')" class="tab-btn px-6 py-3 font-semibold text-gray-600 hover:text-indigo-600">
+            <button onclick="showTab('reports')" class="tab-btn px-6 py-3 font-semibold text-gray-600 hover:text-gray-900">
                 <i class="fas fa-chart-bar mr-2"></i>Reports
             </button>
         </div>
@@ -46,7 +56,7 @@
             <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-bold">User Management</h2>
-                    <button onclick="showCreateUserModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
+                    <button onclick="showCreateUserModal()" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded transition-colors">
                         <i class="fas fa-plus mr-2"></i>Create User
                     </button>
                 </div>
@@ -59,7 +69,7 @@
             <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-bold">Levels & Training Content</h2>
-                    <button onclick="showCreateLevelModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
+                    <button onclick="showCreateLevelModal()" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded transition-colors">
                         <i class="fas fa-plus mr-2"></i>Create Level
                     </button>
                 </div>
@@ -72,7 +82,7 @@
             <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-bold">Boss-Consultant Relationships</h2>
-                    <button onclick="showCreateRelationshipModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
+                    <button onclick="showCreateRelationshipModal()" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded transition-colors">
                         <i class="fas fa-plus mr-2"></i>Add Relationship
                     </button>
                 </div>
@@ -126,7 +136,7 @@
                 </div>
                 <div class="flex justify-end space-x-2">
                     <button type="button" onclick="closeCreateUserModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
-                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">Create</button>
+                    <button type="submit" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded">Create</button>
                 </div>
             </form>
         </div>
@@ -140,13 +150,13 @@
             <!-- Tabs for Materials, Tests, Tasks -->
             <div class="border-b mb-4">
                 <div class="flex space-x-4">
-                    <button onclick="showManageTab('materials')" class="manage-tab-btn px-4 py-2 font-semibold border-b-2 border-indigo-600 text-indigo-600">
+                    <button onclick="showManageTab('materials')" class="manage-tab-btn px-4 py-2 font-semibold border-b-2 border-green-600 text-green-700">
                         Training Materials
                     </button>
-                    <button onclick="showManageTab('tests')" class="manage-tab-btn px-4 py-2 font-semibold text-gray-600 hover:text-indigo-600">
+                    <button onclick="showManageTab('tests')" class="manage-tab-btn px-4 py-2 font-semibold text-gray-600 hover:text-green-700">
                         Tests & Questions
                     </button>
-                    <button onclick="showManageTab('tasks')" class="manage-tab-btn px-4 py-2 font-semibold text-gray-600 hover:text-indigo-600">
+                    <button onclick="showManageTab('tasks')" class="manage-tab-btn px-4 py-2 font-semibold text-gray-600 hover:text-green-700">
                         Boss Tasks
                     </button>
                 </div>
@@ -193,7 +203,7 @@
                     </div>
                     <div class="flex justify-end space-x-2 mt-3">
                         <button onclick="hideAddMaterialForm()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
-                        <button onclick="saveMaterial()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">Save Material</button>
+                        <button onclick="saveMaterial()" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded">Save Material</button>
                     </div>
                 </div>
 
@@ -232,7 +242,7 @@
                     </div>
                     <div class="flex justify-end space-x-2 mt-3">
                         <button onclick="hideAddTestForm()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
-                        <button onclick="saveTest()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">Create Test</button>
+                        <button onclick="saveTest()" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded">Create Test</button>
                     </div>
                 </div>
 
@@ -261,7 +271,7 @@
                     </div>
                     <div class="flex justify-end space-x-2 mt-3">
                         <button onclick="hideAddTaskForm()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
-                        <button onclick="saveTask()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">Save Task</button>
+                        <button onclick="saveTask()" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded">Save Task</button>
                     </div>
                 </div>
 
@@ -319,7 +329,7 @@
 
             <div class="flex justify-end space-x-2">
                 <button onclick="closeAddQuestionModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
-                <button onclick="saveQuestion()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">Save Question</button>
+                <button onclick="saveQuestion()" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded">Save Question</button>
             </div>
         </div>
     </div>
@@ -349,7 +359,7 @@
                 </div>
                 <div class="flex justify-end space-x-2">
                     <button type="button" onclick="closeCreateLevelModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
-                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">Create Level</button>
+                    <button type="submit" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded">Create Level</button>
                 </div>
             </form>
         </div>
@@ -374,7 +384,7 @@
                 </div>
                 <div class="flex justify-end space-x-2">
                     <button type="button" onclick="closeCreateRelationshipModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
-                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">Create</button>
+                    <button type="submit" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded">Create</button>
                 </div>
             </form>
         </div>
@@ -401,12 +411,12 @@
         function showTab(tab) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.tab-btn').forEach(el => {
-                el.classList.remove('border-indigo-600', 'text-indigo-600');
+                el.classList.remove('border-green-600', 'text-green-700');
                 el.classList.add('text-gray-600');
             });
             
             document.getElementById(tab + '-tab').classList.remove('hidden');
-            event.target.classList.add('border-indigo-600', 'text-indigo-600');
+            event.target.classList.add('border-green-600', 'text-green-700');
             event.target.classList.remove('text-gray-600');
 
             if (tab === 'users') loadUsers();
@@ -536,7 +546,7 @@
                                 <p class="text-gray-600">${level.description || ''}</p>
                             </div>
                             <div class="flex space-x-2">
-                                <button onclick="manageLevel(${level.id})" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded text-sm">
+                                <button onclick="manageLevel(${level.id})" class="renoir-green renoir-green-hover text-white px-3 py-1 rounded text-sm">
                                     <i class="fas fa-cog mr-1"></i>Manage
                                 </button>
                                 <button onclick="deleteLevel(${level.id})" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm">
@@ -599,7 +609,7 @@
                                     <span class="text-sm font-medium">${c.completion_rate}%</span>
                                 </div>
                                 <div class="w-full bg-gray-200 rounded-full h-2.5">
-                                    <div class="bg-indigo-600 h-2.5 rounded-full" style="width: ${c.completion_rate}%"></div>
+                                    <div class="renoir-green h-2.5 rounded-full" style="width: ${c.completion_rate}%"></div>
                                 </div>
                                 <p class="text-xs text-gray-500 mt-1">${c.users_completed} of ${c.total_users} users</p>
                             </div>
@@ -688,11 +698,11 @@
         function showManageTab(tab) {
             // Update tab buttons
             document.querySelectorAll('.manage-tab-btn').forEach(btn => {
-                btn.classList.remove('border-b-2', 'border-indigo-600', 'text-indigo-600');
+                btn.classList.remove('border-b-2', 'border-green-600', 'text-green-700');
                 btn.classList.add('text-gray-600');
             });
             event.target.classList.remove('text-gray-600');
-            event.target.classList.add('border-b-2', 'border-indigo-600', 'text-indigo-600');
+            event.target.classList.add('border-b-2', 'border-green-600', 'text-green-700');
 
             // Show/hide content
             document.querySelectorAll('.manage-tab-content').forEach(content => {
@@ -841,8 +851,8 @@
                                                id="test-title-${test.id}" 
                                                value="${test.title}" 
                                                onblur="updateTestField(${test.id}, 'title', this.value)"
-                                               class="font-bold text-lg border-b border-transparent hover:border-gray-300 focus:border-indigo-500 outline-none px-1 -mx-1 flex-1" />
-                                        <button onclick="saveTestField(${test.id}, 'title')" class="text-indigo-600 hover:text-indigo-800 text-sm">
+                                               class="font-bold text-lg border-b border-transparent hover:border-gray-300 focus:ring-2 focus:ring-green-500 outline-none px-1 -mx-1 flex-1" />
+                                        <button onclick="saveTestField(${test.id}, 'title')" class="text-green-700 hover:text-green-900 text-sm">
                                             <i class="fas fa-save"></i>
                                         </button>
                                     </div>
@@ -854,7 +864,7 @@
                                                    value="${test.pass_percentage}" 
                                                    min="0" max="100"
                                                    onblur="updateTestField(${test.id}, 'pass_percentage', this.value)"
-                                                   class="w-12 border-b border-transparent hover:border-gray-300 focus:border-indigo-500 outline-none px-1" />
+                                                   class="w-12 border-b border-transparent hover:border-gray-300 focus:ring-2 focus:ring-green-500 outline-none px-1" />
                                             <span>%</span>
                                         </div>
                                         <div class="flex items-center gap-1">
@@ -864,7 +874,7 @@
                                                    value="${test.time_limit_minutes || ''}" 
                                                    placeholder="None"
                                                    onblur="updateTestField(${test.id}, 'time_limit_minutes', this.value)"
-                                                   class="w-16 border-b border-transparent hover:border-gray-300 focus:border-indigo-500 outline-none px-1" />
+                                                   class="w-16 border-b border-transparent hover:border-gray-300 focus:ring-2 focus:ring-green-500 outline-none px-1" />
                                             <span>min</span>
                                         </div>
                                     </div>
@@ -1571,7 +1581,7 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm">
                                             <button onclick="toggleRelationshipStatus(${rel.id}, ${rel.active})" 
-                                                    class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                                    class="text-green-700 hover:text-green-900 mr-3">
                                                 ${rel.active ? 'Deactivate' : 'Activate'}
                                             </button>
                                             <button onclick="deleteRelationship(${rel.id})" 
