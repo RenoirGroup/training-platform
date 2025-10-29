@@ -1127,70 +1127,85 @@
                     break;
                     
                 case 'hotspot':
-                    label.textContent = 'Hotspot / Diagram Setup';
+                    label.textContent = 'Hotspot / Diagram Setup - Drag & Drop';
                     listEl.innerHTML = `
-                        <div class="mb-3">
-                            <label class="block text-sm font-semibold mb-1">Diagram Image URL (SharePoint link)</label>
-                            <input type="url" id="hotspot-image-url" class="w-full px-3 py-2 border rounded" 
-                                   placeholder="https://..." 
-                                   onchange="loadHotspotImage()"
-                                   required />
-                            <p class="text-xs text-gray-500 mt-1">Paste the SharePoint link to your diagram image, then click on the image to define answer regions</p>
+                        <div class="bg-blue-50 border border-blue-300 rounded p-3 mb-4">
+                            <p class="text-sm text-blue-800">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                <strong>How it works:</strong> Upload your diagram, paste in the labels, then drag each label to its correct position on the diagram. 
+                                Students will do exactly the same thing during the test!
+                            </p>
                         </div>
                         
-                        <!-- Interactive Canvas -->
+                        <!-- Step 1: Upload Image -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-semibold mb-2">
+                                <span class="bg-green-600 text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-xs mr-1">1</span>
+                                Upload Diagram Image
+                            </label>
+                            <div id="hotspot-upload-zone" 
+                                 class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-green-500 transition-colors cursor-pointer"
+                                 ondrop="handleHotspotImageDrop(event)" 
+                                 ondragover="event.preventDefault(); event.currentTarget.classList.add('border-green-500', 'bg-green-50')"
+                                 ondragleave="event.currentTarget.classList.remove('border-green-500', 'bg-green-50')"
+                                 onclick="document.getElementById('hotspot-image-file').click()">
+                                <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+                                <p class="text-gray-600 mb-1">Drag & drop your diagram image here</p>
+                                <p class="text-xs text-gray-500">or click to browse (PNG, JPG, max 5MB)</p>
+                                <input type="file" id="hotspot-image-file" class="hidden" accept="image/*" onchange="handleHotspotImageFile(event)" />
+                            </div>
+                            <input type="hidden" id="hotspot-image-data" />
+                        </div>
+                        
+                        <!-- Step 2: Interactive Canvas (shown after upload) -->
                         <div id="hotspot-canvas-container" class="hidden mb-4">
-                            <div class="bg-gray-100 p-4 rounded border-2 border-dashed border-gray-300">
-                                <p class="text-sm font-semibold mb-2 text-green-700">
-                                    <i class="fas fa-mouse-pointer mr-1"></i>
-                                    Click on each box in the diagram to define answer regions
-                                </p>
-                                <div class="relative inline-block" id="hotspot-image-wrapper">
-                                    <img id="hotspot-preview-image" src="" alt="Diagram" class="max-w-full border border-gray-400 cursor-crosshair" 
-                                         onclick="handleHotspotClick(event)" 
-                                         style="max-height: 500px; object-fit: contain;" />
-                                    <!-- Regions will be overlaid here -->
-                                    <div id="hotspot-overlay-regions"></div>
+                            <label class="block text-sm font-semibold mb-2">
+                                <span class="bg-green-600 text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-xs mr-1">2</span>
+                                Paste Labels Below
+                            </label>
+                            <textarea id="hotspot-labels-input" 
+                                      class="w-full px-3 py-2 border rounded mb-2" 
+                                      rows="3" 
+                                      placeholder="Paste your labels here, one per line or separated by commas...&#10;Example:&#10;Evaluation, Aftercare, Audit, Installation"
+                                      onchange="loadHotspotLabels()"></textarea>
+                            <button type="button" onclick="loadHotspotLabels()" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded text-sm mb-3">
+                                <i class="fas fa-arrow-down mr-1"></i>Load Labels
+                            </button>
+                            
+                            <label class="block text-sm font-semibold mb-2">
+                                <span class="bg-green-600 text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-xs mr-1">3</span>
+                                Drag Labels to Correct Positions (This is your answer key!)
+                            </label>
+                            
+                            <div class="bg-gray-100 p-4 rounded border-2 border-gray-300 mb-3">
+                                <!-- Draggable labels pool -->
+                                <div id="hotspot-labels-pool" class="mb-3 min-h-[60px] border-2 border-dashed border-gray-400 rounded p-2 bg-white">
+                                    <p class="text-xs text-gray-500 text-center">Labels will appear here after you load them</p>
+                                </div>
+                                
+                                <!-- Diagram with drop zone -->
+                                <div class="relative inline-block bg-white" id="hotspot-image-wrapper">
+                                    <img id="hotspot-preview-image" 
+                                         src="" 
+                                         alt="Diagram" 
+                                         class="max-w-full border-2 border-gray-400" 
+                                         style="max-height: 600px; object-fit: contain;"
+                                         ondrop="handleLabelDrop(event)" 
+                                         ondragover="allowDrop(event)" />
+                                    <!-- Placed labels overlay -->
+                                    <div id="hotspot-placed-labels" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <!-- Labels List -->
-                        <div class="mb-3">
-                            <label class="block text-sm font-semibold mb-1">Labels (terms students will drag)</label>
-                            <p class="text-xs text-gray-500 mb-2">Enter all the labels that students will need to place on the diagram</p>
-                            <div id="hotspot-labels-list" class="space-y-2 mb-2"></div>
-                            <button type="button" onclick="addHotspotLabel()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
-                                <i class="fas fa-plus mr-1"></i>Add Label
-                            </button>
-                        </div>
-                        
-                        <!-- Defined Regions List -->
-                        <div id="hotspot-defined-regions" class="hidden">
-                            <label class="block text-sm font-semibold mb-2 text-green-700">
-                                <i class="fas fa-check-circle mr-1"></i>Defined Answer Regions
-                            </label>
-                            <div id="hotspot-regions-list" class="space-y-2 mb-2"></div>
-                        </div>
-                        
-                        <!-- Manual Entry Option -->
-                        <details class="mt-4">
-                            <summary class="cursor-pointer text-sm text-gray-600 hover:text-gray-800">
-                                <i class="fas fa-keyboard mr-1"></i>Advanced: Manual Region Entry
-                            </summary>
-                            <div class="mt-2 p-3 bg-gray-50 rounded">
-                                <p class="text-xs text-gray-500 mb-2">For precise control, you can manually enter coordinates</p>
-                                <button type="button" onclick="addHotspotRegionManual()" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm">
-                                    <i class="fas fa-plus mr-1"></i>Add Region Manually
-                                </button>
-                                <div id="hotspot-manual-regions" class="space-y-2 mt-2"></div>
+                            
+                            <!-- Answer Key Summary -->
+                            <div id="hotspot-answer-summary" class="hidden">
+                                <label class="block text-sm font-semibold mb-2 text-green-700">
+                                    <i class="fas fa-check-circle mr-1"></i>Answer Key (Placed Labels)
+                                </label>
+                                <div id="hotspot-placed-list" class="space-y-2 bg-green-50 border border-green-300 rounded p-3"></div>
                             </div>
-                        </details>
+                        </div>
                     `;
-                    // Add 3 default labels
-                    for (let i = 0; i < 3; i++) {
-                        setTimeout(() => addHotspotLabel(), 10);
-                    }
                     break;
             }
         }
@@ -1295,232 +1310,217 @@
             listEl.appendChild(itemDiv);
         }
 
-        // ===== HOTSPOT QUESTION TYPE =====
-        let hotspotRegions = [];
-        let hotspotClickMode = false;
-        let pendingHotspotRegion = null;
+        // ===== HOTSPOT QUESTION TYPE - DRAG & DROP =====
+        let hotspotPlacedLabels = [];
+        let hotspotImageDataUrl = '';
         
-        function addHotspotLabel() {
-            const listEl = document.getElementById('hotspot-labels-list');
-            if (!listEl) return;
+        function handleHotspotImageFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
             
-            const labelDiv = document.createElement('div');
-            labelDiv.className = 'flex items-center space-x-2';
-            labelDiv.innerHTML = `
-                <input type="text" class="hotspot-available-label flex-1 px-3 py-2 border rounded" placeholder="Label text (e.g., Evaluation, Audit)" required>
-                <button type="button" onclick="this.parentElement.remove()" class="text-red-600 hover:text-red-800">
-                    <i class="fas fa-times"></i>
-                </button>
-            `;
-            listEl.appendChild(labelDiv);
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Image is too large. Please use an image under 5MB.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                hotspotImageDataUrl = e.target.result;
+                document.getElementById('hotspot-image-data').value = hotspotImageDataUrl;
+                document.getElementById('hotspot-preview-image').src = hotspotImageDataUrl;
+                document.getElementById('hotspot-canvas-container').classList.remove('hidden');
+                
+                // Update upload zone to show success
+                const uploadZone = document.getElementById('hotspot-upload-zone');
+                uploadZone.innerHTML = `
+                    <i class="fas fa-check-circle text-4xl text-green-600 mb-2"></i>
+                    <p class="text-green-700 font-semibold">Image uploaded successfully!</p>
+                    <p class="text-xs text-gray-500 mt-1">Click to change image</p>
+                `;
+                uploadZone.classList.remove('border-gray-300');
+                uploadZone.classList.add('border-green-500', 'bg-green-50');
+            };
+            reader.readAsDataURL(file);
         }
         
-        function loadHotspotImage() {
-            const imageUrl = document.getElementById('hotspot-image-url').value;
-            if (!imageUrl) return;
+        function handleHotspotImageDrop(event) {
+            event.preventDefault();
+            event.currentTarget.classList.remove('border-green-500', 'bg-green-50');
             
-            const img = document.getElementById('hotspot-preview-image');
-            const container = document.getElementById('hotspot-canvas-container');
+            const file = event.dataTransfer.files[0];
+            if (!file || !file.type.startsWith('image/')) {
+                alert('Please drop an image file');
+                return;
+            }
             
-            img.src = imageUrl;
-            img.onload = () => {
-                container.classList.remove('hidden');
-                hotspotClickMode = true;
-                hotspotRegions = [];
-                renderHotspotOverlay();
-            };
-            img.onerror = () => {
-                alert('Failed to load image. Please check the URL and ensure it\'s publicly accessible.');
-                container.classList.add('hidden');
-            };
+            // Trigger the file input handler
+            const fakeEvent = { target: { files: [file] } };
+            handleHotspotImageFile(fakeEvent);
         }
         
-        function handleHotspotClick(event) {
-            if (!hotspotClickMode) return;
+        function loadHotspotLabels() {
+            const input = document.getElementById('hotspot-labels-input').value.trim();
+            if (!input) {
+                alert('Please paste your labels first');
+                return;
+            }
             
+            // Parse labels (support comma or newline separated)
+            const labels = input.split(/[,\n]+/).map(l => l.trim()).filter(l => l);
+            
+            if (labels.length === 0) {
+                alert('No valid labels found');
+                return;
+            }
+            
+            // Create draggable label pills
+            const poolEl = document.getElementById('hotspot-labels-pool');
+            poolEl.innerHTML = '';
+            
+            labels.forEach((label, idx) => {
+                const labelPill = document.createElement('div');
+                labelPill.className = 'inline-block bg-blue-500 text-white px-3 py-2 rounded-lg m-1 cursor-move';
+                labelPill.draggable = true;
+                labelPill.textContent = label;
+                labelPill.setAttribute('data-label', label);
+                labelPill.setAttribute('data-label-id', 'label-' + idx);
+                
+                labelPill.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', label);
+                    e.dataTransfer.setData('label-id', e.target.getAttribute('data-label-id'));
+                    e.target.style.opacity = '0.5';
+                });
+                
+                labelPill.addEventListener('dragend', (e) => {
+                    e.target.style.opacity = '1';
+                });
+                
+                poolEl.appendChild(labelPill);
+            });
+        }
+        
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+        
+        function handleLabelDrop(event) {
+            event.preventDefault();
+            
+            const label = event.dataTransfer.getData('text/plain');
+            const labelId = event.dataTransfer.getData('label-id');
+            
+            if (!label) return;
+            
+            // Get drop position relative to image
             const img = event.target;
             const rect = img.getBoundingClientRect();
             const x = Math.round(event.clientX - rect.left);
             const y = Math.round(event.clientY - rect.top);
             
-            // Get available labels
-            const labelInputs = document.querySelectorAll('.hotspot-available-label');
-            const availableLabels = Array.from(labelInputs)
-                .map(input => input.value.trim())
-                .filter(label => label && !hotspotRegions.find(r => r.label === label));
-            
-            if (availableLabels.length === 0) {
-                alert('Please add labels first, or all labels have been assigned to regions.');
-                return;
+            // Remove label from pool
+            const poolLabel = document.querySelector(`[data-label-id="${labelId}"]`);
+            if (poolLabel && poolLabel.parentElement.id === 'hotspot-labels-pool') {
+                poolLabel.remove();
             }
             
-            // Show label selection modal
-            showLabelSelectionModal(x, y, availableLabels);
+            // Add to placed labels array
+            hotspotPlacedLabels.push({ label, x, y });
+            
+            // Render placed label on diagram
+            renderPlacedLabels();
+            updateAnswerSummary();
         }
         
-        function showLabelSelectionModal(x, y, availableLabels) {
-            const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]';
-            modal.innerHTML = `
-                <div class="bg-white rounded-lg p-6 max-w-md w-full">
-                    <h3 class="text-lg font-bold mb-4">Select Label for This Region</h3>
-                    <p class="text-sm text-gray-600 mb-3">Clicked at position: (${x}, ${y})</p>
-                    
-                    <div class="mb-4">
-                        <label class="block text-sm font-semibold mb-2">Which label goes here?</label>
-                        <select id="region-label-select" class="w-full px-3 py-2 border rounded">
-                            ${availableLabels.map(label => `<option value="${label}">${label}</option>`).join('')}
-                        </select>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-3 mb-4">
-                        <div>
-                            <label class="block text-xs text-gray-600 mb-1">Region Width (px)</label>
-                            <input type="number" id="region-width-input" value="100" min="20" class="w-full px-3 py-2 border rounded" />
-                        </div>
-                        <div>
-                            <label class="block text-xs text-gray-600 mb-1">Region Height (px)</label>
-                            <input type="number" id="region-height-input" value="50" min="20" class="w-full px-3 py-2 border rounded" />
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-end space-x-2">
-                        <button onclick="this.closest('.fixed').remove()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
-                            Cancel
-                        </button>
-                        <button onclick="confirmHotspotRegion(${x}, ${y})" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded">
-                            Add Region
-                        </button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-        }
-        
-        function confirmHotspotRegion(x, y) {
-            const labelSelect = document.getElementById('region-label-select');
-            const widthInput = document.getElementById('region-width-input');
-            const heightInput = document.getElementById('region-height-input');
-            
-            const label = labelSelect.value;
-            const width = parseInt(widthInput.value);
-            const height = parseInt(heightInput.value);
-            
-            // Add region
-            hotspotRegions.push({
-                label: label,
-                x: x,
-                y: y,
-                width: width,
-                height: height
-            });
-            
-            // Close modal
-            document.querySelector('.fixed.inset-0.bg-black').remove();
-            
-            // Update display
-            renderHotspotOverlay();
-            updateHotspotRegionsList();
-        }
-        
-        function renderHotspotOverlay() {
-            const overlay = document.getElementById('hotspot-overlay-regions');
+        function renderPlacedLabels() {
+            const overlayEl = document.getElementById('hotspot-placed-labels');
             const img = document.getElementById('hotspot-preview-image');
             
-            if (!overlay || !img) return;
+            if (!overlayEl || !img) return;
             
-            overlay.innerHTML = '';
-            overlay.style.position = 'absolute';
-            overlay.style.top = '0';
-            overlay.style.left = '0';
-            overlay.style.width = img.width + 'px';
-            overlay.style.height = img.height + 'px';
-            overlay.style.pointerEvents = 'none';
+            overlayEl.innerHTML = '';
             
-            hotspotRegions.forEach((region, idx) => {
-                const regionDiv = document.createElement('div');
-                regionDiv.style.position = 'absolute';
-                regionDiv.style.left = region.x + 'px';
-                regionDiv.style.top = region.y + 'px';
-                regionDiv.style.width = region.width + 'px';
-                regionDiv.style.height = region.height + 'px';
-                regionDiv.style.border = '3px solid #7CB342';
-                regionDiv.style.backgroundColor = 'rgba(124, 179, 66, 0.2)';
-                regionDiv.style.display = 'flex';
-                regionDiv.style.alignItems = 'center';
-                regionDiv.style.justifyContent = 'center';
-                regionDiv.style.fontSize = '12px';
-                regionDiv.style.fontWeight = 'bold';
-                regionDiv.style.color = '#2d5016';
-                regionDiv.textContent = region.label;
-                overlay.appendChild(regionDiv);
+            hotspotPlacedLabels.forEach((placement, idx) => {
+                const labelDiv = document.createElement('div');
+                labelDiv.style.position = 'absolute';
+                labelDiv.style.left = placement.x + 'px';
+                labelDiv.style.top = placement.y + 'px';
+                labelDiv.style.transform = 'translate(-50%, -50%)';
+                labelDiv.style.backgroundColor = '#7CB342';
+                labelDiv.style.color = 'white';
+                labelDiv.style.padding = '6px 12px';
+                labelDiv.style.borderRadius = '8px';
+                labelDiv.style.fontSize = '13px';
+                labelDiv.style.fontWeight = 'bold';
+                labelDiv.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
+                labelDiv.style.cursor = 'pointer';
+                labelDiv.style.pointerEvents = 'all';
+                labelDiv.style.whiteSpace = 'nowrap';
+                labelDiv.title = 'Click to remove';
+                labelDiv.innerHTML = `
+                    ${placement.label}
+                    <i class="fas fa-times ml-2 text-xs" onclick="removePlacedLabel(${idx})" style="cursor: pointer;"></i>
+                `;
+                
+                overlayEl.appendChild(labelDiv);
             });
         }
         
-        function updateHotspotRegionsList() {
-            const listEl = document.getElementById('hotspot-regions-list');
-            const containerEl = document.getElementById('hotspot-defined-regions');
+        function removePlacedLabel(idx) {
+            const removed = hotspotPlacedLabels.splice(idx, 1)[0];
             
-            if (!listEl || !containerEl) return;
+            // Add label back to pool
+            const poolEl = document.getElementById('hotspot-labels-pool');
+            const labelPill = document.createElement('div');
+            labelPill.className = 'inline-block bg-blue-500 text-white px-3 py-2 rounded-lg m-1 cursor-move';
+            labelPill.draggable = true;
+            labelPill.textContent = removed.label;
+            labelPill.setAttribute('data-label', removed.label);
+            labelPill.setAttribute('data-label-id', 'label-' + Date.now());
             
-            if (hotspotRegions.length === 0) {
-                containerEl.classList.add('hidden');
+            labelPill.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', removed.label);
+                e.dataTransfer.setData('label-id', e.target.getAttribute('data-label-id'));
+                e.target.style.opacity = '0.5';
+            });
+            
+            labelPill.addEventListener('dragend', (e) => {
+                e.target.style.opacity = '1';
+            });
+            
+            poolEl.appendChild(labelPill);
+            
+            // Re-render
+            renderPlacedLabels();
+            updateAnswerSummary();
+        }
+        
+        function updateAnswerSummary() {
+            const summaryEl = document.getElementById('hotspot-answer-summary');
+            const listEl = document.getElementById('hotspot-placed-list');
+            
+            if (!summaryEl || !listEl) return;
+            
+            if (hotspotPlacedLabels.length === 0) {
+                summaryEl.classList.add('hidden');
                 return;
             }
             
-            containerEl.classList.remove('hidden');
+            summaryEl.classList.remove('hidden');
             listEl.innerHTML = '';
             
-            hotspotRegions.forEach((region, idx) => {
-                const regionDiv = document.createElement('div');
-                regionDiv.className = 'flex items-center justify-between bg-green-50 border border-green-300 rounded p-2';
-                regionDiv.innerHTML = `
-                    <div class="flex-1">
-                        <span class="font-semibold text-green-800">${region.label}</span>
-                        <span class="text-xs text-gray-600 ml-2">
-                            (x:${region.x}, y:${region.y}, ${region.width}×${region.height}px)
-                        </span>
-                    </div>
-                    <button type="button" onclick="removeHotspotRegion(${idx})" class="text-red-600 hover:text-red-800">
-                        <i class="fas fa-times"></i>
+            hotspotPlacedLabels.forEach((placement, idx) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'flex items-center justify-between';
+                itemDiv.innerHTML = `
+                    <span class="text-sm">
+                        <strong>${placement.label}</strong> at position (${placement.x}, ${placement.y})
+                    </span>
+                    <button type="button" onclick="removePlacedLabel(${idx})" class="text-red-600 hover:text-red-800 text-xs">
+                        <i class="fas fa-trash"></i> Remove
                     </button>
                 `;
-                listEl.appendChild(regionDiv);
+                listEl.appendChild(itemDiv);
             });
-        }
-        
-        function removeHotspotRegion(idx) {
-            hotspotRegions.splice(idx, 1);
-            renderHotspotOverlay();
-            updateHotspotRegionsList();
-        }
-        
-        // Manual region entry (advanced option)
-        function addHotspotRegionManual() {
-            const listEl = document.getElementById('hotspot-manual-regions');
-            if (!listEl) return;
-            
-            const regionDiv = document.createElement('div');
-            regionDiv.className = 'border rounded p-3 bg-white mt-2';
-            const count = listEl.querySelectorAll('.hotspot-manual-region').length + 1;
-            regionDiv.innerHTML = `
-                <div class="hotspot-manual-region">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="font-semibold text-sm">Manual Region ${count}</span>
-                        <button type="button" onclick="this.closest('.hotspot-manual-region').parentElement.remove()" class="text-red-600 hover:text-red-800">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2 mb-2">
-                        <input type="number" class="hotspot-manual-x px-2 py-1 border rounded text-sm" placeholder="X (left)" required>
-                        <input type="number" class="hotspot-manual-y px-2 py-1 border rounded text-sm" placeholder="Y (top)" required>
-                        <input type="number" class="hotspot-manual-width px-2 py-1 border rounded text-sm" placeholder="Width" required>
-                        <input type="number" class="hotspot-manual-height px-2 py-1 border rounded text-sm" placeholder="Height" required>
-                    </div>
-                    <input type="text" class="hotspot-manual-label w-full px-3 py-2 border rounded" placeholder="Label text" required>
-                </div>
-            `;
-            listEl.appendChild(regionDiv);
         }
 
         async function saveQuestion() {
@@ -1639,52 +1639,23 @@
                     break;
 
                 case 'hotspot':
-                    const imageUrl = document.getElementById('hotspot-image-url').value;
-                    if (!imageUrl) {
-                        alert('Please provide diagram image URL');
+                    const imageData = document.getElementById('hotspot-image-data').value;
+                    if (!imageData || !hotspotImageDataUrl) {
+                        alert('Please upload a diagram image');
                         return;
                     }
                     
-                    // Collect labels
-                    const labels = [];
-                    document.querySelectorAll('.hotspot-available-label').forEach(input => {
-                        const label = input.value.trim();
-                        if (label) labels.push(label);
-                    });
-                    
-                    // Collect regions from interactive canvas (primary method)
-                    let regions = [...hotspotRegions];
-                    
-                    // Also collect manually entered regions (if any)
-                    document.querySelectorAll('.hotspot-manual-region').forEach(el => {
-                        const x = parseInt(el.querySelector('.hotspot-manual-x').value);
-                        const y = parseInt(el.querySelector('.hotspot-manual-y').value);
-                        const width = parseInt(el.querySelector('.hotspot-manual-width').value);
-                        const height = parseInt(el.querySelector('.hotspot-manual-height').value);
-                        const label = el.querySelector('.hotspot-manual-label').value;
-                        
-                        if (!isNaN(x) && !isNaN(y) && !isNaN(width) && !isNaN(height) && label) {
-                            regions.push({ x, y, width, height, label });
-                        }
-                    });
-                    
-                    if (labels.length === 0) {
-                        alert('Please add at least one label');
+                    if (hotspotPlacedLabels.length === 0) {
+                        alert('Please drag at least one label onto the diagram to create the answer key');
                         return;
                     }
                     
-                    if (regions.length === 0) {
-                        alert('Please define at least one region by clicking on the diagram or using manual entry');
-                        return;
-                    }
+                    // Store image as base64 data URL and placed labels as answer key
+                    answerData.imageUrl = hotspotImageDataUrl;
+                    answerData.placements = hotspotPlacedLabels;
+                    answerData.tolerance = 50; // pixels of tolerance for matching (can adjust)
                     
-                    if (regions.length !== labels.length) {
-                        alert(`Warning: You have ${labels.length} labels but only ${regions.length} regions defined. Students will need to match all labels.`);
-                    }
-                    
-                    answerData.imageUrl = imageUrl;
-                    answerData.labels = labels;
-                    answerData.regions = regions;
+                    console.log('Hotspot answer key:', answerData);
                     break;
 
                 case 'open_text':
