@@ -602,13 +602,17 @@
                             <p class="text-sm text-gray-600 mb-3"><i class="fas fa-hand-pointer mr-1"></i>Drag labels onto the correct areas of the diagram</p>
                             <input type="hidden" name="q${q.id}" id="q${q.id}-answer" />
                             
-                            <!-- Diagram Container (Full Width) -->
-                            <div class="mb-4 bg-gray-100 p-4 rounded border-2 border-gray-300">
+                            <!-- Diagram Container (Full Width with Expand Button) -->
+                            <div class="mb-4 bg-gray-100 p-4 rounded border-2 border-gray-300 relative">
+                                <button onclick="expandHotspot(${q.id})" 
+                                        class="absolute top-2 right-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs z-20">
+                                    <i class="fas fa-expand mr-1"></i>Expand
+                                </button>
                                 <div class="relative w-full bg-white" id="hotspot-wrapper-${q.id}">
                                     <img src="${imageUrl}" 
                                          alt="Diagram" 
                                          class="w-full border-2 border-gray-400" 
-                                         style="max-height: 60vh; object-fit: contain; display: block; margin: 0 auto;"
+                                         style="min-height: 500px; max-height: 70vh; object-fit: contain; display: block; margin: 0 auto;"
                                          id="hotspot-img-${q.id}" />
                                     <div class="hotspot-canvas" id="hotspot-${q.id}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></div>
                                 </div>
@@ -750,10 +754,10 @@
         }
 
         // ===== HOTSPOT QUESTION =====
-        function initHotspotQuestion(questionId, answerData) {
-            const wrapper = document.getElementById(`hotspot-wrapper-${questionId}`);
-            const canvas = document.getElementById(`hotspot-${questionId}`);
-            const img = document.getElementById(`hotspot-img-${questionId}`);
+        function initHotspotQuestion(questionId, answerData, customWrapper = null, customCanvas = null) {
+            const wrapper = customWrapper || document.getElementById(`hotspot-wrapper-${questionId}`);
+            const canvas = customCanvas || document.getElementById(`hotspot-${questionId}`);
+            const img = customWrapper ? wrapper.querySelector('img') : document.getElementById(`hotspot-img-${questionId}`);
             
             if (!canvas || !img || !wrapper) return;
             
@@ -867,6 +871,70 @@
             });
             
             document.getElementById(`q${questionId}-answer`).value = JSON.stringify(placements);
+        }
+
+        function expandHotspot(questionId) {
+            const wrapper = document.getElementById(`hotspot-wrapper-${questionId}`);
+            const canvas = document.getElementById(`hotspot-${questionId}`);
+            
+            // Create fullscreen modal
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4';
+            modal.innerHTML = `
+                <div class="relative w-full h-full flex flex-col">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-white text-xl font-bold">Drag labels to position them accurately</h3>
+                        <button onclick="this.closest('.fixed').remove()" 
+                                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
+                            <i class="fas fa-times mr-1"></i>Close
+                        </button>
+                    </div>
+                    <div class="flex-1 bg-white rounded-lg overflow-hidden">
+                        <div class="relative w-full h-full" id="hotspot-expanded-wrapper">
+                            <img src="${document.getElementById(`hotspot-img-${questionId}`).src}" 
+                                 alt="Diagram" 
+                                 class="w-full h-full object-contain"
+                                 id="hotspot-expanded-img" />
+                            <div class="hotspot-canvas" id="hotspot-expanded-canvas" 
+                                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Copy existing placed labels to expanded view
+            const expandedCanvas = modal.querySelector('#hotspot-expanded-canvas');
+            const placedLabels = canvas.querySelectorAll('.hotspot-label.placed');
+            
+            placedLabels.forEach(label => {
+                const clonedLabel = label.cloneNode(true);
+                expandedCanvas.appendChild(clonedLabel);
+            });
+            
+            // Make expanded canvas droppable
+            const expandedWrapper = modal.querySelector('#hotspot-expanded-wrapper');
+            initHotspotQuestion(questionId, null, expandedWrapper, expandedCanvas);
+            
+            // When closing modal, sync labels back to main view
+            modal.querySelector('button').addEventListener('click', () => {
+                syncExpandedLabels(questionId, expandedCanvas, canvas);
+            });
+        }
+        
+        function syncExpandedLabels(questionId, fromCanvas, toCanvas) {
+            // Clear main canvas
+            toCanvas.innerHTML = '';
+            
+            // Copy labels from expanded to main
+            const expandedLabels = fromCanvas.querySelectorAll('.hotspot-label.placed');
+            expandedLabels.forEach(label => {
+                const clonedLabel = label.cloneNode(true);
+                toCanvas.appendChild(clonedLabel);
+            });
+            
+            updateHotspotAnswer(questionId);
         }
 
         async function submitTest(e) {

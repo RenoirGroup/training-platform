@@ -313,13 +313,21 @@ consultant.post('/tests/:testId/submit', async (c) => {
 
   // Save individual answers
   for (const result of results) {
+    // Convert arrays to JSON strings for storage (multiple_response, hotspot, etc.)
+    let answerText = result.userAnswer;
+    if (Array.isArray(answerText)) {
+      answerText = JSON.stringify(answerText);
+    } else if (typeof answerText === 'object' && answerText !== null) {
+      answerText = JSON.stringify(answerText);
+    }
+    
     await c.env.DB.prepare(
       'INSERT INTO user_answers (attempt_id, question_id, answer_option_id, answer_text, is_correct, points_earned) VALUES (?, ?, ?, ?, ?, ?)'
     ).bind(
       attemptId,
       result.questionId,
       result.selectedOptionId || null,
-      result.userAnswer || null,
+      answerText || null,
       result.isCorrect ? 1 : 0,
       result.pointsEarned
     ).run();
