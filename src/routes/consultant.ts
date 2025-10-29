@@ -118,24 +118,31 @@ consultant.get('/tests/:testId', async (c) => {
     return c.json({ error: 'Test not found' }, 404);
   }
 
-  // Get questions with options (but don't show which are correct)
+  // Get questions with options and answer_data (but don't show which options are correct)
   const questions = await c.env.DB.prepare(`
-    SELECT q.id, q.question_text, q.question_type, q.order_index, q.points
+    SELECT q.id, q.question_text, q.question_type, q.order_index, q.points, q.answer_data
     FROM questions q
     WHERE q.test_id = ?
     ORDER BY q.order_index
   `).bind(testId).all();
 
-  // Get options for each question
+  // Get options for each question and parse answer_data
   const questionsWithOptions = await Promise.all(
     (questions.results as any[]).map(async (q) => {
       const options = await c.env.DB.prepare(
         'SELECT id, option_text, order_index FROM answer_options WHERE question_id = ? ORDER BY order_index'
       ).bind(q.id).all();
       
+      // Parse answer_data for new question types
+      let answerData = null;
+      if (q.answer_data) {
+        answerData = JSON.parse(q.answer_data);
+      }
+      
       return {
         ...q,
         options: options.results,
+        answer_data: answerData,
       };
     })
   );
@@ -173,49 +180,105 @@ consultant.post('/tests/:testId/submit', async (c) => {
   for (const question of questions.results as any[]) {
     maxScore += question.points;
     const userAnswer = answers[question.id];
+    let isCorrect = false;
 
-    if (question.question_type === 'open_text') {
-      // For open text, get the correct answer
-      const correctAnswer = await c.env.DB.prepare(
-        'SELECT option_text FROM answer_options WHERE question_id = ? AND is_correct = 1'
-      ).bind(question.id).first();
+    switch(question.question_type) {
+      case 'multiple_choice':
+      case 'true_false':
+        // Check if selected option is correct
+        const selectedOption = await c.env.DB.prepare(
+          'SELECT * FROM answer_options WHERE id = ?'
+        ).bind(userAnswer).first();
+        isCorrect = selectedOption ? selectedOption.is_correct === 1 : false;
+        break;
 
-      // Simple text comparison (case-insensitive, trimmed)
-      const userText = (userAnswer || '').toString().toLowerCase().trim();
-      const correctText = (correctAnswer?.option_text || '').toString().toLowerCase().trim();
-      
-      // Check if user answer contains key terms from correct answer
-      const isCorrect = correctText.split(' ').filter(w => w.length > 3).every(word => 
-        userText.includes(word)
-      );
-      
-      const pointsEarned = isCorrect ? question.points : 0;
-      totalScore += pointsEarned;
+      case 'open_text':
+        // For open text, fuzzy matching (case-insensitive)
+        const correctAnswer = await c.env.DB.prepare(
+          'SELECT option_text FROM answer_options WHERE question_id = ? AND is_correct = 1'
+        ).bind(question.id).first();
+        const userText = (userAnswer || '').toString().toLowerCase().trim();
+        const correctText = (correctAnswer?.option_text || '').toString().toLowerCase().trim();
+        // Check if user answer contains key terms from correct answer
+        isCorrect = correctText.split(' ').filter(w => w.length > 3).every(word => 
+          userText.includes(word)
+        );
+        break;
 
-      results.push({
-        questionId: question.id,
-        isCorrect,
-        pointsEarned,
-        userAnswer: userAnswer,
-      });
-    } else {
-      // For multiple choice and true/false
-      const selectedOption = await c.env.DB.prepare(
-        'SELECT * FROM answer_options WHERE id = ?'
-      ).bind(userAnswer).first();
+      case 'matching':
+        // Parse answer_data and user answer
+        const matchingData = JSON.parse(question.answer_data || '{}');
+        const userMatches = JSON.parse(userAnswer || '{}');
+        
+        // Check if all pairs match correctly
+        isCorrect = matchingData.pairs && matchingData.pairs.every((pair: any) => 
+          userMatches[pair.left] === pair.right
+        );
+        break;
 
-      const isCorrect = selectedOption ? selectedOption.is_correct === 1 : false;
-      const pointsEarned = isCorrect ? question.points : 0;
-      totalScore += pointsEarned;
+      case 'fill_blank':
+        // Parse answer_data and user answers
+        const fillData = JSON.parse(question.answer_data || '{}');
+        const userBlanks = JSON.parse(userAnswer || '[]');
+        
+        // Check all blanks (case-insensitive, trimmed)
+        isCorrect = fillData.blanks && fillData.blanks.length === userBlanks.length &&
+          fillData.blanks.every((correct: string, idx: number) => 
+            correct.toLowerCase().trim() === (userBlanks[idx] || '').toLowerCase().trim()
+          );
+        break;
 
-      results.push({
-        questionId: question.id,
-        isCorrect,
-        pointsEarned,
-        userAnswer: userAnswer,
-        selectedOptionId: userAnswer,
-      });
+      case 'ranking':
+        // Parse answer_data and user order
+        const rankingData = JSON.parse(question.answer_data || '{}');
+        const userOrder = JSON.parse(userAnswer || '[]');
+        
+        // Check if order matches exactly
+        const correctOrder = rankingData.items?.map((item: any) => item.text) || [];
+        isCorrect = correctOrder.length === userOrder.length &&
+          correctOrder.every((item: string, idx: number) => item === userOrder[idx]);
+        break;
+
+      case 'odd_one_out':
+        // Parse answer_data and check if user selected the odd one
+        const oddData = JSON.parse(question.answer_data || '{}');
+        const userSelection = parseInt(userAnswer || '-1');
+        isCorrect = userSelection === oddData.oddIndex;
+        break;
+
+      case 'hotspot':
+        // Parse answer_data and user placements
+        const hotspotData = JSON.parse(question.answer_data || '{}');
+        const userPlacements = JSON.parse(userAnswer || '[]');
+        
+        // Check if all labels are placed within their correct regions
+        isCorrect = hotspotData.regions && userPlacements.length === hotspotData.regions.length &&
+          userPlacements.every((placement: any) => {
+            const region = hotspotData.regions.find((r: any) => r.label === placement.label);
+            if (!region) return false;
+            
+            // Check if placement coordinates are within the region bounds
+            return placement.x >= region.x && 
+                   placement.x <= region.x + region.width &&
+                   placement.y >= region.y && 
+                   placement.y <= region.y + region.height;
+          });
+        break;
+
+      default:
+        isCorrect = false;
     }
+
+    const pointsEarned = isCorrect ? question.points : 0;
+    totalScore += pointsEarned;
+
+    results.push({
+      questionId: question.id,
+      isCorrect,
+      pointsEarned,
+      userAnswer: userAnswer,
+      selectedOptionId: question.question_type === 'multiple_choice' || question.question_type === 'true_false' ? userAnswer : null,
+    });
   }
 
   const percentage = (totalScore / maxScore) * 100;

@@ -60,6 +60,58 @@
             0%, 100% { box-shadow: 0 0 0 0 rgba(245, 101, 101, 0.7); }
             50% { box-shadow: 0 0 0 20px rgba(245, 101, 101, 0); }
         }
+        
+        /* Drag and Drop Styles */
+        .draggable {
+            cursor: move;
+            user-select: none;
+            transition: all 0.2s;
+        }
+        .draggable:hover {
+            transform: scale(1.02);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .draggable.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+        .drop-zone {
+            min-height: 50px;
+            transition: all 0.2s;
+        }
+        .drop-zone.drag-over {
+            background-color: #e0f2fe;
+            border: 2px dashed #0284c7;
+        }
+        .match-pair {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            align-items: center;
+        }
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .hotspot-canvas {
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+        }
+        .hotspot-label {
+            padding: 0.5rem;
+            background: #fff;
+            border: 2px solid #ccc;
+            border-radius: 0.25rem;
+            cursor: move;
+            font-size: 0.875rem;
+        }
+        .hotspot-label.placed {
+            position: absolute;
+            background: #dcfce7;
+            border-color: #16a34a;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-purple-50 to-blue-100 min-h-screen">
@@ -363,22 +415,7 @@
                     </div>
                     
                     <form id="test-form">
-                        ${questions.map((q, idx) => `
-                            <div class="mb-6 p-4 border rounded">
-                                <p class="font-bold mb-3">${idx + 1}. ${q.question_text} (${q.points} points)</p>
-                                
-                                ${q.question_type === 'multiple_choice' || q.question_type === 'true_false' ? `
-                                    ${q.options.map(opt => `
-                                        <label class="block mb-2 cursor-pointer">
-                                            <input type="radio" name="q${q.id}" value="${opt.id}" class="mr-2" required />
-                                            ${opt.option_text}
-                                        </label>
-                                    `).join('')}
-                                ` : `
-                                    <textarea name="q${q.id}" class="w-full px-3 py-2 border rounded" rows="4" required></textarea>
-                                `}
-                            </div>
-                        `).join('')}
+                        ${questions.map((q, idx) => renderQuestion(q, idx)).join('')}
                         
                         <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg w-full">
                             <i class="fas fa-paper-plane mr-2"></i>Submit Test
@@ -390,6 +427,17 @@
                 document.getElementById('level-detail-view').classList.add('hidden');
                 document.getElementById('test-view').classList.remove('hidden');
                 
+                // Initialize drag-and-drop for each question type
+                questions.forEach((q, idx) => {
+                    if (q.question_type === 'matching') {
+                        initMatchingQuestion(q.id, q.answer_data);
+                    } else if (q.question_type === 'ranking') {
+                        initRankingQuestion(q.id);
+                    } else if (q.question_type === 'hotspot') {
+                        initHotspotQuestion(q.id, q.answer_data);
+                    }
+                });
+                
                 document.getElementById('test-form').addEventListener('submit', submitTest);
             } catch (error) {
                 console.error('Error loading test:', error);
@@ -397,8 +445,355 @@
             }
         }
 
+        function renderQuestion(q, idx) {
+            const qNum = idx + 1;
+            
+            switch(q.question_type) {
+                case 'multiple_choice':
+                case 'true_false':
+                    return `
+                        <div class="mb-6 p-4 border rounded bg-white">
+                            <p class="font-bold mb-3">${qNum}. ${q.question_text} (${q.points} points)</p>
+                            ${q.options.map(opt => `
+                                <label class="block mb-2 p-2 hover:bg-gray-50 rounded cursor-pointer">
+                                    <input type="radio" name="q${q.id}" value="${opt.id}" class="mr-2" required />
+                                    ${opt.option_text}
+                                </label>
+                            `).join('')}
+                        </div>
+                    `;
+                
+                case 'open_text':
+                    return `
+                        <div class="mb-6 p-4 border rounded bg-white">
+                            <p class="font-bold mb-3">${qNum}. ${q.question_text} (${q.points} points)</p>
+                            <textarea name="q${q.id}" class="w-full px-3 py-2 border rounded" rows="4" required></textarea>
+                        </div>
+                    `;
+                
+                case 'matching':
+                    const pairs = q.answer_data.pairs;
+                    const leftItems = pairs.map(p => p.left);
+                    const rightItems = pairs.map(p => p.right).sort(() => Math.random() - 0.5); // Shuffle right items
+                    return `
+                        <div class="mb-6 p-4 border rounded bg-white">
+                            <p class="font-bold mb-3">${qNum}. ${q.question_text} (${q.points} points)</p>
+                            <p class="text-sm text-gray-600 mb-3">Drag items from the right to match with items on the left</p>
+                            <input type="hidden" name="q${q.id}" id="q${q.id}-answer" />
+                            <div id="matching-${q.id}" class="space-y-2">
+                                ${leftItems.map((left, i) => `
+                                    <div class="match-pair">
+                                        <div class="p-3 bg-blue-50 rounded font-semibold">${left}</div>
+                                        <div class="drop-zone p-3 border-2 border-dashed rounded min-h-[3rem] flex items-center" 
+                                             data-left="${left}"
+                                             ondrop="dropMatch(event, ${q.id})" 
+                                             ondragover="allowDrop(event)">
+                                            <span class="text-gray-400 text-sm">Drop here</span>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="mt-4 p-3 bg-gray-50 rounded">
+                                <p class="text-sm font-semibold mb-2">Available items to match:</p>
+                                <div id="matching-${q.id}-items" class="flex flex-wrap gap-2">
+                                    ${rightItems.map((right, i) => `
+                                        <div class="draggable p-2 bg-white border rounded cursor-move" 
+                                             draggable="true" 
+                                             ondragstart="dragStart(event)"
+                                             data-value="${right}">
+                                            ${right}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                
+                case 'fill_blank':
+                    const blankCount = (q.question_text.match(/___/g) || []).length;
+                    return `
+                        <div class="mb-6 p-4 border rounded bg-white">
+                            <p class="font-bold mb-3">${qNum}. ${q.question_text.replace(/___/g, '<span class="inline-block w-32 border-b-2 border-gray-400 mx-1">_____</span>')} (${q.points} points)</p>
+                            <p class="text-sm text-gray-600 mb-3">Fill in the blank(s) below:</p>
+                            <input type="hidden" name="q${q.id}" id="q${q.id}-answer" />
+                            ${Array.from({length: blankCount}, (_, i) => `
+                                <div class="mb-2">
+                                    <label class="block text-sm font-semibold mb-1">Blank ${i + 1}:</label>
+                                    <input type="text" 
+                                           class="fill-blank-input w-full px-3 py-2 border rounded" 
+                                           data-qid="${q.id}"
+                                           placeholder="Enter answer" 
+                                           required />
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                
+                case 'ranking':
+                    const items = q.answer_data.items.map(item => item.text).sort(() => Math.random() - 0.5); // Shuffle
+                    return `
+                        <div class="mb-6 p-4 border rounded bg-white">
+                            <p class="font-bold mb-3">${qNum}. ${q.question_text} (${q.points} points)</p>
+                            <p class="text-sm text-gray-600 mb-3">Drag to reorder items into the correct sequence (1st to last)</p>
+                            <input type="hidden" name="q${q.id}" id="q${q.id}-answer" />
+                            <div id="ranking-${q.id}" class="space-y-2">
+                                ${items.map((item, i) => `
+                                    <div class="ranking-item draggable p-3 bg-white border-2 rounded cursor-move" 
+                                         draggable="true"
+                                         ondragstart="dragStart(event)"
+                                         data-value="${item}">
+                                        <span class="font-bold text-gray-400 mr-2">${i + 1}.</span>
+                                        ${item}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                
+                case 'odd_one_out':
+                    const oddItems = q.answer_data.items;
+                    return `
+                        <div class="mb-6 p-4 border rounded bg-white">
+                            <p class="font-bold mb-3">${qNum}. ${q.question_text} (${q.points} points)</p>
+                            <p class="text-sm text-gray-600 mb-3">Select the item that doesn't belong:</p>
+                            ${oddItems.map((item, i) => `
+                                <label class="block mb-2 p-3 hover:bg-gray-50 border rounded cursor-pointer">
+                                    <input type="radio" name="q${q.id}" value="${i}" class="mr-2" required />
+                                    ${item}
+                                </label>
+                            `).join('')}
+                        </div>
+                    `;
+                
+                case 'hotspot':
+                    const regions = q.answer_data.regions;
+                    const imageUrl = q.answer_data.imageUrl;
+                    return `
+                        <div class="mb-6 p-4 border rounded bg-white">
+                            <p class="font-bold mb-3">${qNum}. ${q.question_text} (${q.points} points)</p>
+                            <p class="text-sm text-gray-600 mb-3">Drag labels onto the correct areas of the diagram</p>
+                            <input type="hidden" name="q${q.id}" id="q${q.id}-answer" />
+                            <div class="hotspot-canvas border rounded overflow-hidden mb-4" id="hotspot-${q.id}">
+                                <img src="${imageUrl}" alt="Diagram" class="max-w-full" id="hotspot-img-${q.id}" />
+                            </div>
+                            <div class="p-3 bg-gray-50 rounded">
+                                <p class="text-sm font-semibold mb-2">Labels (drag onto diagram):</p>
+                                <div id="hotspot-${q.id}-labels" class="flex flex-wrap gap-2">
+                                    ${regions.map((region, i) => `
+                                        <div class="hotspot-label draggable" 
+                                             draggable="true"
+                                             ondragstart="dragStart(event)"
+                                             data-label="${region.label}"
+                                             id="hotspot-${q.id}-label-${i}">
+                                            ${region.label}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                
+                default:
+                    return `<div class="mb-6 p-4 border rounded bg-white"><p>Unknown question type: ${q.question_type}</p></div>`;
+            }
+        }
+
+        // ===== DRAG AND DROP HANDLERS =====
+        let draggedElement = null;
+
+        function dragStart(e) {
+            draggedElement = e.target;
+            e.target.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', e.target.innerHTML);
+        }
+
+        function allowDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        }
+
+        function dropMatch(e, questionId) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            
+            if (!draggedElement) return;
+            
+            const dropZone = e.currentTarget;
+            const value = draggedElement.getAttribute('data-value');
+            
+            // Clear previous content
+            dropZone.innerHTML = `<span class="font-semibold">${value}</span>`;
+            dropZone.setAttribute('data-matched', value);
+            
+            // Remove dragged element
+            draggedElement.remove();
+            draggedElement.classList.remove('dragging');
+            draggedElement = null;
+            
+            // Update hidden input with all matches
+            updateMatchingAnswer(questionId);
+        }
+
+        function updateMatchingAnswer(questionId) {
+            const dropZones = document.querySelectorAll(`#matching-${questionId} .drop-zone`);
+            const matches = {};
+            
+            dropZones.forEach(zone => {
+                const left = zone.getAttribute('data-left');
+                const right = zone.getAttribute('data-matched');
+                if (left && right) {
+                    matches[left] = right;
+                }
+            });
+            
+            document.getElementById(`q${questionId}-answer`).value = JSON.stringify(matches);
+        }
+
+        function initMatchingQuestion(questionId, answerData) {
+            // Already initialized in renderQuestion
+        }
+
+        // ===== RANKING QUESTION =====
+        function initRankingQuestion(questionId) {
+            const container = document.getElementById(`ranking-${questionId}`);
+            if (!container) return;
+            
+            container.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                const afterElement = getDragAfterElement(container, e.clientY);
+                const dragging = document.querySelector('.dragging');
+                
+                if (afterElement == null) {
+                    container.appendChild(dragging);
+                } else {
+                    container.insertBefore(dragging, afterElement);
+                }
+            });
+            
+            container.addEventListener('dragend', () => {
+                document.querySelector('.dragging')?.classList.remove('dragging');
+                updateRankingAnswer(questionId);
+            });
+            
+            // Renumber items
+            const observer = new MutationObserver(() => renumberRanking(questionId));
+            observer.observe(container, { childList: true });
+        }
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.draggable:not(.dragging)')];
+            
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        function renumberRanking(questionId) {
+            const items = document.querySelectorAll(`#ranking-${questionId} .ranking-item`);
+            items.forEach((item, idx) => {
+                const span = item.querySelector('span');
+                if (span) span.textContent = `${idx + 1}.`;
+            });
+        }
+
+        function updateRankingAnswer(questionId) {
+            const items = document.querySelectorAll(`#ranking-${questionId} .ranking-item`);
+            const order = Array.from(items).map(item => item.getAttribute('data-value'));
+            document.getElementById(`q${questionId}-answer`).value = JSON.stringify(order);
+        }
+
+        // ===== HOTSPOT QUESTION =====
+        function initHotspotQuestion(questionId, answerData) {
+            const canvas = document.getElementById(`hotspot-${questionId}`);
+            const img = document.getElementById(`hotspot-img-${questionId}`);
+            
+            if (!canvas || !img) return;
+            
+            // Wait for image to load
+            img.onload = () => {
+                canvas.style.position = 'relative';
+                
+                canvas.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                });
+                
+                canvas.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    
+                    if (!draggedElement || !draggedElement.classList.contains('hotspot-label')) return;
+                    
+                    const rect = canvas.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    // Clone the label and place it
+                    const label = draggedElement.cloneNode(true);
+                    label.classList.add('placed');
+                    label.style.left = x + 'px';
+                    label.style.top = y + 'px';
+                    label.draggable = false;
+                    
+                    // Add remove button
+                    const removeBtn = document.createElement('span');
+                    removeBtn.innerHTML = ' ×';
+                    removeBtn.className = 'cursor-pointer text-red-600 font-bold ml-1';
+                    removeBtn.onclick = () => {
+                        label.remove();
+                        draggedElement.style.display = '';
+                        updateHotspotAnswer(questionId);
+                    };
+                    label.appendChild(removeBtn);
+                    
+                    canvas.appendChild(label);
+                    
+                    // Hide the original
+                    draggedElement.style.display = 'none';
+                    draggedElement.classList.remove('dragging');
+                    draggedElement = null;
+                    
+                    updateHotspotAnswer(questionId);
+                });
+            };
+            
+            if (img.complete) {
+                img.onload();
+            }
+        }
+
+        function updateHotspotAnswer(questionId) {
+            const canvas = document.getElementById(`hotspot-${questionId}`);
+            const placedLabels = canvas.querySelectorAll('.hotspot-label.placed');
+            
+            const placements = Array.from(placedLabels).map(label => {
+                const labelText = label.getAttribute('data-label');
+                return {
+                    label: labelText,
+                    x: parseInt(label.style.left),
+                    y: parseInt(label.style.top)
+                };
+            });
+            
+            document.getElementById(`q${questionId}-answer`).value = JSON.stringify(placements);
+        }
+
         async function submitTest(e) {
             e.preventDefault();
+            
+            // Collect fill-in-blank answers
+            document.querySelectorAll('[data-qid]').forEach(input => {
+                const qid = input.getAttribute('data-qid');
+                const inputs = document.querySelectorAll(`[data-qid="${qid}"]`);
+                const blanks = Array.from(inputs).map(inp => inp.value.trim());
+                document.getElementById(`q${qid}-answer`).value = JSON.stringify(blanks);
+            });
             
             const formData = new FormData(e.target);
             const answers = {};
