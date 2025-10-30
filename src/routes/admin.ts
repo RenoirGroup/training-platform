@@ -72,11 +72,20 @@ admin.post('/users', async (c) => {
 // Update user
 admin.put('/users/:id', async (c) => {
   const id = c.req.param('id');
-  const { name, role, boss_id, active } = await c.req.json();
+  const { name, email, role, boss_id, active, password } = await c.req.json();
 
-  await c.env.DB.prepare(
-    'UPDATE users SET name = ?, role = ?, boss_id = ?, active = ? WHERE id = ?'
-  ).bind(name, role, boss_id || null, active, id).run();
+  // If password is provided, hash it and update
+  if (password) {
+    const passwordHash = await hashPassword(password);
+    await c.env.DB.prepare(
+      'UPDATE users SET name = ?, email = ?, role = ?, boss_id = ?, active = ?, password_hash = ? WHERE id = ?'
+    ).bind(name, email, role, boss_id || null, active !== undefined ? active : 1, passwordHash, id).run();
+  } else {
+    // Update without changing password
+    await c.env.DB.prepare(
+      'UPDATE users SET name = ?, email = ?, role = ?, boss_id = ?, active = ? WHERE id = ?'
+    ).bind(name, email, role, boss_id || null, active !== undefined ? active : 1, id).run();
+  }
 
   return c.json({ message: 'User updated' });
 });

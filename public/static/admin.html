@@ -142,6 +142,40 @@
         </div>
     </div>
 
+    <!-- Edit User Modal -->
+    <div id="edit-user-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full">
+            <h3 class="text-2xl font-bold mb-4">Edit User</h3>
+            <form id="edit-user-form">
+                <input type="hidden" id="edit-user-id">
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Name</label>
+                    <input type="text" id="edit-name" class="w-full px-3 py-2 border rounded" required />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Email</label>
+                    <input type="email" id="edit-email" class="w-full px-3 py-2 border rounded" required />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Role</label>
+                    <select id="edit-role" class="w-full px-3 py-2 border rounded" required>
+                        <option value="consultant">Consultant</option>
+                        <option value="boss">Boss</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Assign Boss</label>
+                    <select id="edit-boss" class="w-full px-3 py-2 border rounded"></select>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" onclick="closeEditUserModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
+                    <button type="submit" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Manage Level Modal -->
     <div id="manage-level-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" style="display: none;">
         <div class="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
@@ -455,12 +489,20 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">${u.boss_name || 'N/A'}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        ${u.active ? '<span class="text-green-600">Active</span>' : '<span class="text-red-600">Inactive</span>'}
+                                        ${u.active ? '<span class="text-green-600 font-medium">Active</span>' : '<span class="text-gray-400 font-medium">Inactive</span>'}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <button onclick="deleteUser(${u.id})" class="text-red-600 hover:text-red-800">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                        <div class="flex items-center space-x-3">
+                                            <button onclick="editUser(${u.id})" class="text-blue-500 hover:text-blue-700 transition-colors" title="Edit User">
+                                                <i class="fas fa-edit text-xl"></i>
+                                            </button>
+                                            <button onclick="changePassword(${u.id})" class="text-yellow-600 hover:text-yellow-800 transition-colors" title="Change Password">
+                                                <i class="fas fa-key text-xl"></i>
+                                            </button>
+                                            <button onclick="deleteUser(${u.id})" class="text-red-600 hover:text-red-800 transition-colors" title="Delete User">
+                                                <i class="fas fa-user-times text-xl"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             `).join('')}
@@ -518,6 +560,88 @@
                 alert('Error creating user: ' + (error.response?.data?.error || 'Unknown error'));
             }
         });
+
+        document.getElementById('edit-user-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const userId = document.getElementById('edit-user-id').value;
+            const data = {
+                name: document.getElementById('edit-name').value,
+                email: document.getElementById('edit-email').value,
+                role: document.getElementById('edit-role').value,
+                boss_id: document.getElementById('edit-boss').value || null
+            };
+            
+            try {
+                await axios.put(`/api/admin/users/${userId}`, data);
+                closeEditUserModal();
+                loadUsers();
+                alert('User updated successfully!');
+            } catch (error) {
+                alert('Error updating user: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        });
+
+        async function editUser(id) {
+            try {
+                // Get user data
+                const response = await axios.get('/api/admin/users');
+                const user = response.data.users.find(u => u.id === id);
+                if (!user) {
+                    alert('User not found');
+                    return;
+                }
+                
+                // Get bosses for dropdown
+                const bosses = response.data.users.filter(u => u.role === 'boss');
+                
+                // Populate edit form
+                document.getElementById('edit-user-id').value = user.id;
+                document.getElementById('edit-name').value = user.name;
+                document.getElementById('edit-email').value = user.email;
+                document.getElementById('edit-role').value = user.role;
+                
+                const editBossSelect = document.getElementById('edit-boss');
+                editBossSelect.innerHTML = '<option value="">None</option>' + bosses.map(b => 
+                    `<option value="${b.id}" ${b.id === user.boss_id ? 'selected' : ''}>${b.name}</option>`
+                ).join('');
+                
+                // Show modal
+                document.getElementById('edit-user-modal').classList.remove('hidden');
+            } catch (error) {
+                alert('Error loading user: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+
+        function closeEditUserModal() {
+            document.getElementById('edit-user-modal').classList.add('hidden');
+            document.getElementById('edit-user-form').reset();
+        }
+
+        async function changePassword(id) {
+            const newPassword = prompt('Enter new password for user:');
+            if (!newPassword) return;
+            
+            if (newPassword.length < 6) {
+                alert('Password must be at least 6 characters long');
+                return;
+            }
+            
+            const confirmPassword = prompt('Confirm new password:');
+            if (newPassword !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+            
+            try {
+                await axios.put(`/api/admin/users/${id}`, {
+                    password: newPassword
+                });
+                alert('Password changed successfully!');
+            } catch (error) {
+                alert('Error changing password: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
 
         async function deleteUser(id) {
             if (!confirm('Are you sure you want to delete this user?')) return;
