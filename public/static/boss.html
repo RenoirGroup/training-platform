@@ -35,15 +35,15 @@
     <div class="container mx-auto px-4 py-8">
         <!-- Tabs -->
         <div class="flex space-x-2 mb-6 border-b border-gray-300">
-            <button onclick="showTab('signoffs')" class="tab-btn px-6 py-3 font-semibold border-b-4 border-green-600" style="color: #7CB342; border-color: #7CB342;">
+            <button onclick="showTab('signoffs')" class="tab-btn px-6 py-3 font-semibold border-b-4 transition-colors" data-tab="signoffs" style="color: #7CB342; border-color: #7CB342;">
                 <i class="fas fa-clipboard-check mr-2"></i>
                 Sign-off Requests
                 <span id="pending-badge" class="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">0</span>
             </button>
-            <button onclick="showTab('team')" class="tab-btn px-6 py-3 font-semibold text-gray-600 hover:text-gray-900">
+            <button onclick="showTab('team')" class="tab-btn px-6 py-3 font-semibold border-b-4 border-transparent text-gray-600 hover:text-gray-900 transition-colors" data-tab="team">
                 <i class="fas fa-users mr-2"></i>Team Progress
             </button>
-            <button onclick="showTab('analytics')" class="tab-btn px-6 py-3 font-semibold text-gray-600 hover:text-gray-900">
+            <button onclick="showTab('analytics')" class="tab-btn px-6 py-3 font-semibold border-b-4 border-transparent text-gray-600 hover:text-gray-900 transition-colors" data-tab="analytics">
                 <i class="fas fa-chart-line mr-2"></i>Analytics
             </button>
         </div>
@@ -134,16 +134,30 @@
         }
 
         function showTab(tab) {
+            // Hide all tab contents
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Reset all tab buttons to inactive state
             document.querySelectorAll('.tab-btn').forEach(el => {
-                el.classList.remove('border-green-600', 'text-green-700');
+                el.style.borderColor = 'transparent';
+                el.style.color = '#4B5563'; // gray-600
+                el.classList.remove('text-green-700');
                 el.classList.add('text-gray-600');
             });
             
+            // Show selected tab content
             document.getElementById(tab + '-tab').classList.remove('hidden');
-            event.target.classList.add('border-green-600', 'text-green-700');
-            event.target.classList.remove('text-gray-600');
+            
+            // Highlight active tab button with Renoir green
+            const activeBtn = document.querySelector(`[data-tab="${tab}"]`);
+            if (activeBtn) {
+                activeBtn.style.borderColor = '#7CB342'; // Renoir green
+                activeBtn.style.color = '#7CB342'; // Renoir green
+                activeBtn.classList.remove('text-gray-600');
+                activeBtn.classList.add('text-green-700');
+            }
 
+            // Load tab data
             if (tab === 'signoffs') loadSignoffs();
             if (tab === 'team') loadTeam();
             if (tab === 'analytics') loadAnalytics();
