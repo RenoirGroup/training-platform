@@ -396,7 +396,7 @@
     </nav>
 
     <div class="container mx-auto px-4 py-8">
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Left Sidebar - Quick Stats -->
             <div class="lg:col-span-1">
                 <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
@@ -417,9 +417,17 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
                     <h3 class="text-lg font-bold mb-4"><i class="fas fa-medal mr-2 text-purple-500"></i>Recent Achievements</h3>
                     <div id="recent-achievements" class="space-y-2"></div>
+                </div>
+
+                <!-- Notice Board -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-bold mb-4"><i class="fas fa-bullhorn mr-2 text-green-600"></i>Notice Board</h3>
+                    <div id="notice-board" class="space-y-3 max-h-96 overflow-y-auto">
+                        <!-- Activity notices will be inserted here -->
+                    </div>
                 </div>
             </div>
 
@@ -459,13 +467,7 @@
                 </div>
             </div>
 
-            <!-- Right Sidebar - Leaderboard -->
-            <div class="lg:col-span-1">
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="text-lg font-bold mb-4"><i class="fas fa-crown mr-2 text-yellow-500"></i>Leaderboard</h3>
-                    <div id="leaderboard" class="space-y-2"></div>
-                </div>
-            </div>
+
         </div>
     </div>
 
@@ -492,7 +494,7 @@
         async function init() {
             await loadLadder();
             await loadStats();
-            await loadLeaderboard();
+            await loadNoticeBoard();
         }
 
         async function loadLadder() {
@@ -1610,23 +1612,77 @@
             }
         }
 
-        async function loadLeaderboard() {
+        async function loadNoticeBoard() {
             try {
-                const response = await axios.get('/api/consultant/leaderboard');
-                const leaderboard = response.data.leaderboard.slice(0, 10);
+                const response = await axios.get('/api/consultant/activity-feed');
+                const activities = response.data.activities || [];
                 
-                document.getElementById('leaderboard').innerHTML = leaderboard.map((entry, idx) => `
-                    <div class="flex items-center justify-between p-2 ${entry.user_id === user.id ? 'bg-indigo-50 font-bold' : ''}">
-                        <div class="flex items-center">
-                            <span class="text-lg mr-2">${idx < 3 ? ['🥇', '🥈', '🥉'][idx] : `#${idx + 1}`}</span>
-                            <span class="text-sm">${entry.name}</span>
+                const noticeBoard = document.getElementById('notice-board');
+                
+                if (activities.length === 0) {
+                    noticeBoard.innerHTML = '<p class="text-sm text-gray-500 italic">No recent activity</p>';
+                    return;
+                }
+                
+                noticeBoard.innerHTML = activities.map(activity => {
+                    const timeAgo = getTimeAgo(activity.created_at);
+                    const icon = getActivityIcon(activity.activity_type);
+                    const color = getActivityColor(activity.activity_type);
+                    
+                    return `
+                        <div class="flex items-start p-3 bg-${color}-50 rounded-lg border-l-4 border-${color}-400 hover:shadow-md transition-shadow">
+                            <span class="text-2xl mr-3 flex-shrink-0">${icon}</span>
+                            <div class="flex-1">
+                                <p class="text-sm font-semibold text-gray-800">${activity.message}</p>
+                                <p class="text-xs text-gray-500 mt-1">${timeAgo}</p>
+                            </div>
                         </div>
-                        <span class="text-sm text-gray-600">${entry.total_points} pts</span>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
             } catch (error) {
-                console.error('Error loading leaderboard:', error);
+                console.error('Error loading notice board:', error);
+                document.getElementById('notice-board').innerHTML = '<p class="text-sm text-gray-500">Unable to load activities</p>';
             }
+        }
+        
+        function getActivityIcon(type) {
+            const icons = {
+                'level_completed': '🎉',
+                'test_passed': '✅',
+                'test_failed': '📝',
+                'boss_level_submitted': '🚀',
+                'boss_level_approved': '👑',
+                'boss_level_rejected': '📋',
+                'level_started': '🎯',
+                'achievement_unlocked': '🏆'
+            };
+            return icons[type] || '📢';
+        }
+        
+        function getActivityColor(type) {
+            const colors = {
+                'level_completed': 'green',
+                'test_passed': 'green',
+                'test_failed': 'yellow',
+                'boss_level_submitted': 'blue',
+                'boss_level_approved': 'purple',
+                'boss_level_rejected': 'orange',
+                'level_started': 'cyan',
+                'achievement_unlocked': 'yellow'
+            };
+            return colors[type] || 'gray';
+        }
+        
+        function getTimeAgo(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const seconds = Math.floor((now - date) / 1000);
+            
+            if (seconds < 60) return 'Just now';
+            if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+            if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+            if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
+            return date.toLocaleDateString();
         }
 
         init();

@@ -9,8 +9,8 @@ INSERT OR IGNORE INTO users (id, email, password_hash, name, role, active) VALUE
 
 -- Create sample consultant users (password: consultant123)
 INSERT OR IGNORE INTO users (id, email, password_hash, name, role, boss_id, active) VALUES 
-  (3, 'consultant1@training.com', '$2a$10$N9qo8uLOickgx2ZMRZoMye.J3K.6yLlCUJy0/L8n4.jLMwMPBFRLu', 'John Consultant', 'consultant', 2, 1),
-  (4, 'consultant2@training.com', '$2a$10$N9qo8uLOickgx2ZMRZoMye.J3K.6yLlCUJy0/L8n4.jLMwMPBFRLu', 'Sarah Smith', 'consultant', 2, 1);
+  (3, 'consultant1@training.com', '$2a$10$t5cw5tDE0pCWz7h9LmHhbeq1VYfjeRoh9X3qc/2SOlQtoAfJiaYzu', 'John Consultant', 'consultant', 2, 1),
+  (4, 'consultant2@training.com', '$2a$10$t5cw5tDE0pCWz7h9LmHhbeq1VYfjeRoh9X3qc/2SOlQtoAfJiaYzu', 'Sarah Smith', 'consultant', 2, 1);
 
 -- Create sample levels
 INSERT OR IGNORE INTO levels (id, title, description, order_index, is_boss_level, active) VALUES 

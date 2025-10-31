@@ -559,6 +559,135 @@ consultant.get('/leaderboard', async (c) => {
   return c.json({ leaderboard: leaderboard.results });
 });
 
+// Get activity feed (notice board)
+consultant.get('/activity-feed', async (c) => {
+  try {
+    // Get recent activities from multiple sources
+    const activities: any[] = [];
+
+    // 1. Level completions
+    const levelCompletions = await c.env.DB.prepare(`
+      SELECT 
+        up.user_id,
+        up.level_id,
+        up.completed_at as created_at,
+        u.name as user_name,
+        l.title as level_title,
+        'level_completed' as activity_type
+      FROM user_progress up
+      JOIN users u ON up.user_id = u.id
+      JOIN levels l ON up.level_id = l.id
+      WHERE up.status = 'completed' AND up.completed_at IS NOT NULL
+      ORDER BY up.completed_at DESC
+      LIMIT 20
+    `).all();
+
+    for (const activity of levelCompletions.results as any[]) {
+      activities.push({
+        activity_type: 'level_completed',
+        message: `${activity.user_name} has just completed ${activity.level_title}!`,
+        created_at: activity.created_at,
+      });
+    }
+
+    // 2. Boss level sign-offs (approved)
+    const signoffs = await c.env.DB.prepare(`
+      SELECT 
+        sr.user_id,
+        sr.reviewed_at as created_at,
+        u.name as consultant_name,
+        b.name as boss_name,
+        l.title as level_title,
+        sr.status,
+        'boss_level_approved' as activity_type
+      FROM signoff_requests sr
+      JOIN users u ON sr.user_id = u.id
+      JOIN users b ON sr.boss_id = b.id
+      JOIN levels l ON sr.level_id = l.id
+      WHERE sr.status = 'approved' AND sr.reviewed_at IS NOT NULL
+      ORDER BY sr.reviewed_at DESC
+      LIMIT 10
+    `).all();
+
+    for (const activity of signoffs.results as any[]) {
+      activities.push({
+        activity_type: 'boss_level_approved',
+        message: `${activity.boss_name} has signed off ${activity.consultant_name}'s ${activity.level_title}!`,
+        created_at: activity.created_at,
+      });
+    }
+
+    // 3. Recent test passes (high scores)
+    const testPasses = await c.env.DB.prepare(`
+      SELECT 
+        ta.user_id,
+        ta.completed_at as created_at,
+        ta.percentage,
+        u.name as user_name,
+        t.title as test_title,
+        l.title as level_title,
+        CASE 
+          WHEN ta.percentage = 100 THEN 'test_passed'
+          ELSE 'test_passed'
+        END as activity_type
+      FROM test_attempts ta
+      JOIN users u ON ta.user_id = u.id
+      JOIN tests t ON ta.test_id = t.id
+      JOIN levels l ON t.level_id = l.id
+      WHERE ta.passed = 1 AND ta.percentage >= 90
+      ORDER BY ta.completed_at DESC
+      LIMIT 15
+    `).all();
+
+    for (const activity of testPasses.results as any[]) {
+      const emoji = activity.percentage === 100 ? ' with a perfect score 💯' : '';
+      activities.push({
+        activity_type: 'test_passed',
+        message: `${activity.user_name} passed ${activity.level_title}${emoji}`,
+        created_at: activity.created_at,
+      });
+    }
+
+    // 4. Level starts (recent activity)
+    const levelStarts = await c.env.DB.prepare(`
+      SELECT 
+        up.user_id,
+        up.started_at as created_at,
+        u.name as user_name,
+        l.title as level_title,
+        'level_started' as activity_type
+      FROM user_progress up
+      JOIN users u ON up.user_id = u.id
+      JOIN levels l ON up.level_id = l.id
+      WHERE up.status = 'in_progress' AND up.started_at IS NOT NULL
+      ORDER BY up.started_at DESC
+      LIMIT 10
+    `).all();
+
+    for (const activity of levelStarts.results as any[]) {
+      activities.push({
+        activity_type: 'level_started',
+        message: `${activity.user_name} started ${activity.level_title}`,
+        created_at: activity.created_at,
+      });
+    }
+
+    // Sort all activities by date and limit to 25 most recent
+    activities.sort((a, b) => {
+      const dateA = new Date(a.created_at || 0).getTime();
+      const dateB = new Date(b.created_at || 0).getTime();
+      return dateB - dateA;
+    });
+
+    const recentActivities = activities.slice(0, 25);
+
+    return c.json({ activities: recentActivities });
+  } catch (error) {
+    console.error('Error loading activity feed:', error);
+    return c.json({ activities: [] });
+  }
+});
+
 // ===== HELPER FUNCTIONS =====
 
 async function canAccessLevel(db: D1Database, userId: number, levelId: number): Promise<boolean> {
