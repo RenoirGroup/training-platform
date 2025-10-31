@@ -400,6 +400,76 @@
         </div>
     </div>
 
+    <!-- Edit Level Modal -->
+    <div id="edit-level-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" style="display: none;">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full">
+            <h2 class="text-2xl font-bold mb-4">Edit Level</h2>
+            <form onsubmit="updateLevel(event)">
+                <input type="hidden" id="edit-level-id" />
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Title</label>
+                    <input type="text" id="edit-level-title" class="w-full px-3 py-2 border rounded" required />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Description (optional)</label>
+                    <textarea id="edit-level-description" class="w-full px-3 py-2 border rounded" rows="3"></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Order Index</label>
+                    <input type="number" id="edit-level-order" class="w-full px-3 py-2 border rounded" value="1" min="1" required />
+                </div>
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" id="edit-level-is-boss" class="mr-2" />
+                        <span class="text-gray-700 font-bold">Boss Level (requires manager sign-off)</span>
+                    </label>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" onclick="closeEditLevelModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
+                    <button type="submit" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded">Update Level</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Material Modal -->
+    <div id="edit-material-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" style="display: none;">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full">
+            <h2 class="text-2xl font-bold mb-4">Edit Training Material</h2>
+            <input type="hidden" id="edit-material-id" />
+            <div class="mb-4">
+                <label class="block text-gray-700 font-bold mb-2">Title</label>
+                <input type="text" id="edit-material-title" class="w-full px-3 py-2 border rounded" required />
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 font-bold mb-2">Type</label>
+                <select id="edit-material-type" class="w-full px-3 py-2 border rounded" required>
+                    <option value="powerpoint">PowerPoint</option>
+                    <option value="video">Video</option>
+                    <option value="word">Word Document</option>
+                    <option value="excel">Excel</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 font-bold mb-2">SharePoint URL</label>
+                <input type="url" id="edit-material-url" class="w-full px-3 py-2 border rounded" placeholder="https://..." required />
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 font-bold mb-2">Description (optional)</label>
+                <textarea id="edit-material-description" class="w-full px-3 py-2 border rounded" rows="2"></textarea>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 font-bold mb-2">Order Index</label>
+                <input type="number" id="edit-material-order" class="w-full px-3 py-2 border rounded" value="1" required />
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button onclick="closeEditMaterialModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
+                <button onclick="updateMaterial()" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded">Update Material</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Create Relationship Modal -->
     <div id="create-relationship-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" style="display: none;">
         <div class="bg-white rounded-lg p-6 max-w-md w-full">
@@ -677,7 +747,7 @@
                 const html = levels.map(level => `
                     <div class="border rounded-lg p-4 mb-4">
                         <div class="flex justify-between items-center">
-                            <div>
+                            <div class="flex-1">
                                 <h3 class="text-xl font-bold">
                                     ${level.order_index}. ${level.title}
                                     ${level.is_boss_level ? '<span class="text-xs bg-red-500 text-white px-2 py-1 rounded ml-2">BOSS LEVEL</span>' : ''}
@@ -685,11 +755,14 @@
                                 <p class="text-gray-600">${level.description || ''}</p>
                             </div>
                             <div class="flex space-x-2">
+                                <button onclick="editLevel(${level.id})" class="text-blue-500 hover:text-blue-700 transition-colors" title="Edit Level">
+                                    <i class="fas fa-edit text-xl"></i>
+                                </button>
                                 <button onclick="manageLevel(${level.id})" class="renoir-green renoir-green-hover text-white px-3 py-1 rounded text-sm">
                                     <i class="fas fa-cog mr-1"></i>Manage
                                 </button>
-                                <button onclick="deleteLevel(${level.id})" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm">
-                                    <i class="fas fa-trash"></i>
+                                <button onclick="deleteLevel(${level.id})" class="text-red-600 hover:text-red-800 transition-colors" title="Delete Level">
+                                    <i class="fas fa-trash text-xl"></i>
                                 </button>
                             </div>
                         </div>
@@ -822,8 +895,18 @@
             modal.classList.remove('hidden');
             modal.style.display = 'flex';
             
-            // Load materials by default
-            showManageTab('materials');
+            // Load materials by default and display them
+            document.querySelectorAll('.manage-tab-content').forEach(content => content.classList.add('hidden'));
+            document.getElementById('materials-tab').classList.remove('hidden');
+            
+            // Set active tab button
+            document.querySelectorAll('.manage-tab-btn').forEach(btn => {
+                btn.classList.remove('border-b-2', 'border-green-600', 'text-green-700');
+                btn.classList.add('text-gray-600');
+            });
+            document.querySelector('[onclick*="materials"]').classList.remove('text-gray-600');
+            document.querySelector('[onclick*="materials"]').classList.add('border-b-2', 'border-green-600', 'text-green-700');
+            
             await loadMaterials();
         }
 
@@ -890,16 +973,21 @@
                 
                 listEl.innerHTML = materials.map(m => `
                     <div class="bg-white border rounded p-3 flex justify-between items-center">
-                        <div>
+                        <div class="flex-1">
                             <h4 class="font-semibold">${m.title}</h4>
                             <p class="text-sm text-gray-600">${m.material_type} - Order: ${m.order_index}</p>
                             <a href="${m.sharepoint_url}" target="_blank" class="text-sm text-blue-600 hover:underline">
                                 <i class="fas fa-external-link-alt mr-1"></i>${m.sharepoint_url}
                             </a>
                         </div>
-                        <button onclick="deleteMaterial(${m.id})" class="text-red-600 hover:text-red-800">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                        <div class="flex items-center space-x-3">
+                            <button onclick="editMaterial(${m.id})" class="text-blue-500 hover:text-blue-700 transition-colors" title="Edit Material">
+                                <i class="fas fa-edit text-xl"></i>
+                            </button>
+                            <button onclick="deleteMaterial(${m.id})" class="text-red-600 hover:text-red-800 transition-colors" title="Delete Material">
+                                <i class="fas fa-trash text-xl"></i>
+                            </button>
+                        </div>
                     </div>
                 `).join('');
             } catch (error) {
@@ -2340,6 +2428,123 @@
                 alert('Relationship deleted!');
             } catch (error) {
                 alert('Error deleting relationship: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+
+        async function editLevel(id) {
+            try {
+                const response = await axios.get('/api/admin/levels');
+                const level = response.data.levels.find(l => l.id === id);
+                
+                if (!level) {
+                    alert('Level not found');
+                    return;
+                }
+                
+                document.getElementById('edit-level-id').value = level.id;
+                document.getElementById('edit-level-title').value = level.title;
+                document.getElementById('edit-level-description').value = level.description || '';
+                document.getElementById('edit-level-order').value = level.order_index;
+                document.getElementById('edit-level-is-boss').checked = level.is_boss_level === 1;
+                
+                const modal = document.getElementById('edit-level-modal');
+                modal.classList.remove('hidden');
+                modal.style.display = 'flex';
+            } catch (error) {
+                alert('Error loading level: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+
+        function closeEditLevelModal() {
+            const modal = document.getElementById('edit-level-modal');
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
+        }
+
+        async function updateLevel(event) {
+            event.preventDefault();
+            
+            const id = document.getElementById('edit-level-id').value;
+            const title = document.getElementById('edit-level-title').value;
+            const description = document.getElementById('edit-level-description').value;
+            const orderIndex = parseInt(document.getElementById('edit-level-order').value);
+            const isBossLevel = document.getElementById('edit-level-is-boss').checked;
+            
+            try {
+                await axios.put(`/api/admin/levels/${id}`, {
+                    title,
+                    description: description || null,
+                    order_index: orderIndex,
+                    is_boss_level: isBossLevel ? 1 : 0,
+                    active: 1
+                });
+                
+                closeEditLevelModal();
+                loadLevels();
+                alert('Level updated successfully!');
+            } catch (error) {
+                alert('Error updating level: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+
+        async function editMaterial(id) {
+            try {
+                const response = await axios.get(`/api/admin/levels/${currentLevelId}/materials`);
+                const material = response.data.materials.find(m => m.id === id);
+                
+                if (!material) {
+                    alert('Material not found');
+                    return;
+                }
+                
+                document.getElementById('edit-material-id').value = material.id;
+                document.getElementById('edit-material-title').value = material.title;
+                document.getElementById('edit-material-type').value = material.material_type;
+                document.getElementById('edit-material-url').value = material.sharepoint_url;
+                document.getElementById('edit-material-description').value = material.description || '';
+                document.getElementById('edit-material-order').value = material.order_index;
+                
+                const modal = document.getElementById('edit-material-modal');
+                modal.classList.remove('hidden');
+                modal.style.display = 'flex';
+            } catch (error) {
+                alert('Error loading material: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+
+        function closeEditMaterialModal() {
+            const modal = document.getElementById('edit-material-modal');
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
+        }
+
+        async function updateMaterial() {
+            const id = document.getElementById('edit-material-id').value;
+            const title = document.getElementById('edit-material-title').value;
+            const type = document.getElementById('edit-material-type').value;
+            const url = document.getElementById('edit-material-url').value;
+            const description = document.getElementById('edit-material-description').value;
+            const order = parseInt(document.getElementById('edit-material-order').value);
+
+            if (!title || !url) {
+                alert('Title and URL are required');
+                return;
+            }
+
+            try {
+                await axios.put(`/api/admin/materials/${id}`, {
+                    title,
+                    material_type: type,
+                    sharepoint_url: url,
+                    description: description || null,
+                    order_index: order
+                });
+                
+                closeEditMaterialModal();
+                await loadMaterials();
+                alert('Material updated successfully!');
+            } catch (error) {
+                alert('Error updating material: ' + (error.response?.data?.error || 'Unknown error'));
             }
         }
 
