@@ -21,12 +21,17 @@ consultant.get('/ladder', async (c) => {
       up.completed_at,
       (SELECT COUNT(*) FROM training_materials WHERE level_id = l.id) as materials_count,
       (SELECT COUNT(*) FROM tests WHERE level_id = l.id) as tests_count,
-      (SELECT COUNT(*) FROM boss_level_tasks WHERE level_id = l.id) as tasks_count
+      (SELECT COUNT(*) FROM boss_level_tasks WHERE level_id = l.id) as tasks_count,
+      (SELECT MAX(ta.score) 
+       FROM test_attempts ta 
+       JOIN tests t ON ta.test_id = t.id 
+       WHERE t.level_id = l.id AND ta.user_id = ?
+      ) as best_score
     FROM levels l
     LEFT JOIN user_progress up ON l.id = up.level_id AND up.user_id = ?
     WHERE l.active = 1
     ORDER BY l.order_index
-  `).bind(user.userId).all();
+  `).bind(user.userId, user.userId).all();
 
   return c.json({ ladder: ladder.results });
 });

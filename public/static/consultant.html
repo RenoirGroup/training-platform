@@ -16,6 +16,35 @@
             overflow: hidden;
         }
         
+        /* Industry Graphics */
+        .industry-graphic {
+            position: absolute;
+            opacity: 0.08;
+            pointer-events: none;
+            font-size: 120px;
+            color: #1e40af;
+        }
+        
+        .industry-graphic.left {
+            left: -20px;
+        }
+        
+        .industry-graphic.right {
+            right: -20px;
+        }
+        
+        .stat-graphic {
+            position: absolute;
+            opacity: 0.12;
+            font-size: 80px;
+            animation: pulse-stat 4s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-stat {
+            0%, 100% { opacity: 0.12; transform: scale(1); }
+            50% { opacity: 0.18; transform: scale(1.05); }
+        }
+        
         .journey-path-svg {
             position: absolute;
             top: 0;
@@ -113,8 +142,30 @@
         }
         
         .step-node.completed {
-            border-color: #fbbf24;
-            background: linear-gradient(135deg, #ffffff 0%, #fef3c7 100%);
+            border-color: #22c55e;
+            background: linear-gradient(135deg, #ffffff 0%, #dcfce7 100%);
+            box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
+        }
+        
+        .step-node.completed.perfect {
+            border-color: #16a34a;
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            box-shadow: 0 12px 35px rgba(22, 163, 74, 0.4);
+        }
+        
+        .step-node.completed.perfect::after {
+            content: '🌟';
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            font-size: 28px;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+        
+        .step-node.completed.partial {
+            border-color: #f97316;
+            background: linear-gradient(135deg, #ffffff 0%, #fed7aa 100%);
+            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.3);
         }
         
         .step-node.awaiting_signoff {
@@ -193,16 +244,28 @@
             position: absolute;
             top: -8px;
             right: -8px;
-            width: 32px;
+            min-width: 32px;
             height: 32px;
-            border-radius: 50%;
+            padding: 0 8px;
+            border-radius: 16px;
             background: #22c55e;
             border: 3px solid white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
             box-shadow: 0 2px 10px rgba(34, 197, 94, 0.5);
+        }
+        
+        .progress-badge.perfect {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        }
+        
+        .progress-badge.partial {
+            background: #f97316;
+            box-shadow: 0 2px 10px rgba(249, 115, 22, 0.5);
         }
         
         /* Decorative elements */
@@ -409,8 +472,29 @@
                 // Create journey container with SVG path
                 let html = '<div class="journey-container">';
                 
-                // Add floating decorative elements
+                // Add industry graphics on the sides
                 html += `
+                    <!-- Left side industry graphics -->
+                    <div class="industry-graphic left" style="top: 10%;">🏭</div>
+                    <div class="stat-graphic" style="top: 20%; left: 10px;">📊</div>
+                    <div class="industry-graphic left" style="top: 35%;">🏢</div>
+                    <div class="stat-graphic" style="top: 45%; left: 15px;">📈</div>
+                    <div class="industry-graphic left" style="top: 60%;">⚙️</div>
+                    <div class="stat-graphic" style="top: 70%; left: 5px;">💹</div>
+                    <div class="industry-graphic left" style="bottom: 15%;">🏗️</div>
+                    <div class="stat-graphic" style="bottom: 5%; left: 20px;">📉</div>
+                    
+                    <!-- Right side industry graphics -->
+                    <div class="industry-graphic right" style="top: 15%;">🏪</div>
+                    <div class="stat-graphic" style="top: 25%; right: 10px;">💼</div>
+                    <div class="industry-graphic right" style="top: 40%;">🏥</div>
+                    <div class="stat-graphic" style="top: 50%; right: 15px;">📋</div>
+                    <div class="industry-graphic right" style="top: 65%;">🚚</div>
+                    <div class="stat-graphic" style="top: 75%; right: 5px;">💰</div>
+                    <div class="industry-graphic right" style="bottom: 20%;">🏛️</div>
+                    <div class="stat-graphic" style="bottom: 10%; right: 20px;">📊</div>
+                    
+                    <!-- Floating decorative elements -->
                     <div class="floating-element" style="top: 5%; left: 10%;">⭐</div>
                     <div class="floating-element" style="top: 15%; right: 8%; animation-delay: 1s;">🌟</div>
                     <div class="floating-element" style="top: 35%; left: 5%; animation-delay: 2s;">✨</div>
@@ -459,13 +543,30 @@
                     const offsetX = Math.sin(index * 0.8) * 80;
                     const marginLeft = `calc(50% + ${offsetX}px - 50px)`;
                     
+                    // Determine completion level
+                    const bestScore = level.best_score || 0;
+                    let completionClass = '';
+                    let badgeContent = '';
+                    
+                    if (status === 'completed') {
+                        if (bestScore === 100) {
+                            completionClass = 'perfect';
+                            badgeContent = '<div class="progress-badge perfect">100%</div>';
+                        } else if (bestScore >= 80) {
+                            completionClass = 'partial';
+                            badgeContent = `<div class="progress-badge partial">${bestScore}%</div>`;
+                        } else {
+                            badgeContent = `<div class="progress-badge">${bestScore}%</div>`;
+                        }
+                    }
+                    
                     html += `
                         <div class="journey-step" style="margin-left: ${marginLeft};">
-                            <div class="step-node ${status} ${isBoss ? 'boss-level' : ''}" 
+                            <div class="step-node ${status} ${completionClass} ${isBoss ? 'boss-level' : ''}" 
                                  onclick="openLevel(${level.id})"
                                  data-level-id="${level.id}">
                                 <div class="step-icon">${icon}</div>
-                                ${status === 'completed' ? '<div class="progress-badge">✓</div>' : ''}
+                                ${badgeContent}
                             </div>
                             <div class="step-label">
                                 ${level.order_index}. ${level.title}
