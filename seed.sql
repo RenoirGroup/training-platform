@@ -69,3 +69,8 @@ INSERT OR IGNORE INTO user_streaks (user_id, current_login_streak, total_points)
 INSERT OR IGNORE INTO leaderboard (user_id, rungs_completed, days_used, total_points, league) VALUES 
   (3, 0, 0, 0, 'bronze'),
   (4, 0, 0, 0, 'bronze');
+
+-- Initialize user progress - unlock first level for all consultants
+INSERT OR IGNORE INTO user_progress (user_id, level_id, status) VALUES 
+  (3, 1, 'unlocked'),
+  (4, 1, 'unlocked');
