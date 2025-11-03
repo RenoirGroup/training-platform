@@ -27,8 +27,29 @@ admin.post('/users', async (c) => {
   try {
     const { email, password, name, role, boss_id } = await c.req.json();
 
+    // Validate required fields
     if (!email || !password || !name || !role) {
-      return c.json({ error: 'Missing required fields' }, 400);
+      return c.json({ error: 'Missing required fields: email, password, name, and role are required' }, 400);
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return c.json({ error: 'Invalid email format' }, 400);
+    }
+
+    // Validate password length (minimum 6 characters)
+    if (password.length < 6) {
+      return c.json({ error: 'Password must be at least 6 characters long' }, 400);
+    }
+
+    // Check if email already exists
+    const existingUser = await c.env.DB.prepare(
+      'SELECT id FROM users WHERE email = ?'
+    ).bind(email).first();
+
+    if (existingUser) {
+      return c.json({ error: 'A user with this email already exists' }, 409);
     }
 
     const passwordHash = await hashPassword(password);
@@ -62,32 +83,61 @@ admin.post('/users', async (c) => {
       }
     }
 
-    return c.json({ message: 'User created', userId });
-  } catch (error) {
+    return c.json({ message: 'User created successfully', userId });
+  } catch (error: any) {
     console.error('Create user error:', error);
-    return c.json({ error: 'Failed to create user' }, 500);
+    
+    // Provide specific error messages
+    if (error.message && error.message.includes('UNIQUE constraint failed')) {
+      return c.json({ error: 'A user with this email already exists' }, 409);
+    }
+    
+    return c.json({ error: `Failed to create user: ${error.message || 'Unknown error'}` }, 500);
   }
 });
 
 // Update user
 admin.put('/users/:id', async (c) => {
-  const id = c.req.param('id');
-  const { name, email, role, boss_id, active, password } = await c.req.json();
+  try {
+    const id = c.req.param('id');
+    const { name, email, role, boss_id, active, password } = await c.req.json();
 
-  // If password is provided, hash it and update
-  if (password) {
-    const passwordHash = await hashPassword(password);
-    await c.env.DB.prepare(
-      'UPDATE users SET name = ?, email = ?, role = ?, boss_id = ?, active = ?, password_hash = ? WHERE id = ?'
-    ).bind(name, email, role, boss_id || null, active !== undefined ? active : 1, passwordHash, id).run();
-  } else {
-    // Update without changing password
-    await c.env.DB.prepare(
-      'UPDATE users SET name = ?, email = ?, role = ?, boss_id = ?, active = ? WHERE id = ?'
-    ).bind(name, email, role, boss_id || null, active !== undefined ? active : 1, id).run();
+    // Validate email format
+    if (email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return c.json({ error: 'Invalid email format' }, 400);
+      }
+    }
+
+    // If password is provided, validate and hash it
+    if (password) {
+      // Validate password length (minimum 6 characters)
+      if (password.length < 6) {
+        return c.json({ error: 'Password must be at least 6 characters long' }, 400);
+      }
+      
+      const passwordHash = await hashPassword(password);
+      await c.env.DB.prepare(
+        'UPDATE users SET name = ?, email = ?, role = ?, boss_id = ?, active = ?, password_hash = ? WHERE id = ?'
+      ).bind(name, email, role, boss_id || null, active !== undefined ? active : 1, passwordHash, id).run();
+    } else {
+      // Update without changing password
+      await c.env.DB.prepare(
+        'UPDATE users SET name = ?, email = ?, role = ?, boss_id = ?, active = ? WHERE id = ?'
+      ).bind(name, email, role, boss_id || null, active !== undefined ? active : 1, id).run();
+    }
+
+    return c.json({ message: 'User updated successfully' });
+  } catch (error: any) {
+    console.error('Update user error:', error);
+    
+    if (error.message && error.message.includes('UNIQUE constraint failed')) {
+      return c.json({ error: 'A user with this email already exists' }, 409);
+    }
+    
+    return c.json({ error: `Failed to update user: ${error.message || 'Unknown error'}` }, 500);
   }
-
-  return c.json({ message: 'User updated' });
 });
 
 // Delete user

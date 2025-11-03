@@ -1448,6 +1448,9 @@
             
             const { modal, expandedCanvas, canvas } = window.currentExpandedModal;
             
+            // Clear any stray drag state
+            draggedElement = null;
+            
             // Sync labels back to main view
             syncExpandedLabels(questionId, expandedCanvas, canvas);
             
@@ -1463,6 +1466,14 @@
                 label.style.display = isPlaced ? 'none' : '';
             });
             
+            // Remove all expanded labels from DOM (prevent ghost labels)
+            const allExpandedLabels = document.querySelectorAll('[id*="expanded"]');
+            allExpandedLabels.forEach(el => {
+                if (el.classList && el.classList.contains('hotspot-label')) {
+                    el.remove();
+                }
+            });
+            
             // Remove modal
             modal.remove();
             window.currentExpandedModal = null;
@@ -1473,8 +1484,12 @@
             const expandedWrapper = document.getElementById(`hotspot-expanded-wrapper-${questionId}`);
             const mainWrapper = document.getElementById(`hotspot-wrapper-${questionId}`);
             
+            if (!expandedWrapper || !mainWrapper) return;
+            
             const expandedImg = expandedWrapper.querySelector('img');
             const mainImg = mainWrapper.querySelector('img');
+            
+            if (!expandedImg || !mainImg) return;
             
             const expandedWidth = expandedImg.offsetWidth;
             const expandedHeight = expandedImg.offsetHeight;
@@ -1484,14 +1499,14 @@
             // Clear main canvas
             toCanvas.innerHTML = '';
             
-            // Copy labels from expanded to main with scaled coordinates
+            // Copy labels from expanded to main with percentage-based coordinates for resolution independence
             const expandedLabels = fromCanvas.querySelectorAll('.hotspot-label.placed');
             expandedLabels.forEach(label => {
                 const labelText = label.getAttribute('data-label');
-                const expandedX = parseInt(label.style.left);
-                const expandedY = parseInt(label.style.top);
+                const expandedX = parseFloat(label.style.left);
+                const expandedY = parseFloat(label.style.top);
                 
-                // Calculate percentage position from expanded view
+                // Store as percentages for resolution independence
                 const xPercent = (expandedX / expandedWidth) * 100;
                 const yPercent = (expandedY / expandedHeight) * 100;
                 
@@ -1499,8 +1514,10 @@
                 const mainX = (xPercent / 100) * mainWidth;
                 const mainY = (yPercent / 100) * mainHeight;
                 
-                // Create label with scaled position
+                // Create label with scaled position and store percentages
                 const newLabel = createPlacedLabel(labelText, mainX, mainY, questionId, toCanvas);
+                newLabel.setAttribute('data-x-percent', xPercent.toFixed(2));
+                newLabel.setAttribute('data-y-percent', yPercent.toFixed(2));
                 toCanvas.appendChild(newLabel);
             });
             
@@ -1539,14 +1556,37 @@
                 const response = await axios.post(`/api/consultant/tests/${currentTestId}/submit`, { answers });
                 const result = response.data;
                 
-                alert(`Test ${result.passed ? 'PASSED' : 'FAILED'}!\n\nScore: ${result.score}/${result.maxScore} (${result.percentage.toFixed(1)}%)`);
+                // Build detailed results message
+                let message = `Test ${result.passed ? 'PASSED ✓' : 'FAILED ✗'}!\n\n`;
+                message += `Score: ${result.score}/${result.maxScore} (${result.percentage.toFixed(1)}%)\n`;
+                message += `Pass requirement: ${result.passed ? '✓' : '✗'}\n\n`;
+                
+                // Show question-by-question results
+                if (result.results && result.results.length > 0) {
+                    message += '📊 Question Results:\n';
+                    message += '━━━━━━━━━━━━━━━━━━━━━━\n';
+                    
+                    result.results.forEach((qResult, idx) => {
+                        const questionNum = idx + 1;
+                        const status = qResult.isCorrect ? '✓ Correct' : '✗ Wrong';
+                        const points = `${qResult.pointsEarned}pts`;
+                        message += `Q${questionNum}: ${status} (${points})\n`;
+                    });
+                    
+                    const correctCount = result.results.filter(r => r.isCorrect).length;
+                    const totalCount = result.results.length;
+                    message += '━━━━━━━━━━━━━━━━━━━━━━\n';
+                    message += `${correctCount}/${totalCount} questions correct`;
+                }
+                
+                alert(message);
                 
                 backToLevel();
                 await loadLadder();
                 await loadStats();
             } catch (error) {
                 console.error('Error submitting test:', error);
-                alert('Error submitting test');
+                alert('Error submitting test. Please try again.');
             }
         }
 
