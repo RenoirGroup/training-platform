@@ -58,10 +58,29 @@ consultant.get('/levels/:levelId', async (c) => {
     'SELECT * FROM training_materials WHERE level_id = ? ORDER BY order_index'
   ).bind(levelId).all();
 
-  // Get tests
-  const tests = await c.env.DB.prepare(
+  // Get tests with attempt history
+  const testsResult = await c.env.DB.prepare(
     'SELECT * FROM tests WHERE level_id = ?'
   ).bind(levelId).all();
+  
+  // Enrich tests with user's best attempt info
+  const testsWithAttempts = await Promise.all(
+    (testsResult.results as any[]).map(async (test) => {
+      const bestAttempt = await c.env.DB.prepare(`
+        SELECT MAX(percentage) as best_percentage, COUNT(*) as attempt_count,
+               MAX(CASE WHEN passed = 1 THEN 1 ELSE 0 END) as has_passed
+        FROM test_attempts 
+        WHERE user_id = ? AND test_id = ?
+      `).bind(user.userId, test.id).first();
+      
+      return {
+        ...test,
+        best_percentage: bestAttempt?.best_percentage || null,
+        attempt_count: bestAttempt?.attempt_count || 0,
+        has_passed: bestAttempt?.has_passed === 1
+      };
+    })
+  );
 
   // Get boss level tasks if applicable
   let tasks = null;
@@ -75,7 +94,7 @@ consultant.get('/levels/:levelId', async (c) => {
   return c.json({
     level,
     materials: materials.results,
-    tests: tests.results,
+    tests: testsWithAttempts,
     tasks,
   });
 });

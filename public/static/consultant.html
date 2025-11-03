@@ -721,18 +721,53 @@
                     html += `
                         <div class="mb-6">
                             <h3 class="text-xl font-bold mb-3"><i class="fas fa-clipboard-check mr-2"></i>Tests</h3>
-                            <div class="space-y-2">
-                                ${tests.map(t => `
-                                    <div class="p-4 border rounded cursor-pointer hover:bg-gray-50"
-                                         onclick="startTest(${t.id})">
-                                        <p class="font-bold">${t.title}</p>
-                                        <p class="text-sm text-gray-600">${t.description || ''}</p>
-                                        <p class="text-sm text-gray-500 mt-2">
-                                            Pass: ${t.pass_percentage}% | 
-                                            ${t.time_limit_minutes ? `Time: ${t.time_limit_minutes} min` : 'No time limit'}
-                                        </p>
+                            <div class="space-y-3">
+                                ${tests.map(t => {
+                                    const hasPassed = t.has_passed;
+                                    const attemptCount = t.attempt_count || 0;
+                                    const bestScore = t.best_percentage ? t.best_percentage.toFixed(1) : null;
+                                    
+                                    return `
+                                    <div class="p-4 border rounded ${hasPassed ? 'border-green-400 bg-green-50' : 'border-gray-300'}">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <div class="flex-1">
+                                                <p class="font-bold">${t.title}</p>
+                                                <p class="text-sm text-gray-600">${t.description || ''}</p>
+                                                <p class="text-sm text-gray-500 mt-2">
+                                                    Pass: ${t.pass_percentage}% | 
+                                                    ${t.time_limit_minutes ? `Time: ${t.time_limit_minutes} min` : 'No time limit'}
+                                                </p>
+                                            </div>
+                                            ${hasPassed ? `
+                                                <span class="ml-4 px-3 py-1 bg-green-600 text-white rounded-full text-sm font-bold">
+                                                    ✓ Passed (${bestScore}%)
+                                                </span>
+                                            ` : attemptCount > 0 ? `
+                                                <span class="ml-4 px-3 py-1 bg-orange-500 text-white rounded-full text-sm">
+                                                    Attempted (${attemptCount}x)
+                                                </span>
+                                            ` : ''}
+                                        </div>
+                                        
+                                        ${hasPassed ? `
+                                            <div class="mt-3 flex gap-2">
+                                                <button onclick="reviewTest(${t.id})" 
+                                                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                                                    <i class="fas fa-eye mr-2"></i>Review Questions
+                                                </button>
+                                                <button onclick="retakeTest(${t.id})" 
+                                                        class="flex-1 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded">
+                                                    <i class="fas fa-redo mr-2"></i>Retake Test
+                                                </button>
+                                            </div>
+                                        ` : `
+                                            <button onclick="startTest(${t.id}, false)" 
+                                                    class="mt-3 w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+                                                <i class="fas fa-play mr-2"></i>${attemptCount > 0 ? 'Try Again' : 'Start Test'}
+                                            </button>
+                                        `}
                                     </div>
-                                `).join('')}
+                                `}).join('')}
                             </div>
                         </div>
                     `;
@@ -785,7 +820,17 @@
             return icons[type] || 'fa-file';
         }
 
-        async function startTest(testId) {
+        async function reviewTest(testId) {
+            await startTest(testId, true);
+        }
+        
+        async function retakeTest(testId) {
+            if (confirm('Are you sure you want to retake this test? Your previous score will remain, but you can improve it.')) {
+                await startTest(testId, false);
+            }
+        }
+        
+        async function startTest(testId, reviewMode = false) {
             currentTestId = testId;
             
             try {
@@ -793,19 +838,37 @@
                 const { test, questions } = response.data;
                 
                 let html = `
-                    <h2 class="text-2xl font-bold mb-4">${test.title}</h2>
+                    <h2 class="text-2xl font-bold mb-4">
+                        ${test.title}
+                        ${reviewMode ? '<span class="ml-3 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded">Review Mode</span>' : ''}
+                    </h2>
                     <p class="text-gray-600 mb-4">${test.description || ''}</p>
-                    <div class="bg-yellow-50 border border-yellow-300 rounded p-3 mb-6">
-                        <p class="font-bold">Pass: ${test.pass_percentage}%</p>
-                        ${test.time_limit_minutes ? `<p>Time Limit: ${test.time_limit_minutes} minutes</p>` : ''}
-                    </div>
+                    ${reviewMode ? `
+                        <div class="bg-blue-50 border border-blue-300 rounded p-3 mb-6">
+                            <p class="font-bold text-blue-800">
+                                <i class="fas fa-info-circle mr-2"></i>Review Mode: Questions are shown for review only. Not graded.
+                            </p>
+                        </div>
+                    ` : `
+                        <div class="bg-yellow-50 border border-yellow-300 rounded p-3 mb-6">
+                            <p class="font-bold">Pass: ${test.pass_percentage}%</p>
+                            ${test.time_limit_minutes ? `<p>Time Limit: ${test.time_limit_minutes} minutes</p>` : ''}
+                        </div>
+                    `}
                     
                     <form id="test-form">
                         ${questions.map((q, idx) => renderQuestion(q, idx)).join('')}
                         
-                        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg w-full">
-                            <i class="fas fa-paper-plane mr-2"></i>Submit Test
-                        </button>
+                        ${reviewMode ? `
+                            <button type="button" onclick="backToLevel()" 
+                                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg w-full">
+                                <i class="fas fa-arrow-left mr-2"></i>Back to Level
+                            </button>
+                        ` : `
+                            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg w-full">
+                                <i class="fas fa-paper-plane mr-2"></i>Submit Test
+                            </button>
+                        `}
                     </form>
                 `;
                 
@@ -824,7 +887,10 @@
                     }
                 });
                 
-                document.getElementById('test-form').addEventListener('submit', submitTest);
+                // Only add submit handler if not in review mode
+                if (!reviewMode) {
+                    document.getElementById('test-form').addEventListener('submit', submitTest);
+                }
             } catch (error) {
                 console.error('Error loading test:', error);
                 alert('Error loading test');
@@ -1048,18 +1114,74 @@
             
             const dropZone = e.currentTarget;
             const value = draggedElement.getAttribute('data-value');
+            const isFromDropZone = draggedElement.classList.contains('matched-item');
             
-            // Clear previous content
-            dropZone.innerHTML = `<span class="font-semibold">${value}</span>`;
+            // If drop zone already has content, return it to the pool
+            if (dropZone.hasAttribute('data-matched')) {
+                const oldValue = dropZone.getAttribute('data-matched');
+                returnToMatchPool(questionId, oldValue);
+            }
+            
+            // Create draggable matched item in drop zone
+            dropZone.innerHTML = `
+                <div class="matched-item p-2 bg-green-100 border border-green-400 rounded cursor-move inline-flex items-center gap-2" 
+                     draggable="true" 
+                     ondragstart="dragStart(event)"
+                     data-value="${value}">
+                    <span class="font-semibold">${value}</span>
+                    <button onclick="removeMatch(event, ${questionId}, '${value.replace(/'/g, "\\'")}')" 
+                            class="text-red-600 hover:text-red-800 font-bold text-sm">✕</button>
+                </div>
+            `;
             dropZone.setAttribute('data-matched', value);
             
-            // Remove dragged element
-            draggedElement.remove();
-            draggedElement.classList.remove('dragging');
+            // Remove original dragged element from pool or previous drop zone
+            if (isFromDropZone) {
+                // It came from another drop zone, clear that zone
+                const oldParent = draggedElement.closest('.drop-zone');
+                if (oldParent) {
+                    oldParent.innerHTML = '<span class="text-gray-400 text-sm">Drop here</span>';
+                    oldParent.removeAttribute('data-matched');
+                }
+            } else {
+                // It came from the pool, remove it
+                draggedElement.remove();
+            }
+            
             draggedElement = null;
             
             // Update hidden input with all matches
             updateMatchingAnswer(questionId);
+        }
+        
+        function removeMatch(e, questionId, value) {
+            e.stopPropagation();
+            const dropZone = e.target.closest('.drop-zone');
+            dropZone.innerHTML = '<span class="text-gray-400 text-sm">Drop here</span>';
+            dropZone.removeAttribute('data-matched');
+            
+            // Return item to pool
+            returnToMatchPool(questionId, value);
+            updateMatchingAnswer(questionId);
+        }
+        
+        function returnToMatchPool(questionId, value) {
+            const pool = document.getElementById(`matching-${questionId}-items`);
+            
+            // Check if item already exists in pool
+            const existing = Array.from(pool.children).find(
+                child => child.getAttribute('data-value') === value
+            );
+            
+            if (!existing) {
+                const newItem = document.createElement('div');
+                newItem.className = 'draggable p-2 bg-white border rounded cursor-move';
+                newItem.draggable = true;
+                newItem.setAttribute('data-value', value);
+                newItem.textContent = value;
+                newItem.ondragstart = dragStart;
+                pool.appendChild(newItem);
+            }
         }
 
         function updateMatchingAnswer(questionId) {

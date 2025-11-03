@@ -1518,16 +1518,71 @@
         function addAnswerOption(text = '') {
             const listEl = document.getElementById('answer-options-list');
             const optionDiv = document.createElement('div');
-            optionDiv.className = 'flex items-center space-x-2';
+            optionDiv.className = 'flex items-center space-x-2 bg-white p-2 rounded border cursor-move hover:bg-gray-50';
+            optionDiv.draggable = true;
             optionDiv.innerHTML = `
+                <i class="fas fa-grip-vertical text-gray-400 mr-2"></i>
                 <input type="checkbox" class="answer-correct" title="Mark as correct answer">
                 <input type="text" class="answer-text flex-1 px-3 py-2 border rounded" placeholder="Option text" value="${text}" required>
-                <button onclick="this.parentElement.remove()" class="text-red-600 hover:text-red-800">
+                <button type="button" onclick="this.parentElement.remove()" class="text-red-600 hover:text-red-800">
                     <i class="fas fa-times"></i>
                 </button>
             `;
+            
+            // Add drag events
+            optionDiv.addEventListener('dragstart', handleAnswerDragStart);
+            optionDiv.addEventListener('dragover', handleAnswerDragOver);
+            optionDiv.addEventListener('drop', handleAnswerDrop);
+            optionDiv.addEventListener('dragend', handleAnswerDragEnd);
+            
             listEl.appendChild(optionDiv);
             answerOptionCount++;
+        }
+        
+        let draggedAnswerElement = null;
+        
+        function handleAnswerDragStart(e) {
+            draggedAnswerElement = e.target.closest('.flex');
+            draggedAnswerElement.style.opacity = '0.4';
+            e.dataTransfer.effectAllowed = 'move';
+        }
+        
+        function handleAnswerDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            const target = e.target.closest('.flex');
+            if (target && target !== draggedAnswerElement) {
+                target.style.borderTop = '2px solid #7CB342';
+            }
+        }
+        
+        function handleAnswerDrop(e) {
+            e.preventDefault();
+            const target = e.target.closest('.flex');
+            if (target && target !== draggedAnswerElement && draggedAnswerElement) {
+                const listEl = document.getElementById('answer-options-list');
+                const allOptions = Array.from(listEl.children);
+                const draggedIndex = allOptions.indexOf(draggedAnswerElement);
+                const targetIndex = allOptions.indexOf(target);
+                
+                if (draggedIndex < targetIndex) {
+                    target.parentNode.insertBefore(draggedAnswerElement, target.nextSibling);
+                } else {
+                    target.parentNode.insertBefore(draggedAnswerElement, target);
+                }
+            }
+            if (target) {
+                target.style.borderTop = '';
+            }
+        }
+        
+        function handleAnswerDragEnd(e) {
+            const allOptions = document.querySelectorAll('#answer-options-list > div');
+            allOptions.forEach(opt => {
+                opt.style.opacity = '1';
+                opt.style.borderTop = '';
+            });
+            draggedAnswerElement = null;
         }
 
         // ===== MATCHING QUESTION TYPE =====
