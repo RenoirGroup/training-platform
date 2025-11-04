@@ -1311,6 +1311,40 @@
             document.getElementById('question-text').value = '';
             document.getElementById('question-type').value = 'multiple_choice';
             document.getElementById('question-points').value = '1';
+            
+            // CRITICAL: Clear hotspot state to prevent ghost labels
+            hotspotPlacedLabels = [];
+            hotspotImageDataUrl = '';
+            
+            // Clear hotspot canvas elements
+            const placedLabelsContainer = document.getElementById('hotspot-placed-labels');
+            if (placedLabelsContainer) {
+                placedLabelsContainer.innerHTML = '';
+            }
+            
+            // Clear hotspot inputs
+            const hotspotLabelsInput = document.getElementById('hotspot-labels-input');
+            if (hotspotLabelsInput) {
+                hotspotLabelsInput.value = '';
+            }
+            
+            const hotspotImageData = document.getElementById('hotspot-image-data');
+            if (hotspotImageData) {
+                hotspotImageData.value = '';
+            }
+            
+            // Clear preview image
+            const previewImg = document.getElementById('hotspot-preview-image');
+            if (previewImg) {
+                previewImg.src = '';
+            }
+            
+            // Hide canvas container
+            const canvasContainer = document.getElementById('hotspot-canvas-container');
+            if (canvasContainer) {
+                canvasContainer.classList.add('hidden');
+            }
+            
             updateQuestionTypeFields();
         }
 
@@ -1319,6 +1353,12 @@
             const container = document.getElementById('answer-options-container');
             const listEl = document.getElementById('answer-options-list');
             const modalContent = document.getElementById('question-modal-content');
+            
+            // Clear hotspot state when switching away from hotspot question type
+            if (type !== 'hotspot') {
+                hotspotPlacedLabels = [];
+                hotspotImageDataUrl = '';
+            }
             
             // Resize modal for hotspot questions (need wider space)
             if (type === 'hotspot') {
@@ -2216,14 +2256,24 @@
                         // Set hidden input
                         document.getElementById('hotspot-image-data').value = answerData.imageUrl;
                         
+                        // Update upload zone to show success
+                        const uploadZone = document.getElementById('hotspot-upload-zone');
+                        uploadZone.innerHTML = `
+                            <i class="fas fa-check-circle text-4xl text-green-600 mb-2"></i>
+                            <p class="text-green-700 font-semibold">Image loaded successfully!</p>
+                            <p class="text-xs text-gray-500 mt-1">Click to change image</p>
+                        `;
+                        uploadZone.classList.remove('border-gray-300');
+                        uploadZone.classList.add('border-green-500', 'bg-green-50');
+                        
                         // Wait for image to load, then render placed labels
                         previewImg.onload = () => {
-                            updateHotspotPlacedLabels();
+                            renderPlacedLabels();
                         };
                         
                         // If image is already loaded (cached)
                         if (previewImg.complete) {
-                            updateHotspotPlacedLabels();
+                            renderPlacedLabels();
                         }
                         
                         // Populate the labels input with all labels
