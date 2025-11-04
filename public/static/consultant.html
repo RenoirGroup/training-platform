@@ -1452,18 +1452,48 @@
             const expandedLabelsPool = modal.querySelector(`#hotspot-expanded-labels-${questionId}`);
             const expandedWrapper = modal.querySelector(`#hotspot-expanded-wrapper-${questionId}`);
             
-            // Copy existing placed labels to expanded canvas with proper events
+            // Copy existing placed labels to expanded canvas with PERCENTAGE-based coordinates
             const placedLabels = canvas.querySelectorAll('.hotspot-label.placed');
-            placedLabels.forEach(label => {
-                const newLabel = createPlacedLabel(
-                    label.getAttribute('data-label'),
-                    parseInt(label.style.left),
-                    parseInt(label.style.top),
-                    questionId,
-                    expandedCanvas
-                );
-                expandedCanvas.appendChild(newLabel);
-            });
+            const mainImg = wrapper.querySelector('img');
+            const expandedImg = modal.querySelector(`#hotspot-expanded-img-${questionId}`);
+            
+            // Wait for expanded image to load and get dimensions
+            expandedImg.onload = () => {
+                const mainWidth = mainImg.offsetWidth;
+                const mainHeight = mainImg.offsetHeight;
+                const expandedWidth = expandedImg.offsetWidth;
+                const expandedHeight = expandedImg.offsetHeight;
+                
+                placedLabels.forEach(label => {
+                    const mainX = parseFloat(label.style.left);
+                    const mainY = parseFloat(label.style.top);
+                    
+                    // Convert to percentage (resolution independent)
+                    const xPercent = (mainX / mainWidth) * 100;
+                    const yPercent = (mainY / mainHeight) * 100;
+                    
+                    // Apply percentage to expanded dimensions
+                    const expandedX = (xPercent / 100) * expandedWidth;
+                    const expandedY = (yPercent / 100) * expandedHeight;
+                    
+                    const newLabel = createPlacedLabel(
+                        label.getAttribute('data-label'),
+                        expandedX,
+                        expandedY,
+                        questionId,
+                        expandedCanvas
+                    );
+                    // Store percentage for reverse conversion
+                    newLabel.setAttribute('data-x-percent', xPercent.toFixed(2));
+                    newLabel.setAttribute('data-y-percent', yPercent.toFixed(2));
+                    expandedCanvas.appendChild(newLabel);
+                });
+            };
+            
+            // If image is already loaded (cached)
+            if (expandedImg.complete) {
+                expandedImg.onload();
+            }
             
             // Add available labels to expanded pool with proper drag events
             allLabelData.forEach((labelData, idx) => {
@@ -1527,9 +1557,10 @@
             removeBtn.onclick = (e) => {
                 e.stopPropagation();
                 label.remove();
-                // Add label back to pool
-                const pool = document.getElementById(`hotspot-expanded-labels-${questionId}`);
-                if (pool) {
+                
+                // Add label back to EXPANDED pool (if in expanded view)
+                const expandedPool = document.getElementById(`hotspot-expanded-labels-${questionId}`);
+                if (expandedPool) {
                     const labelDiv = document.createElement('div');
                     labelDiv.className = 'hotspot-label bg-blue-500 text-white px-3 py-2 rounded-lg cursor-move hover:bg-blue-600 transition-colors';
                     labelDiv.draggable = true;
@@ -1545,8 +1576,22 @@
                         labelDiv.style.opacity = '1';
                     });
                     
-                    pool.appendChild(labelDiv);
+                    expandedPool.appendChild(labelDiv);
                 }
+                
+                // ALSO add label back to MAIN pool (immediately visible)
+                const mainPool = document.getElementById(`hotspot-${questionId}-labels`);
+                if (mainPool) {
+                    // Find the label in main pool and show it
+                    Array.from(mainPool.children).forEach(poolLabel => {
+                        if (poolLabel.getAttribute('data-label') === labelText) {
+                            poolLabel.style.display = '';
+                        }
+                    });
+                }
+                
+                // Update the answer immediately
+                updateHotspotAnswer(questionId);
             };
             
             label.textContent = labelText;
@@ -1625,12 +1670,18 @@
             const expandedLabels = fromCanvas.querySelectorAll('.hotspot-label.placed');
             expandedLabels.forEach(label => {
                 const labelText = label.getAttribute('data-label');
-                const expandedX = parseFloat(label.style.left);
-                const expandedY = parseFloat(label.style.top);
                 
-                // Store as percentages for resolution independence
-                const xPercent = (expandedX / expandedWidth) * 100;
-                const yPercent = (expandedY / expandedHeight) * 100;
+                // Try to use stored percentages first (more accurate)
+                let xPercent = parseFloat(label.getAttribute('data-x-percent'));
+                let yPercent = parseFloat(label.getAttribute('data-y-percent'));
+                
+                // If no stored percentages, calculate from pixel positions
+                if (isNaN(xPercent) || isNaN(yPercent)) {
+                    const expandedX = parseFloat(label.style.left);
+                    const expandedY = parseFloat(label.style.top);
+                    xPercent = (expandedX / expandedWidth) * 100;
+                    yPercent = (expandedY / expandedHeight) * 100;
+                }
                 
                 // Apply percentage to main view dimensions
                 const mainX = (xPercent / 100) * mainWidth;
