@@ -397,7 +397,17 @@ async function completeLevel(db: D1Database, userId: number, levelId: number) {
     'INSERT INTO activity_log (user_id, activity_type, activity_date) VALUES (?, ?, ?)'
   ).bind(userId, 'level_complete', today).run();
 
-  // Update leaderboard
+  // Update leaderboard - ensure leaderboard entry exists first
+  const leaderboardExists = await db.prepare(
+    'SELECT id FROM leaderboard WHERE user_id = ?'
+  ).bind(userId).first();
+  
+  if (!leaderboardExists) {
+    await db.prepare(
+      'INSERT INTO leaderboard (user_id, league, rungs_completed, total_points) VALUES (?, ?, ?, ?)'
+    ).bind(userId, 'bronze', 0, 0).run();
+  }
+  
   const completed = await db.prepare(
     'SELECT COUNT(*) as count FROM user_progress WHERE user_id = ? AND status = ?'
   ).bind(userId, 'completed').first();
