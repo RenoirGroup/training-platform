@@ -131,6 +131,65 @@ auth.get('/me', async (c) => {
   return c.json({ user });
 });
 
+// Change password (requires authentication)
+auth.post('/change-password', async (c) => {
+  try {
+    const authHeader = c.req.header('Authorization');
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return c.json({ error: 'Unauthorized' }, 401);
+    }
+
+    const token = authHeader.substring(7);
+    const { verifyToken } = await import('../utils/auth');
+    const payload = await verifyToken(token);
+
+    if (!payload) {
+      return c.json({ error: 'Invalid token' }, 401);
+    }
+
+    const { currentPassword, newPassword } = await c.req.json();
+
+    if (!currentPassword || !newPassword) {
+      return c.json({ error: 'Current and new password required' }, 400);
+    }
+
+    // Validate new password length
+    if (newPassword.length < 6) {
+      return c.json({ error: 'New password must be at least 6 characters' }, 400);
+    }
+
+    // Get user
+    const user = await c.env.DB.prepare(
+      'SELECT id, password_hash FROM users WHERE id = ?'
+    ).bind(payload.userId).first();
+
+    if (!user) {
+      return c.json({ error: 'User not found' }, 404);
+    }
+
+    // Verify current password
+    const validPassword = await comparePassword(currentPassword, user.password_hash as string);
+    
+    if (!validPassword) {
+      return c.json({ error: 'Current password is incorrect' }, 401);
+    }
+
+    // Hash new password
+    const newPasswordHash = await hashPassword(newPassword);
+
+    // Update password
+    await c.env.DB.prepare(
+      'UPDATE users SET password_hash = ? WHERE id = ?'
+    ).bind(newPasswordHash, user.id).run();
+
+    return c.json({ message: 'Password changed successfully' });
+  } catch (error) {
+    console.error('Change password error:', error);
+    return c.json({ error: 'Failed to change password' }, 500);
+  }
+});
+
 async function updateLoginStreak(db: D1Database, userId: number) {
   const today = new Date().toISOString().split('T')[0];
   

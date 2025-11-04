@@ -490,6 +490,127 @@
             localStorage.clear();
             window.location.href = '/';
         }
+        
+        function showTab(tab) {
+            if (tab === 'profile') {
+                showProfileModal();
+            }
+        }
+        
+        function showProfileModal() {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+                    <div class="border-b px-6 py-4 flex justify-between items-center">
+                        <h2 class="text-2xl font-bold">Profile Settings</h2>
+                        <button onclick="this.closest('.fixed').remove()" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times text-2xl"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="p-6">
+                        <!-- User Info -->
+                        <div class="mb-6 pb-6 border-b">
+                            <div class="mb-3">
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Name</label>
+                                <p class="text-lg">${user.name}</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Email</label>
+                                <p class="text-lg">${user.email}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Role</label>
+                                <p class="text-lg capitalize">${user.role}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Change Password -->
+                        <div>
+                            <h3 class="text-lg font-bold mb-4">Change Password</h3>
+                            <form id="change-password-form" onsubmit="changePassword(event)">
+                                <div class="mb-4">
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                        Current Password *
+                                    </label>
+                                    <input type="password" id="current-password" required
+                                           class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-green-500">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                        New Password * (min 6 characters)
+                                    </label>
+                                    <input type="password" id="new-password" required minlength="6"
+                                           class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-green-500">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                        Confirm New Password *
+                                    </label>
+                                    <input type="password" id="confirm-password" required minlength="6"
+                                           class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-green-500">
+                                </div>
+                                <div id="password-error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"></div>
+                                <div id="password-success" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4"></div>
+                                <button type="submit" class="w-full renoir-green renoir-green-hover text-white px-4 py-2 rounded transition-colors">
+                                    <i class="fas fa-key mr-2"></i>Change Password
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        async function changePassword(e) {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const errorDiv = document.getElementById('password-error');
+            const successDiv = document.getElementById('password-success');
+            
+            // Hide previous messages
+            errorDiv.classList.add('hidden');
+            successDiv.classList.add('hidden');
+            
+            // Validate
+            if (newPassword !== confirmPassword) {
+                errorDiv.textContent = 'New passwords do not match';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                errorDiv.textContent = 'Password must be at least 6 characters';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            try {
+                await axios.post('/api/auth/change-password', {
+                    currentPassword,
+                    newPassword
+                });
+                
+                successDiv.textContent = 'Password changed successfully!';
+                successDiv.classList.remove('hidden');
+                
+                // Clear form
+                document.getElementById('change-password-form').reset();
+                
+                // Close modal after 2 seconds
+                setTimeout(() => {
+                    document.querySelector('.fixed.inset-0').remove();
+                }, 2000);
+            } catch (error) {
+                errorDiv.textContent = error.response?.data?.error || 'Error changing password';
+                errorDiv.classList.remove('hidden');
+            }
+        }
 
         async function init() {
             await loadLadder();

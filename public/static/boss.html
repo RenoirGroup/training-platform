@@ -23,8 +23,10 @@
                     <p class="text-sm text-gray-300">Boss Dashboard</p>
                 </div>
             </div>
-            <div>
-                <span id="user-name" class="mr-4"></span>
+            <div class="flex items-center gap-2">
+                <button onclick="showProfileModal()" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded transition-colors">
+                    <i class="fas fa-user mr-2"></i><span id="user-name"></span>
+                </button>
                 <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded transition-colors">
                     <i class="fas fa-sign-out-alt mr-2"></i>Logout
                 </button>
@@ -76,9 +78,23 @@
             <div class="bg-white rounded-lg shadow-lg p-6">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-bold">Your Team</h2>
-                    <button onclick="exportReport()" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded transition-colors">
-                        <i class="fas fa-download mr-2"></i>Export Report
-                    </button>
+                    <div class="relative">
+                        <button onclick="toggleExportMenu()" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded transition-colors">
+                            <i class="fas fa-download mr-2"></i>Export Report
+                            <i class="fas fa-chevron-down ml-2"></i>
+                        </button>
+                        <div id="export-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 z-10">
+                            <button onclick="exportReport('csv')" class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-t-lg">
+                                <i class="fas fa-file-csv mr-2 text-green-600"></i>Export as CSV
+                            </button>
+                            <button onclick="exportReport('excel')" class="w-full text-left px-4 py-2 hover:bg-gray-100">
+                                <i class="fas fa-file-excel mr-2 text-green-700"></i>Export as Excel
+                            </button>
+                            <button onclick="exportReport('pdf')" class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-b-lg">
+                                <i class="fas fa-file-pdf mr-2 text-red-600"></i>Export as PDF
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <div id="team-list"></div>
             </div>
@@ -131,6 +147,121 @@
         function logout() {
             localStorage.clear();
             window.location.href = '/';
+        }
+        
+        function showProfileModal() {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+                    <div class="border-b px-6 py-4 flex justify-between items-center">
+                        <h2 class="text-2xl font-bold">Profile Settings</h2>
+                        <button onclick="this.closest('.fixed').remove()" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times text-2xl"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="p-6">
+                        <!-- User Info -->
+                        <div class="mb-6 pb-6 border-b">
+                            <div class="mb-3">
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Name</label>
+                                <p class="text-lg">${user.name}</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Email</label>
+                                <p class="text-lg">${user.email}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Role</label>
+                                <p class="text-lg capitalize">${user.role}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Change Password -->
+                        <div>
+                            <h3 class="text-lg font-bold mb-4">Change Password</h3>
+                            <form id="change-password-form" onsubmit="changePassword(event)">
+                                <div class="mb-4">
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                        Current Password *
+                                    </label>
+                                    <input type="password" id="current-password" required
+                                           class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-green-500">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                        New Password * (min 6 characters)
+                                    </label>
+                                    <input type="password" id="new-password" required minlength="6"
+                                           class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-green-500">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                        Confirm New Password *
+                                    </label>
+                                    <input type="password" id="confirm-password" required minlength="6"
+                                           class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-green-500">
+                                </div>
+                                <div id="password-error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"></div>
+                                <div id="password-success" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4"></div>
+                                <button type="submit" class="w-full renoir-green renoir-green-hover text-white px-4 py-2 rounded transition-colors">
+                                    <i class="fas fa-key mr-2"></i>Change Password
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        async function changePassword(e) {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const errorDiv = document.getElementById('password-error');
+            const successDiv = document.getElementById('password-success');
+            
+            // Hide previous messages
+            errorDiv.classList.add('hidden');
+            successDiv.classList.add('hidden');
+            
+            // Validate
+            if (newPassword !== confirmPassword) {
+                errorDiv.textContent = 'New passwords do not match';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                errorDiv.textContent = 'Password must be at least 6 characters';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            try {
+                await axios.post('/api/auth/change-password', {
+                    currentPassword,
+                    newPassword
+                });
+                
+                successDiv.textContent = 'Password changed successfully!';
+                successDiv.classList.remove('hidden');
+                
+                // Clear form
+                document.getElementById('change-password-form').reset();
+                
+                // Close modal after 2 seconds
+                setTimeout(() => {
+                    document.querySelector('.fixed.inset-0').remove();
+                }, 2000);
+            } catch (error) {
+                errorDiv.textContent = error.response?.data?.error || 'Error changing password';
+                errorDiv.classList.remove('hidden');
+            }
         }
 
         function showTab(tab) {
@@ -371,8 +502,113 @@
         }
 
         async function viewProgress(userId) {
-            // Could open a modal with detailed progress
-            alert(`View detailed progress for user ${userId} - implement modal with progress details`);
+            try {
+                const response = await axios.get(`/api/boss/team/${userId}/progress`);
+                const { user, progress, recentTests, stats } = response.data;
+                
+                // Create modal
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+                modal.innerHTML = `
+                    <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                        <div class="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
+                            <h2 class="text-2xl font-bold">${user.name}'s Progress</h2>
+                            <button onclick="this.closest('.fixed').remove()" class="text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-times text-2xl"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="p-6">
+                            <!-- Stats Overview -->
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                                <div class="bg-blue-50 p-4 rounded-lg">
+                                    <div class="text-sm text-gray-600">Total Points</div>
+                                    <div class="text-2xl font-bold text-blue-600">${stats?.total_points || 0}</div>
+                                </div>
+                                <div class="bg-green-50 p-4 rounded-lg">
+                                    <div class="text-sm text-gray-600">Current Streak</div>
+                                    <div class="text-2xl font-bold text-green-600">${stats?.current_login_streak || 0} days</div>
+                                </div>
+                                <div class="bg-purple-50 p-4 rounded-lg">
+                                    <div class="text-sm text-gray-600">Longest Streak</div>
+                                    <div class="text-2xl font-bold text-purple-600">${stats?.longest_login_streak || 0} days</div>
+                                </div>
+                                <div class="bg-orange-50 p-4 rounded-lg">
+                                    <div class="text-sm text-gray-600">Last Login</div>
+                                    <div class="text-sm font-bold text-orange-600">${user.last_login ? new Date(user.last_login).toLocaleDateString() : 'Never'}</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Level Progress -->
+                            <div class="mb-6">
+                                <h3 class="text-xl font-bold mb-4">Level Progress</h3>
+                                <div class="space-y-3">
+                                    ${progress.map(level => `
+                                        <div class="border rounded-lg p-4 ${
+                                            level.status === 'completed' ? 'bg-green-50 border-green-300' : 
+                                            level.status === 'in_progress' ? 'bg-blue-50 border-blue-300' : 
+                                            level.status === 'unlocked' ? 'bg-gray-50 border-gray-300' : 
+                                            'bg-gray-100 border-gray-200'
+                                        }">
+                                            <div class="flex justify-between items-center">
+                                                <div class="flex-1">
+                                                    <div class="font-semibold">${level.title}</div>
+                                                    <div class="text-sm text-gray-600">${level.description || ''}</div>
+                                                </div>
+                                                <div class="ml-4">
+                                                    ${level.status === 'completed' ? '<span class="px-3 py-1 bg-green-600 text-white rounded-full text-sm">✓ Completed</span>' : 
+                                                      level.status === 'in_progress' ? '<span class="px-3 py-1 bg-blue-600 text-white rounded-full text-sm">In Progress</span>' : 
+                                                      level.status === 'unlocked' ? '<span class="px-3 py-1 bg-gray-600 text-white rounded-full text-sm">Unlocked</span>' : 
+                                                      '<span class="px-3 py-1 bg-gray-400 text-white rounded-full text-sm">Locked</span>'}
+                                                </div>
+                                            </div>
+                                            ${level.completed_at ? `<div class="text-xs text-gray-500 mt-2">Completed: ${new Date(level.completed_at).toLocaleDateString()}</div>` : ''}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            
+                            <!-- Recent Test Attempts -->
+                            <div class="mb-4">
+                                <h3 class="text-xl font-bold mb-4">Recent Test Attempts</h3>
+                                ${recentTests.length > 0 ? `
+                                    <div class="overflow-x-auto">
+                                        <table class="min-w-full">
+                                            <thead class="bg-gray-50">
+                                                <tr>
+                                                    <th class="px-4 py-2 text-left text-sm font-semibold">Test</th>
+                                                    <th class="px-4 py-2 text-left text-sm font-semibold">Level</th>
+                                                    <th class="px-4 py-2 text-left text-sm font-semibold">Score</th>
+                                                    <th class="px-4 py-2 text-left text-sm font-semibold">Result</th>
+                                                    <th class="px-4 py-2 text-left text-sm font-semibold">Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="divide-y divide-gray-200">
+                                                ${recentTests.map(test => `
+                                                    <tr>
+                                                        <td class="px-4 py-2 text-sm">${test.test_title}</td>
+                                                        <td class="px-4 py-2 text-sm">${test.level_title}</td>
+                                                        <td class="px-4 py-2 text-sm">${test.score}/${test.max_score} (${test.percentage}%)</td>
+                                                        <td class="px-4 py-2 text-sm">
+                                                            ${test.passed ? '<span class="text-green-600 font-semibold">✓ Passed</span>' : '<span class="text-red-600 font-semibold">✗ Failed</span>'}
+                                                        </td>
+                                                        <td class="px-4 py-2 text-sm">${new Date(test.completed_at).toLocaleDateString()}</td>
+                                                    </tr>
+                                                `).join('')}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                ` : '<p class="text-gray-500">No test attempts yet</p>'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+            } catch (error) {
+                console.error('Error loading progress:', error);
+                alert('Error loading progress details');
+            }
         }
 
         async function loadAnalytics() {
@@ -448,18 +684,109 @@
             }
         }
 
-        async function exportReport() {
+        function toggleExportMenu() {
+            const menu = document.getElementById('export-menu');
+            menu.classList.toggle('hidden');
+        }
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('export-menu');
+            if (menu && !e.target.closest('[onclick*="exportReport"]') && !e.target.closest('[onclick*="toggleExportMenu"]')) {
+                menu.classList.add('hidden');
+            }
+        });
+        
+        async function exportReport(format = 'csv') {
             try {
-                const response = await axios.get('/api/boss/export/team-report');
-                const csv = response.data.csv;
+                // Hide menu
+                document.getElementById('export-menu').classList.add('hidden');
                 
-                // Download CSV
-                const blob = new Blob([csv], { type: 'text/csv' });
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `team-report-${new Date().toISOString().split('T')[0]}.csv`;
-                a.click();
+                const response = await axios.get('/api/boss/export/team-report');
+                const { csv, data } = response.data;
+                const timestamp = new Date().toISOString().split('T')[0];
+                
+                if (format === 'csv') {
+                    // Download CSV
+                    const blob = new Blob([csv], { type: 'text/csv' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `team-report-${timestamp}.csv`;
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                } else if (format === 'excel') {
+                    // Create Excel format (CSV with Excel-specific formatting)
+                    const excelCsv = '\uFEFF' + csv; // Add BOM for Excel
+                    const blob = new Blob([excelCsv], { type: 'application/vnd.ms-excel' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `team-report-${timestamp}.xls`;
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                } else if (format === 'pdf') {
+                    // Generate PDF using browser print
+                    const printWindow = window.open('', '_blank');
+                    printWindow.document.write(`
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <title>Team Report - ${timestamp}</title>
+                            <style>
+                                body { font-family: Arial, sans-serif; padding: 20px; }
+                                h1 { color: #7CB342; margin-bottom: 20px; }
+                                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                                th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                                th { background-color: #7CB342; color: white; }
+                                tr:nth-child(even) { background-color: #f9f9f9; }
+                                .header { margin-bottom: 20px; }
+                                .timestamp { color: #666; font-size: 14px; }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="header">
+                                <h1>The Renoir Academy - Team Report</h1>
+                                <p class="timestamp">Generated: ${new Date().toLocaleString()}</p>
+                            </div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Project</th>
+                                        <th>Levels</th>
+                                        <th>Points</th>
+                                        <th>Streak</th>
+                                        <th>Rank</th>
+                                        <th>League</th>
+                                        <th>Last Login</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${data.map(row => `
+                                        <tr>
+                                            <td>${row.name}</td>
+                                            <td>${row.email}</td>
+                                            <td>${row.project_name || 'N/A'}</td>
+                                            <td>${row.levels_completed}</td>
+                                            <td>${row.total_points || 0}</td>
+                                            <td>${row.current_login_streak || 0}</td>
+                                            <td>${row.rank || 'N/A'}</td>
+                                            <td>${row.league || 'N/A'}</td>
+                                            <td>${row.last_login ? new Date(row.last_login).toLocaleDateString() : 'Never'}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </body>
+                        </html>
+                    `);
+                    printWindow.document.close();
+                    setTimeout(() => {
+                        printWindow.print();
+                    }, 250);
+                }
             } catch (error) {
                 console.error('Error exporting report:', error);
                 alert('Error exporting report');

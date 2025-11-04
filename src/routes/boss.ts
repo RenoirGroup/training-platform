@@ -377,7 +377,10 @@ boss.get('/export/team-report', async (c) => {
 
   const csv = [headers, ...rows].map(row => row.join(',')).join('\n');
 
-  return c.json({ csv });
+  return c.json({ 
+    csv,
+    data: teamData.results // Include raw data for PDF generation
+  });
 });
 
 // ===== HELPER FUNCTIONS =====
