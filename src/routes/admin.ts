@@ -361,9 +361,38 @@ admin.put('/questions/:id', async (c) => {
   const id = c.req.param('id');
   const { question_text, question_type, order_index, points, options, answer_data } = await c.req.json();
 
+  // Get the current question to find its test_id and current order
+  const currentQuestion = await c.env.DB.prepare(
+    'SELECT test_id, order_index FROM questions WHERE id = ?'
+  ).bind(id).first();
+
+  if (!currentQuestion) {
+    return c.json({ error: 'Question not found' }, 404);
+  }
+
+  const oldOrder = currentQuestion.order_index as number;
+  const newOrder = order_index;
+  const testId = currentQuestion.test_id;
+
+  // If order changed, reorder other questions
+  if (oldOrder !== newOrder) {
+    if (newOrder < oldOrder) {
+      // Moving up: increment order of questions between new and old position
+      await c.env.DB.prepare(
+        'UPDATE questions SET order_index = order_index + 1 WHERE test_id = ? AND order_index >= ? AND order_index < ? AND id != ?'
+      ).bind(testId, newOrder, oldOrder, id).run();
+    } else {
+      // Moving down: decrement order of questions between old and new position
+      await c.env.DB.prepare(
+        'UPDATE questions SET order_index = order_index - 1 WHERE test_id = ? AND order_index > ? AND order_index <= ? AND id != ?'
+      ).bind(testId, oldOrder, newOrder, id).run();
+    }
+  }
+
+  // Update the question
   await c.env.DB.prepare(
     'UPDATE questions SET question_text = ?, question_type = ?, order_index = ?, points = ?, answer_data = ? WHERE id = ?'
-  ).bind(question_text, question_type, order_index, points, answer_data || null, id).run();
+  ).bind(question_text, question_type, newOrder, points, answer_data || null, id).run();
 
   // Update options if provided
   if (options && Array.isArray(options)) {

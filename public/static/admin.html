@@ -2146,6 +2146,7 @@
                 document.getElementById('question-text').value = question.question_text;
                 document.getElementById('question-type').value = question.question_type;
                 document.getElementById('question-points').value = question.points;
+                document.getElementById('question-order').value = question.order_index || 1;
                 
                 // Change modal title and button
                 document.getElementById('question-modal-title').textContent = 'Edit Question';
