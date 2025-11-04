@@ -2180,20 +2180,53 @@
                 case 'multiple_choice':
                 case 'true_false':
                 case 'multiple_response':
-                    // Populate options
-                    const optionsHtml = question.options.map(opt => `
-                        <div class="flex gap-2 mb-2 option-row">
-                            <input type="text" class="flex-1 px-3 py-2 border rounded option-text" value="${opt.option_text}" placeholder="Option text" />
-                            <label class="flex items-center">
-                                <input type="checkbox" class="mr-1 option-correct" ${opt.is_correct ? 'checked' : ''} />
-                                <span class="text-sm">Correct</span>
-                            </label>
-                            <button type="button" onclick="this.parentElement.remove()" class="text-red-600 hover:text-red-800 px-2">
-                                <i class="fas fa-trash"></i> Remove
-                            </button>
-                        </div>
-                    `).join('');
-                    document.getElementById('question-options').innerHTML = optionsHtml;
+                    // Populate options with drag-and-drop support
+                    const listEl = document.getElementById('answer-options-list');
+                    listEl.innerHTML = ''; // Clear existing options
+                    
+                    question.options.forEach(opt => {
+                        const optionDiv = document.createElement('div');
+                        optionDiv.className = 'flex items-center space-x-2 bg-white p-2 rounded border cursor-move';
+                        optionDiv.draggable = true;
+                        
+                        // Create grip icon
+                        const gripIcon = document.createElement('i');
+                        gripIcon.className = 'fas fa-grip-vertical text-gray-400 mr-2';
+                        
+                        // Create correct checkbox
+                        const correctCheckbox = document.createElement('input');
+                        correctCheckbox.type = 'checkbox';
+                        correctCheckbox.className = 'answer-correct';
+                        correctCheckbox.checked = opt.is_correct;
+                        
+                        // Create text input
+                        const textInput = document.createElement('input');
+                        textInput.type = 'text';
+                        textInput.className = 'answer-text flex-1 px-3 py-2 border rounded';
+                        textInput.value = opt.option_text;
+                        textInput.placeholder = 'Answer option';
+                        
+                        // Create remove button
+                        const removeBtn = document.createElement('button');
+                        removeBtn.type = 'button';
+                        removeBtn.className = 'text-red-600 hover:text-red-800 text-xl';
+                        removeBtn.innerHTML = '×';
+                        removeBtn.onclick = () => optionDiv.remove();
+                        
+                        // Add drag event listeners
+                        optionDiv.addEventListener('dragstart', handleAnswerDragStart);
+                        optionDiv.addEventListener('dragover', handleAnswerDragOver);
+                        optionDiv.addEventListener('drop', handleAnswerDrop);
+                        optionDiv.addEventListener('dragend', handleAnswerDragEnd);
+                        
+                        // Append elements
+                        optionDiv.appendChild(gripIcon);
+                        optionDiv.appendChild(correctCheckbox);
+                        optionDiv.appendChild(textInput);
+                        optionDiv.appendChild(removeBtn);
+                        
+                        listEl.appendChild(optionDiv);
+                    });
                     break;
                     
                 case 'matching':
