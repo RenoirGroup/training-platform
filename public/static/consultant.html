@@ -1617,29 +1617,21 @@
                 
                 placedLabels.forEach(label => {
                     const labelText = label.getAttribute('data-label');
+                    
+                    // ALWAYS calculate percentages from current position in main view
+                    // This ensures we capture any moves made in normal view
                     const mainX = parseFloat(label.style.left);
                     const mainY = parseFloat(label.style.top);
+                    const xPercent = (mainX / mainWidth) * 100;
+                    const yPercent = (mainY / mainHeight) * 100;
                     
-                    console.log(`EXPAND - Label "${labelText}" in main view at: ${mainX}px, ${mainY}px`);
-                    
-                    // Try to get stored percentages first
-                    let xPercent = parseFloat(label.getAttribute('data-x-percent'));
-                    let yPercent = parseFloat(label.getAttribute('data-y-percent'));
-                    
-                    // If no stored percentages, calculate from pixel positions
-                    if (isNaN(xPercent) || isNaN(yPercent)) {
-                        xPercent = (mainX / mainWidth) * 100;
-                        yPercent = (mainY / mainHeight) * 100;
-                        console.log(`EXPAND - Label "${labelText}": NO stored % - calculated ${xPercent.toFixed(2)}%, ${yPercent.toFixed(2)}%`);
-                    } else {
-                        console.log(`EXPAND - Label "${labelText}": using stored ${xPercent.toFixed(2)}%, ${yPercent.toFixed(2)}%`);
-                    }
+                    console.log(`EXPAND - Label "${labelText}" at ${mainX.toFixed(1)}, ${mainY.toFixed(1)}px in main (${xPercent.toFixed(2)}%, ${yPercent.toFixed(2)}%)`);
                     
                     // Apply percentage to expanded dimensions
                     const expandedX = (xPercent / 100) * expandedWidth;
                     const expandedY = (yPercent / 100) * expandedHeight;
                     
-                    console.log(`EXPAND - Placing label "${labelText}" at ${expandedX.toFixed(1)}, ${expandedY.toFixed(1)}px in expanded view`);
+                    console.log(`EXPAND - Placing at ${expandedX.toFixed(1)}, ${expandedY.toFixed(1)}px in expanded view`);
                     
                     const newLabel = createPlacedLabel(
                         labelText,
@@ -1849,26 +1841,20 @@
             expandedLabels.forEach(label => {
                 const labelText = label.getAttribute('data-label');
                 
-                // Try to use stored percentages first (more accurate)
-                let xPercent = parseFloat(label.getAttribute('data-x-percent'));
-                let yPercent = parseFloat(label.getAttribute('data-y-percent'));
+                // ALWAYS calculate percentages from current position in expanded view
+                // This ensures we capture any moves made in expanded view
+                const expandedX = parseFloat(label.style.left);
+                const expandedY = parseFloat(label.style.top);
+                const xPercent = (expandedX / expandedWidth) * 100;
+                const yPercent = (expandedY / expandedHeight) * 100;
                 
-                // If no stored percentages, calculate from pixel positions
-                if (isNaN(xPercent) || isNaN(yPercent)) {
-                    const expandedX = parseFloat(label.style.left);
-                    const expandedY = parseFloat(label.style.top);
-                    xPercent = (expandedX / expandedWidth) * 100;
-                    yPercent = (expandedY / expandedHeight) * 100;
-                    console.log(`SYNC - Label "${labelText}": calculated ${xPercent.toFixed(2)}%, ${yPercent.toFixed(2)}%`);
-                } else {
-                    console.log(`SYNC - Label "${labelText}": using stored ${xPercent.toFixed(2)}%, ${yPercent.toFixed(2)}%`);
-                }
+                console.log(`SYNC - Label "${labelText}" at ${expandedX.toFixed(1)}, ${expandedY.toFixed(1)}px in expanded (${xPercent.toFixed(2)}%, ${yPercent.toFixed(2)}%)`);
                 
                 // Apply percentage to main view dimensions
                 const mainX = (xPercent / 100) * mainWidth;
                 const mainY = (yPercent / 100) * mainHeight;
                 
-                console.log(`SYNC - Placing at ${mainX.toFixed(1)}, ${mainY.toFixed(1)}px`);
+                console.log(`SYNC - Placing at ${mainX.toFixed(1)}, ${mainY.toFixed(1)}px in main view`);
                 
                 // Create label with scaled position and store percentages
                 const newLabel = createPlacedLabel(labelText, mainX, mainY, questionId, toCanvas);
