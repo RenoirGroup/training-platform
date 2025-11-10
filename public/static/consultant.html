@@ -1591,8 +1591,8 @@
             const mainImg = wrapper.querySelector('img');
             const expandedImg = modal.querySelector(`#hotspot-expanded-img-${questionId}`);
             
-            // Wait for expanded image to load and get dimensions
-            expandedImg.onload = () => {
+            // Function to copy labels once dimensions are stable
+            const copyLabelsToExpanded = () => {
                 // Force synchronous reflow to get current dimensions
                 mainImg.offsetHeight;
                 expandedImg.offsetHeight;
@@ -1601,6 +1601,15 @@
                 const mainHeight = mainImg.offsetHeight;
                 const expandedWidth = expandedImg.offsetWidth;
                 const expandedHeight = expandedImg.offsetHeight;
+                
+                // Validate that expanded image has been properly sized by CSS
+                // It should be significantly larger than a small placeholder size
+                if (expandedWidth < 200 || expandedHeight < 100) {
+                    console.log('EXPAND - Waiting for CSS to apply... dimensions too small:', expandedWidth, 'x', expandedHeight);
+                    // Try again on next frame
+                    requestAnimationFrame(copyLabelsToExpanded);
+                    return;
+                }
                 
                 console.log('EXPAND - Main dimensions:', mainWidth, 'x', mainHeight);
                 console.log('EXPAND - Expanded dimensions:', expandedWidth, 'x', expandedHeight);
@@ -1646,9 +1655,15 @@
                 });
             };
             
-            // If image is already loaded (cached)
+            // Wait for expanded image to load and CSS to apply
+            expandedImg.onload = () => {
+                // Use requestAnimationFrame to wait for CSS layout
+                requestAnimationFrame(copyLabelsToExpanded);
+            };
+            
+            // If image is already loaded (cached), start immediately
             if (expandedImg.complete) {
-                expandedImg.onload();
+                requestAnimationFrame(copyLabelsToExpanded);
             }
             
             // Add available labels to expanded pool with proper drag events
