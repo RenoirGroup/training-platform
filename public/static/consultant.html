@@ -1556,11 +1556,11 @@
                     </div>
                     
                     <!-- Diagram Container (grows to fill space) -->
-                    <div class="flex-1 bg-white rounded-lg overflow-hidden mb-3 flex items-center justify-center">
-                        <div class="relative" style="max-width: 100%; max-height: 100%;" id="hotspot-expanded-wrapper-${questionId}">
+                    <div class="flex-1 bg-white rounded-lg overflow-auto mb-3 flex items-center justify-center p-4">
+                        <div class="relative inline-block" id="hotspot-expanded-wrapper-${questionId}">
                             <img src="${document.getElementById(`hotspot-img-${questionId}`).src}" 
                                  alt="Diagram" 
-                                 style="max-width: 100%; max-height: calc(100vh - 200px); width: auto; height: auto; display: block;"
+                                 style="max-width: 90vw; max-height: calc(100vh - 250px); width: auto; height: auto; display: block;"
                                  id="hotspot-expanded-img-${questionId}" />
                             <div class="hotspot-canvas" id="hotspot-expanded-canvas-${questionId}" 
                                  style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></div>
@@ -1611,9 +1611,19 @@
                     return;
                 }
                 
-                console.log('EXPAND - Main dimensions:', mainWidth, 'x', mainHeight);
-                console.log('EXPAND - Expanded dimensions:', expandedWidth, 'x', expandedHeight);
+                console.log('EXPAND - Main dimensions:', mainWidth, 'x', mainHeight, '(aspect ratio:', (mainWidth/mainHeight).toFixed(2) + ')');
+                console.log('EXPAND - Expanded dimensions:', expandedWidth, 'x', expandedHeight, '(aspect ratio:', (expandedWidth/expandedHeight).toFixed(2) + ')');
+                console.log('EXPAND - Natural image size:', expandedImg.naturalWidth, 'x', expandedImg.naturalHeight, '(aspect ratio:', (expandedImg.naturalWidth/expandedImg.naturalHeight).toFixed(2) + ')');
                 console.log('EXPAND - Found', placedLabels.length, 'labels to copy');
+                
+                // Check for aspect ratio mismatch
+                const mainAspect = mainWidth / mainHeight;
+                const expandedAspect = expandedWidth / expandedHeight;
+                const aspectDiff = Math.abs(mainAspect - expandedAspect);
+                if (aspectDiff > 0.1) {
+                    console.warn('⚠️ ASPECT RATIO MISMATCH! Main:', mainAspect.toFixed(2), 'vs Expanded:', expandedAspect.toFixed(2));
+                    console.warn('⚠️ This will cause labels to move to wrong sections!');
+                }
                 
                 placedLabels.forEach(label => {
                     const labelText = label.getAttribute('data-label');
@@ -1830,8 +1840,17 @@
             const mainWidth = mainImg.offsetWidth;
             const mainHeight = mainImg.offsetHeight;
             
-            console.log('SYNC - Expanded dimensions:', expandedWidth, 'x', expandedHeight);
-            console.log('SYNC - Main dimensions:', mainWidth, 'x', mainHeight);
+            console.log('SYNC - Expanded dimensions:', expandedWidth, 'x', expandedHeight, '(aspect ratio:', (expandedWidth/expandedHeight).toFixed(2) + ')');
+            console.log('SYNC - Main dimensions:', mainWidth, 'x', mainHeight, '(aspect ratio:', (mainWidth/mainHeight).toFixed(2) + ')');
+            
+            // Check for aspect ratio mismatch
+            const mainAspect = mainWidth / mainHeight;
+            const expandedAspect = expandedWidth / expandedHeight;
+            const aspectDiff = Math.abs(mainAspect - expandedAspect);
+            if (aspectDiff > 0.1) {
+                console.warn('⚠️ ASPECT RATIO MISMATCH! Expanded:', expandedAspect.toFixed(2), 'vs Main:', mainAspect.toFixed(2));
+                console.warn('⚠️ This will cause labels to move to wrong sections!');
+            }
             
             // Clear main canvas
             toCanvas.innerHTML = '';
