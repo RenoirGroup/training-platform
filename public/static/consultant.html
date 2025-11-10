@@ -1808,55 +1808,55 @@
             
             if (!expandedImg || !mainImg) return;
             
-            // Use requestAnimationFrame to ensure dimensions are stable
-            requestAnimationFrame(() => {
-                const expandedWidth = expandedImg.offsetWidth;
-                const expandedHeight = expandedImg.offsetHeight;
-                const mainWidth = mainImg.offsetWidth;
-                const mainHeight = mainImg.offsetHeight;
+            // Force synchronous reflow to get current dimensions
+            mainImg.offsetHeight;
+            expandedImg.offsetHeight;
+            
+            const expandedWidth = expandedImg.offsetWidth;
+            const expandedHeight = expandedImg.offsetHeight;
+            const mainWidth = mainImg.offsetWidth;
+            const mainHeight = mainImg.offsetHeight;
+            
+            console.log('SYNC - Expanded dimensions:', expandedWidth, 'x', expandedHeight);
+            console.log('SYNC - Main dimensions:', mainWidth, 'x', mainHeight);
+            
+            // Clear main canvas
+            toCanvas.innerHTML = '';
+            
+            // Copy labels from expanded to main with percentage-based coordinates for resolution independence
+            const expandedLabels = fromCanvas.querySelectorAll('.hotspot-label.placed');
+            expandedLabels.forEach(label => {
+                const labelText = label.getAttribute('data-label');
                 
-                console.log('SYNC - Expanded dimensions:', expandedWidth, 'x', expandedHeight);
-                console.log('SYNC - Main dimensions:', mainWidth, 'x', mainHeight);
+                // Try to use stored percentages first (more accurate)
+                let xPercent = parseFloat(label.getAttribute('data-x-percent'));
+                let yPercent = parseFloat(label.getAttribute('data-y-percent'));
                 
-                // Clear main canvas
-                toCanvas.innerHTML = '';
+                // If no stored percentages, calculate from pixel positions
+                if (isNaN(xPercent) || isNaN(yPercent)) {
+                    const expandedX = parseFloat(label.style.left);
+                    const expandedY = parseFloat(label.style.top);
+                    xPercent = (expandedX / expandedWidth) * 100;
+                    yPercent = (expandedY / expandedHeight) * 100;
+                    console.log(`SYNC - Label "${labelText}": calculated ${xPercent.toFixed(2)}%, ${yPercent.toFixed(2)}%`);
+                } else {
+                    console.log(`SYNC - Label "${labelText}": using stored ${xPercent.toFixed(2)}%, ${yPercent.toFixed(2)}%`);
+                }
                 
-                // Copy labels from expanded to main with percentage-based coordinates for resolution independence
-                const expandedLabels = fromCanvas.querySelectorAll('.hotspot-label.placed');
-                expandedLabels.forEach(label => {
-                    const labelText = label.getAttribute('data-label');
-                    
-                    // Try to use stored percentages first (more accurate)
-                    let xPercent = parseFloat(label.getAttribute('data-x-percent'));
-                    let yPercent = parseFloat(label.getAttribute('data-y-percent'));
-                    
-                    // If no stored percentages, calculate from pixel positions
-                    if (isNaN(xPercent) || isNaN(yPercent)) {
-                        const expandedX = parseFloat(label.style.left);
-                        const expandedY = parseFloat(label.style.top);
-                        xPercent = (expandedX / expandedWidth) * 100;
-                        yPercent = (expandedY / expandedHeight) * 100;
-                        console.log(`SYNC - Label "${labelText}": calculated ${xPercent.toFixed(2)}%, ${yPercent.toFixed(2)}%`);
-                    } else {
-                        console.log(`SYNC - Label "${labelText}": using stored ${xPercent.toFixed(2)}%, ${yPercent.toFixed(2)}%`);
-                    }
-                    
-                    // Apply percentage to main view dimensions
-                    const mainX = (xPercent / 100) * mainWidth;
-                    const mainY = (yPercent / 100) * mainHeight;
-                    
-                    console.log(`SYNC - Placing at ${mainX.toFixed(1)}, ${mainY.toFixed(1)}px`);
-                    
-                    // Create label with scaled position and store percentages
-                    const newLabel = createPlacedLabel(labelText, mainX, mainY, questionId, toCanvas);
-                    newLabel.setAttribute('data-x-percent', xPercent.toFixed(2));
-                    newLabel.setAttribute('data-y-percent', yPercent.toFixed(2));
-                    toCanvas.appendChild(newLabel);
-                });
+                // Apply percentage to main view dimensions
+                const mainX = (xPercent / 100) * mainWidth;
+                const mainY = (yPercent / 100) * mainHeight;
                 
-                updateHotspotAnswer(questionId);
+                console.log(`SYNC - Placing at ${mainX.toFixed(1)}, ${mainY.toFixed(1)}px`);
+                
+                // Create label with scaled position and store percentages
+                const newLabel = createPlacedLabel(labelText, mainX, mainY, questionId, toCanvas);
+                newLabel.setAttribute('data-x-percent', xPercent.toFixed(2));
+                newLabel.setAttribute('data-y-percent', yPercent.toFixed(2));
+                toCanvas.appendChild(newLabel);
             });
-
+            
+            updateHotspotAnswer(questionId);
         }
 
         async function submitTest(e) {
