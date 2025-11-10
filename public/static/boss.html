@@ -697,6 +697,50 @@
             }
         });
         
+        function generateExcel(data, timestamp) {
+            // Create workbook and worksheet
+            const wb = XLSX.utils.book_new();
+            
+            // Prepare data with headers
+            const headers = ['Name', 'Email', 'Project', 'Levels Completed', 'Total Points', 'Current Streak', 'Rank', 'League', 'Last Login'];
+            const rows = data.map(row => [
+                row.name,
+                row.email,
+                row.project_name || 'N/A',
+                row.levels_completed,
+                row.total_points || 0,
+                row.current_login_streak || 0,
+                row.rank || 'N/A',
+                row.league || 'N/A',
+                row.last_login ? new Date(row.last_login).toLocaleDateString() : 'Never'
+            ]);
+            
+            // Combine headers and data
+            const wsData = [headers, ...rows];
+            
+            // Create worksheet
+            const ws = XLSX.utils.aoa_to_sheet(wsData);
+            
+            // Set column widths
+            ws['!cols'] = [
+                { wch: 20 }, // Name
+                { wch: 25 }, // Email
+                { wch: 20 }, // Project
+                { wch: 15 }, // Levels
+                { wch: 12 }, // Points
+                { wch: 12 }, // Streak
+                { wch: 10 }, // Rank
+                { wch: 10 }, // League
+                { wch: 15 }  // Last Login
+            ];
+            
+            // Add worksheet to workbook
+            XLSX.utils.book_append_sheet(wb, ws, 'Team Report');
+            
+            // Generate Excel file and download
+            XLSX.writeFile(wb, `team-report-${timestamp}.xlsx`);
+        }
+
         async function exportReport(format = 'csv') {
             try {
                 // Hide menu
@@ -716,15 +760,15 @@
                     a.click();
                     window.URL.revokeObjectURL(url);
                 } else if (format === 'excel') {
-                    // Create Excel format (CSV with Excel-specific formatting)
-                    const excelCsv = '\uFEFF' + csv; // Add BOM for Excel
-                    const blob = new Blob([excelCsv], { type: 'application/vnd.ms-excel' });
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `team-report-${timestamp}.xls`;
-                    a.click();
-                    window.URL.revokeObjectURL(url);
+                    // Load SheetJS library if not already loaded
+                    if (typeof XLSX === 'undefined') {
+                        const script = document.createElement('script');
+                        script.src = 'https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js';
+                        script.onload = () => generateExcel(data, timestamp);
+                        document.head.appendChild(script);
+                    } else {
+                        generateExcel(data, timestamp);
+                    }
                 } else if (format === 'pdf') {
                     // Generate PDF using browser print
                     const printWindow = window.open('', '_blank');
