@@ -1179,11 +1179,11 @@
                                         class="absolute top-2 right-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs z-20">
                                     <i class="fas fa-expand mr-1"></i>Expand
                                 </button>
-                                <div class="relative w-full bg-white" id="hotspot-wrapper-${q.id}">
+                                <div class="relative inline-block bg-white" id="hotspot-wrapper-${q.id}">
                                     <img src="${imageUrl}" 
                                          alt="Diagram" 
-                                         class="w-full border-2 border-gray-400" 
-                                         style="min-height: 500px; max-height: 70vh; object-fit: contain; display: block; margin: 0 auto;"
+                                         class="border-2 border-gray-400" 
+                                         style="max-width: 100%; height: auto; display: block;"
                                          id="hotspot-img-${q.id}" />
                                     <div class="hotspot-canvas" id="hotspot-${q.id}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></div>
                                 </div>
