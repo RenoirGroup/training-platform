@@ -1593,50 +1593,56 @@
             
             // Wait for expanded image to load and get dimensions
             expandedImg.onload = () => {
-                // Use requestAnimationFrame to ensure the browser has finished rendering
-                requestAnimationFrame(() => {
-                    const mainWidth = mainImg.offsetWidth;
-                    const mainHeight = mainImg.offsetHeight;
-                    const expandedWidth = expandedImg.offsetWidth;
-                    const expandedHeight = expandedImg.offsetHeight;
+                // Force synchronous reflow to get current dimensions
+                mainImg.offsetHeight;
+                expandedImg.offsetHeight;
+                
+                const mainWidth = mainImg.offsetWidth;
+                const mainHeight = mainImg.offsetHeight;
+                const expandedWidth = expandedImg.offsetWidth;
+                const expandedHeight = expandedImg.offsetHeight;
+                
+                console.log('EXPAND - Main dimensions:', mainWidth, 'x', mainHeight);
+                console.log('EXPAND - Expanded dimensions:', expandedWidth, 'x', expandedHeight);
+                console.log('EXPAND - Found', placedLabels.length, 'labels to copy');
+                
+                placedLabels.forEach(label => {
+                    const labelText = label.getAttribute('data-label');
+                    const mainX = parseFloat(label.style.left);
+                    const mainY = parseFloat(label.style.top);
                     
-                    console.log('EXPAND - Main dimensions:', mainWidth, 'x', mainHeight);
-                    console.log('EXPAND - Expanded dimensions:', expandedWidth, 'x', expandedHeight);
+                    console.log(`EXPAND - Label "${labelText}" in main view at: ${mainX}px, ${mainY}px`);
                     
-                    placedLabels.forEach(label => {
-                        // Try to get stored percentages first
-                        let xPercent = parseFloat(label.getAttribute('data-x-percent'));
-                        let yPercent = parseFloat(label.getAttribute('data-y-percent'));
-                        
-                        // If no stored percentages, calculate from pixel positions
-                        if (isNaN(xPercent) || isNaN(yPercent)) {
-                            const mainX = parseFloat(label.style.left);
-                            const mainY = parseFloat(label.style.top);
-                            xPercent = (mainX / mainWidth) * 100;
-                            yPercent = (mainY / mainHeight) * 100;
-                            console.log(`EXPAND - Label "${label.getAttribute('data-label')}": calculated ${xPercent.toFixed(2)}%, ${yPercent.toFixed(2)}%`);
-                        } else {
-                            console.log(`EXPAND - Label "${label.getAttribute('data-label')}": using stored ${xPercent.toFixed(2)}%, ${yPercent.toFixed(2)}%`);
-                        }
-                        
-                        // Apply percentage to expanded dimensions
-                        const expandedX = (xPercent / 100) * expandedWidth;
-                        const expandedY = (yPercent / 100) * expandedHeight;
-                        
-                        console.log(`EXPAND - Placing at ${expandedX.toFixed(1)}, ${expandedY.toFixed(1)}px`);
-                        
-                        const newLabel = createPlacedLabel(
-                            label.getAttribute('data-label'),
-                            expandedX,
-                            expandedY,
-                            questionId,
-                            expandedCanvas
-                        );
-                        // Store percentage for reverse conversion
-                        newLabel.setAttribute('data-x-percent', xPercent.toFixed(2));
-                        newLabel.setAttribute('data-y-percent', yPercent.toFixed(2));
-                        expandedCanvas.appendChild(newLabel);
-                    });
+                    // Try to get stored percentages first
+                    let xPercent = parseFloat(label.getAttribute('data-x-percent'));
+                    let yPercent = parseFloat(label.getAttribute('data-y-percent'));
+                    
+                    // If no stored percentages, calculate from pixel positions
+                    if (isNaN(xPercent) || isNaN(yPercent)) {
+                        xPercent = (mainX / mainWidth) * 100;
+                        yPercent = (mainY / mainHeight) * 100;
+                        console.log(`EXPAND - Label "${labelText}": NO stored % - calculated ${xPercent.toFixed(2)}%, ${yPercent.toFixed(2)}%`);
+                    } else {
+                        console.log(`EXPAND - Label "${labelText}": using stored ${xPercent.toFixed(2)}%, ${yPercent.toFixed(2)}%`);
+                    }
+                    
+                    // Apply percentage to expanded dimensions
+                    const expandedX = (xPercent / 100) * expandedWidth;
+                    const expandedY = (yPercent / 100) * expandedHeight;
+                    
+                    console.log(`EXPAND - Placing label "${labelText}" at ${expandedX.toFixed(1)}, ${expandedY.toFixed(1)}px in expanded view`);
+                    
+                    const newLabel = createPlacedLabel(
+                        labelText,
+                        expandedX,
+                        expandedY,
+                        questionId,
+                        expandedCanvas
+                    );
+                    // Store percentage for reverse conversion
+                    newLabel.setAttribute('data-x-percent', xPercent.toFixed(2));
+                    newLabel.setAttribute('data-y-percent', yPercent.toFixed(2));
+                    expandedCanvas.appendChild(newLabel);
                 });
             };
             
