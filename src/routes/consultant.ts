@@ -292,13 +292,21 @@ consultant.post('/tests/:testId/submit', async (c) => {
         // Parse answer_data and user placements
         const hotspotData = JSON.parse(question.answer_data || '{}');
         const userPlacements = JSON.parse(userAnswer || '[]');
-        const tolerance = hotspotData.tolerance || 5; // percentage tolerance (5% default)
+        const tolerance = hotspotData.tolerance || 10; // Increased tolerance to 10% for aspect ratio differences
+        
+        console.log('Hotspot scoring - Question:', question.id);
+        console.log('Correct placements:', hotspotData.placements);
+        console.log('User placements:', userPlacements);
+        console.log('Tolerance:', tolerance + '%');
         
         // Check if all labels are placed within tolerance of correct positions
         isCorrect = hotspotData.placements && userPlacements.length === hotspotData.placements.length &&
           userPlacements.every((userPlacement: any) => {
             const correctPlacement = hotspotData.placements.find((p: any) => p.label === userPlacement.label);
-            if (!correctPlacement) return false;
+            if (!correctPlacement) {
+              console.log(`Label "${userPlacement.label}" not found in correct answer`);
+              return false;
+            }
             
             // Use percentage-based comparison for resolution independence
             const userXPercent = userPlacement.xPercent || 0;
@@ -311,8 +319,20 @@ consultant.post('/tests/:testId/submit', async (c) => {
               Math.pow(userXPercent - correctXPercent, 2) + 
               Math.pow(userYPercent - correctYPercent, 2)
             );
-            return distance <= tolerance;
+            
+            const labelCorrect = distance <= tolerance;
+            console.log(`Label "${userPlacement.label}":`, {
+              user: `${userXPercent.toFixed(2)}%, ${userYPercent.toFixed(2)}%`,
+              correct: `${correctXPercent.toFixed(2)}%, ${correctYPercent.toFixed(2)}%`,
+              distance: distance.toFixed(2) + '%',
+              tolerance: tolerance + '%',
+              result: labelCorrect ? '✓ CORRECT' : '✗ TOO FAR'
+            });
+            
+            return labelCorrect;
           });
+        
+        console.log('Overall result:', isCorrect ? '✓ PASSED' : '✗ FAILED');
         break;
 
       default:
