@@ -1917,6 +1917,30 @@
                 const response = await axios.post(`/api/consultant/tests/${currentTestId}/submit`, { answers });
                 const result = response.data;
                 
+                // Log hotspot debug info to console
+                if (result.hotspotDebug) {
+                    console.log('═══════════════════════════════════════════');
+                    console.log('🔍 HOTSPOT SCORING DEBUG INFORMATION');
+                    console.log('═══════════════════════════════════════════');
+                    console.log('Question ID:', result.hotspotDebug.questionId);
+                    console.log('Tolerance:', result.hotspotDebug.tolerance + '%');
+                    console.log('');
+                    console.log('📍 Label Comparisons:');
+                    console.log('─────────────────────────────────────────');
+                    result.hotspotDebug.labelComparisons.forEach((comparison, idx) => {
+                        console.log(`${idx + 1}. Label: "${comparison.label}"`);
+                        console.log(`   User Position:    ${comparison.userPosition}`);
+                        console.log(`   Correct Position: ${comparison.correctPosition}`);
+                        console.log(`   Distance:         ${comparison.distance}`);
+                        console.log(`   Tolerance:        ${comparison.tolerance}`);
+                        console.log(`   Result:           ${comparison.result === 'PASS' ? '✅ PASS' : '❌ FAIL'}`);
+                        console.log('');
+                    });
+                    console.log('─────────────────────────────────────────');
+                    console.log('Overall Result:', result.hotspotDebug.overallResult === 'PASS' ? '✅ PASS' : '❌ FAIL');
+                    console.log('═══════════════════════════════════════════');
+                }
+                
                 // Build detailed results message
                 let message = `Test ${result.passed ? 'PASSED ✓' : 'FAILED ✗'}!\n\n`;
                 message += `Score: ${result.score}/${result.maxScore} (${result.percentage.toFixed(1)}%)\n`;
