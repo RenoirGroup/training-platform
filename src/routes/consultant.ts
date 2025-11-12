@@ -294,17 +294,24 @@ consultant.post('/tests/:testId/submit', async (c) => {
         const userPlacements = JSON.parse(userAnswer || '[]');
         const tolerance = hotspotData.tolerance || 10; // Increased tolerance to 10% for aspect ratio differences
         
-        console.log('Hotspot scoring - Question:', question.id);
-        console.log('Correct placements:', hotspotData.placements);
-        console.log('User placements:', userPlacements);
-        console.log('Tolerance:', tolerance + '%');
+        // Store debug info to return in response
+        const debugInfo: any = {
+          questionId: question.id,
+          tolerance: tolerance,
+          correctPlacements: hotspotData.placements,
+          userPlacements: userPlacements,
+          labelComparisons: []
+        };
         
         // Check if all labels are placed within tolerance of correct positions
         isCorrect = hotspotData.placements && userPlacements.length === hotspotData.placements.length &&
           userPlacements.every((userPlacement: any) => {
             const correctPlacement = hotspotData.placements.find((p: any) => p.label === userPlacement.label);
             if (!correctPlacement) {
-              console.log(`Label "${userPlacement.label}" not found in correct answer`);
+              debugInfo.labelComparisons.push({
+                label: userPlacement.label,
+                error: 'Label not found in correct answer'
+              });
               return false;
             }
             
@@ -321,18 +328,23 @@ consultant.post('/tests/:testId/submit', async (c) => {
             );
             
             const labelCorrect = distance <= tolerance;
-            console.log(`Label "${userPlacement.label}":`, {
-              user: `${userXPercent.toFixed(2)}%, ${userYPercent.toFixed(2)}%`,
-              correct: `${correctXPercent.toFixed(2)}%, ${correctYPercent.toFixed(2)}%`,
+            
+            debugInfo.labelComparisons.push({
+              label: userPlacement.label,
+              userPosition: `${userXPercent.toFixed(2)}%, ${userYPercent.toFixed(2)}%`,
+              correctPosition: `${correctXPercent.toFixed(2)}%, ${correctYPercent.toFixed(2)}%`,
               distance: distance.toFixed(2) + '%',
               tolerance: tolerance + '%',
-              result: labelCorrect ? '✓ CORRECT' : '✗ TOO FAR'
+              result: labelCorrect ? 'PASS' : 'FAIL'
             });
             
             return labelCorrect;
           });
         
-        console.log('Overall result:', isCorrect ? '✓ PASSED' : '✗ FAILED');
+        debugInfo.overallResult = isCorrect ? 'PASS' : 'FAIL';
+        
+        // Store debug info in results for this question
+        (results as any).hotspotDebug = debugInfo;
         break;
 
       default:
@@ -421,6 +433,7 @@ consultant.post('/tests/:testId/submit', async (c) => {
     maxScore,
     percentage,
     results,
+    hotspotDebug: (results as any).hotspotDebug, // Include hotspot debug info
   });
 });
 
