@@ -1812,12 +1812,20 @@
             const x = Math.round(event.clientX - rect.left);
             const y = Math.round(event.clientY - rect.top);
             
+            // Calculate percentage coordinates (same as consultant view)
+            const imgWidth = rect.width;
+            const imgHeight = rect.height;
+            const xPercent = (x / imgWidth) * 100;
+            const yPercent = (y / imgHeight) * 100;
+            
             if (isReposition) {
                 // Repositioning existing label
                 const idx = parseInt(event.dataTransfer.getData('index'));
                 if (idx >= 0 && idx < hotspotPlacedLabels.length) {
                     hotspotPlacedLabels[idx].x = x;
                     hotspotPlacedLabels[idx].y = y;
+                    hotspotPlacedLabels[idx].xPercent = xPercent;
+                    hotspotPlacedLabels[idx].yPercent = yPercent;
                 }
             } else {
                 // New placement
@@ -1832,8 +1840,8 @@
                     poolLabel.remove();
                 }
                 
-                // Add to placed labels array
-                hotspotPlacedLabels.push({ label, x, y });
+                // Add to placed labels array with both pixel and percentage coordinates
+                hotspotPlacedLabels.push({ label, x, y, xPercent, yPercent });
             }
             
             // Re-render placed labels
