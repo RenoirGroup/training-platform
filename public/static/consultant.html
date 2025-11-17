@@ -1457,8 +1457,17 @@
                             e.stopPropagation();
                             const labelText = label.getAttribute('data-label');
                             label.remove();
-                            // Show the original label in pool
-                            draggedElement.style.display = '';
+                            
+                            // Find and restore the label in the main pool
+                            const mainPool = document.getElementById(`hotspot-${questionId}-labels`);
+                            if (mainPool) {
+                                Array.from(mainPool.children).forEach(poolLabel => {
+                                    if (poolLabel.getAttribute('data-label') === labelText) {
+                                        poolLabel.style.display = '';
+                                    }
+                                });
+                            }
+                            
                             updateHotspotAnswer(questionId);
                         };
                         
