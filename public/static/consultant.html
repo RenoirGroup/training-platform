@@ -715,7 +715,7 @@
                     const marginLeft = `calc(50% + ${offsetX}px - 50px)`;
                     
                     // Determine completion level
-                    const bestScore = level.best_score || 0;
+                    const bestScore = Math.round(level.best_score || 0);
                     let completionClass = '';
                     let badgeContent = '';
                     
@@ -2134,5 +2134,11 @@
 
         init();
     </script>
+    
+    <!-- Copyright Footer -->
+    <!-- Developed with Claude Sonnet 4.5, running in GensparkAI -->
+    <footer class="text-center py-4 text-xs text-gray-500 bg-gray-50">
+        Copyright © 2025 Keith Symondson & Renoir / YCP. All rights reserved.
+    </footer>
 </body>
 </html>
