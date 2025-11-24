@@ -22,7 +22,7 @@ consultant.get('/ladder', async (c) => {
       (SELECT COUNT(*) FROM training_materials WHERE level_id = l.id) as materials_count,
       (SELECT COUNT(*) FROM tests WHERE level_id = l.id) as tests_count,
       (SELECT COUNT(*) FROM boss_level_tasks WHERE level_id = l.id) as tasks_count,
-      (SELECT MAX(ta.score) 
+      (SELECT MAX(ta.percentage) 
        FROM test_attempts ta 
        JOIN tests t ON ta.test_id = t.id 
        WHERE t.level_id = l.id AND ta.user_id = ?
@@ -192,9 +192,9 @@ consultant.post('/tests/:testId/submit', async (c) => {
     return c.json({ error: 'Test not found' }, 404);
   }
 
-  // Get all questions
+  // Get all questions ordered by order_index to match display order
   const questions = await c.env.DB.prepare(
-    'SELECT * FROM questions WHERE test_id = ?'
+    'SELECT * FROM questions WHERE test_id = ? ORDER BY order_index'
   ).bind(testId).all();
 
   let totalScore = 0;
