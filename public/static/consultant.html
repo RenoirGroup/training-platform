@@ -378,30 +378,30 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-teal-50 to-green-100 min-h-screen">
+<body class="bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen">
     <!-- Navigation -->
-    <nav class="bg-gray-900 text-white p-4 shadow-lg">
+    <nav class="text-white p-4 shadow-lg" style="background: linear-gradient(135deg, #001C44 0%, #1524A9 100%);">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center gap-4">
-                <img src="/static/renoir-logo-dark.png" alt="Renoir Consulting" class="h-10">
+                <img src="/static/ycp-renoir-logo.png" alt="YCP Renoir" class="h-12">
                 <div>
                     <h1 class="text-2xl font-bold">The Renoir Academy</h1>
                     <p class="text-sm text-gray-300">Consultant Training</p>
                 </div>
             </div>
             <div class="flex items-center space-x-4">
-                <div class="bg-gray-800 px-4 py-2 rounded-lg">
+                <div class="px-4 py-2 rounded-lg" style="background-color: rgba(0, 28, 68, 0.5);">
                     <i class="fas fa-fire text-orange-500 mr-2"></i>
                     <span id="streak-count" class="font-bold">0</span> day streak
                 </div>
-                <div class="bg-gray-800 px-4 py-2 rounded-lg">
+                <div class="px-4 py-2 rounded-lg" style="background-color: rgba(0, 28, 68, 0.5);">
                     <i class="fas fa-star text-yellow-500 mr-2"></i>
                     <span id="points-count" class="font-bold">0</span> points
                 </div>
-                <button onclick="showTab('profile')" class="bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded transition-colors">
+                <button onclick="showTab('profile')" class="px-4 py-2 rounded transition-colors hover:opacity-80" style="background-color: rgba(0, 28, 68, 0.5);">
                     <i class="fas fa-user mr-2"></i><span id="user-name"></span>
                 </button>
-                <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded transition-colors">
+                <button onclick="logout()" class="px-4 py-2 rounded transition-colors hover:opacity-80" style="background-color: #0077FF;">
                     <i class="fas fa-sign-out-alt"></i>
                 </button>
             </div>

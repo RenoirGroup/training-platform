@@ -21,26 +21,27 @@
             width: 100% !important;
         }
         
-        .renoir-green { background-color: #7CB342; }
-        .renoir-green-hover:hover { background-color: #689F38; }
+        .renoir-blue { background-color: #1524A9; }
+        .renoir-blue-hover:hover { background-color: #0077FF; }
+        .renoir-dark-blue { background-color: #001C44; }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gradient-to-br from-blue-50 to-blue-100">
     <!-- Navigation -->
-    <nav class="bg-gray-900 text-white p-4 shadow-lg">
+    <nav class="text-white p-4 shadow-lg" style="background: linear-gradient(135deg, #001C44 0%, #1524A9 100%);">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center gap-4">
-                <img src="/static/renoir-logo-dark.png" alt="Renoir Consulting" class="h-10">
+                <img src="/static/ycp-renoir-logo.png" alt="YCP Renoir" class="h-12">
                 <div>
                     <h1 class="text-2xl font-bold">The Renoir Academy</h1>
-                    <p class="text-sm text-gray-300">Boss Dashboard</p>
+                    <p class="text-sm text-blue-200">Boss Dashboard</p>
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <button onclick="showProfileModal()" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded transition-colors">
+                <button onclick="showProfileModal()" class="px-4 py-2 rounded transition-colors hover:opacity-80" style="background-color: rgba(0, 28, 68, 0.5);">
                     <i class="fas fa-user mr-2"></i><span id="user-name"></span>
                 </button>
-                <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded transition-colors">
+                <button onclick="logout()" class="px-4 py-2 rounded transition-colors hover:opacity-80" style="background-color: #0077FF;">
                     <i class="fas fa-sign-out-alt mr-2"></i>Logout
                 </button>
             </div>
@@ -92,7 +93,7 @@
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-bold">Your Team</h2>
                     <div class="relative">
-                        <button onclick="toggleExportMenu()" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded transition-colors">
+                        <button onclick="toggleExportMenu()" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded transition-colors">
                             <i class="fas fa-download mr-2"></i>Export Report
                             <i class="fas fa-chevron-down ml-2"></i>
                         </button>
@@ -333,7 +334,7 @@
                             </div>
                             <p class="text-sm mb-3">${req.evidence_notes || 'No notes provided'}</p>
                             ${req.evidence_url ? `<a href="${req.evidence_url}" target="_blank" class="text-sm text-green-700 hover:underline mb-3 block"><i class="fas fa-link mr-1"></i>View Evidence</a>` : ''}
-                            <button onclick="reviewSignoff(${req.id})" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded text-sm w-full">
+                            <button onclick="reviewSignoff(${req.id})" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded text-sm w-full">
                                 <i class="fas fa-eye mr-2"></i>Review
                             </button>
                         </div>

@@ -21,26 +21,26 @@
             width: 100% !important;
         }
         
-        .renoir-green { background-color: #7CB342; }
-        .renoir-green-hover:hover { background-color: #689F38; }
-        .renoir-teal { background-color: #00ACC1; }
-        .renoir-teal-hover:hover { background-color: #0097A7; }
+        .renoir-blue { background-color: #1524A9; }
+        .renoir-blue-hover:hover { background-color: #0077FF; }
+        .renoir-dark-blue { background-color: #001C44; }
+        .renoir-azure { background-color: #0077FF; }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gradient-to-br from-blue-50 to-blue-100">
     <!-- Navigation -->
-    <nav class="bg-gray-900 text-white p-4 shadow-lg">
+    <nav class="text-white p-4 shadow-lg" style="background: linear-gradient(135deg, #001C44 0%, #1524A9 100%);">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center gap-4">
-                <img src="/static/renoir-logo-dark.png" alt="Renoir Consulting" class="h-10">
+                <img src="/static/ycp-renoir-logo.png" alt="YCP Renoir" class="h-12">
                 <div>
                     <h1 class="text-2xl font-bold">The Renoir Academy</h1>
-                    <p class="text-sm text-gray-300">Admin Dashboard</p>
+                    <p class="text-sm text-blue-200">Admin Dashboard</p>
                 </div>
             </div>
             <div>
                 <span id="user-name" class="mr-4"></span>
-                <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded transition-colors">
+                <button onclick="logout()" class="px-4 py-2 rounded transition-colors hover:opacity-80" style="background-color: #0077FF;">
                     <i class="fas fa-sign-out-alt mr-2"></i>Logout
                 </button>
             </div>
@@ -69,7 +69,7 @@
             <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-bold">User Management</h2>
-                    <button onclick="showCreateUserModal()" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded transition-colors">
+                    <button onclick="showCreateUserModal()" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded transition-colors">
                         <i class="fas fa-plus mr-2"></i>Create User
                     </button>
                 </div>
@@ -82,7 +82,7 @@
             <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-bold">Levels & Training Content</h2>
-                    <button onclick="showCreateLevelModal()" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded transition-colors">
+                    <button onclick="showCreateLevelModal()" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded transition-colors">
                         <i class="fas fa-plus mr-2"></i>Create Level
                     </button>
                 </div>
@@ -95,7 +95,7 @@
             <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-bold">Boss-Consultant Relationships</h2>
-                    <button onclick="showCreateRelationshipModal()" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded transition-colors">
+                    <button onclick="showCreateRelationshipModal()" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded transition-colors">
                         <i class="fas fa-plus mr-2"></i>Add Relationship
                     </button>
                 </div>
@@ -149,7 +149,7 @@
                 </div>
                 <div class="flex justify-end space-x-2">
                     <button type="button" onclick="closeCreateUserModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
-                    <button type="submit" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded">Create</button>
+                    <button type="submit" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded">Create</button>
                 </div>
             </form>
         </div>
@@ -183,7 +183,7 @@
                 </div>
                 <div class="flex justify-end space-x-2">
                     <button type="button" onclick="closeEditUserModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
-                    <button type="submit" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded">Update</button>
+                    <button type="submit" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded">Update</button>
                 </div>
             </form>
         </div>
@@ -250,7 +250,7 @@
                     </div>
                     <div class="flex justify-end space-x-2 mt-3">
                         <button onclick="hideAddMaterialForm()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
-                        <button onclick="saveMaterial()" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded">Save Material</button>
+                        <button onclick="saveMaterial()" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded">Save Material</button>
                     </div>
                 </div>
 
@@ -289,7 +289,7 @@
                     </div>
                     <div class="flex justify-end space-x-2 mt-3">
                         <button onclick="hideAddTestForm()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
-                        <button onclick="saveTest()" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded">Create Test</button>
+                        <button onclick="saveTest()" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded">Create Test</button>
                     </div>
                 </div>
 
@@ -318,7 +318,7 @@
                     </div>
                     <div class="flex justify-end space-x-2 mt-3">
                         <button onclick="hideAddTaskForm()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
-                        <button onclick="saveTask()" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded">Save Task</button>
+                        <button onclick="saveTask()" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded">Save Task</button>
                     </div>
                 </div>
 
@@ -377,7 +377,7 @@
 
             <div class="flex justify-end space-x-2">
                 <button onclick="closeAddQuestionModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
-                <button onclick="saveQuestion()" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded">Save Question</button>
+                <button onclick="saveQuestion()" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded">Save Question</button>
             </div>
         </div>
     </div>
@@ -407,7 +407,7 @@
                 </div>
                 <div class="flex justify-end space-x-2">
                     <button type="button" onclick="closeCreateLevelModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
-                    <button type="submit" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded">Create Level</button>
+                    <button type="submit" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded">Create Level</button>
                 </div>
             </form>
         </div>
@@ -439,7 +439,7 @@
                 </div>
                 <div class="flex justify-end space-x-2">
                     <button type="button" onclick="closeEditLevelModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
-                    <button type="submit" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded">Update Level</button>
+                    <button type="submit" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded">Update Level</button>
                 </div>
             </form>
         </div>
@@ -478,7 +478,7 @@
             </div>
             <div class="flex justify-end space-x-2">
                 <button onclick="closeEditMaterialModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
-                <button onclick="updateMaterial()" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded">Update Material</button>
+                <button onclick="updateMaterial()" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded">Update Material</button>
             </div>
         </div>
     </div>
@@ -502,7 +502,7 @@
                 </div>
                 <div class="flex justify-end space-x-2">
                     <button type="button" onclick="closeCreateRelationshipModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
-                    <button type="submit" class="renoir-green renoir-green-hover text-white px-4 py-2 rounded">Create</button>
+                    <button type="submit" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded">Create</button>
                 </div>
             </form>
         </div>
@@ -771,7 +771,7 @@
                                 <button onclick="editLevel(${level.id})" class="text-blue-500 hover:text-blue-700 transition-colors" title="Edit Level">
                                     <i class="fas fa-edit text-xl"></i>
                                 </button>
-                                <button onclick="manageLevel(${level.id})" class="renoir-green renoir-green-hover text-white px-3 py-1 rounded text-sm">
+                                <button onclick="manageLevel(${level.id})" class="renoir-blue renoir-blue-hover text-white px-3 py-1 rounded text-sm">
                                     <i class="fas fa-cog mr-1"></i>Manage
                                 </button>
                                 <button onclick="deleteLevel(${level.id})" class="text-red-600 hover:text-red-800 transition-colors" title="Delete Level">
