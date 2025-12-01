@@ -40,7 +40,7 @@ app.get('/', (c) => {
         <div class="container mx-auto px-4 py-8">
             <div class="max-w-md mx-auto">
                 <div class="text-center mb-8">
-                    <img src="/static/ycp-renoir-logo.png" alt="YCP Renoir" class="h-20 mx-auto mb-4">
+                    <img src="/static/ycp-renoir-logo.png" alt="YCP Renoir" class="h-20 mx-auto mb-4" style="filter: invert(1);">
                     <h1 class="text-4xl font-bold mb-2" style="color: #001C44;">
                         The Academy
                     </h1>
