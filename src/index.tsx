@@ -31,24 +31,24 @@ app.get('/', (c) => {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>The Renoir Academy - Login</title>
+        <title>The Academy - Login</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
-        <link rel="icon" type="image/png" href="/static/renoir-logo-light.png">
+        <link rel="icon" type="image/png" href="/static/ycp-renoir-logo.png">
     </head>
-    <body class="bg-gradient-to-br from-teal-50 to-green-100 min-h-screen">
+    <body class="bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen">
         <div class="container mx-auto px-4 py-8">
             <div class="max-w-md mx-auto">
                 <div class="text-center mb-8">
-                    <img src="/static/renoir-logo-light.png" alt="Renoir Consulting" class="h-20 mx-auto mb-4">
-                    <h1 class="text-4xl font-bold text-gray-900 mb-2">
-                        The Renoir Academy
+                    <img src="/static/ycp-renoir-logo.png" alt="YCP Renoir" class="h-20 mx-auto mb-4">
+                    <h1 class="text-4xl font-bold mb-2" style="color: #001C44;">
+                        The Academy
                     </h1>
                     <p class="text-gray-600">Excellence in Consulting Training</p>
                 </div>
 
                 <div class="bg-white rounded-lg shadow-xl p-8">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Sign In</h2>
+                    <h2 class="text-2xl font-bold mb-6" style="color: #001C44;">Sign In</h2>
                     
                     <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"></div>
                     
@@ -60,7 +60,8 @@ app.get('/', (c) => {
                             <input 
                                 type="email" 
                                 id="email" 
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2"
+                                style="focus:ring-color: #1524A9;"
                                 required
                             />
                         </div>
@@ -72,17 +73,16 @@ app.get('/', (c) => {
                             <input 
                                 type="password" 
                                 id="password" 
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2"
+                                style="focus:ring-color: #1524A9;"
                                 required
                             />
                         </div>
                         
                         <button 
                             type="submit" 
-                            class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors"
-                            style="background-color: #7CB342;"
-                            onmouseover="this.style.backgroundColor='#689F38'"
-                            onmouseout="this.style.backgroundColor='#7CB342'"
+                            class="w-full text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors hover:opacity-90"
+                            style="background-color: #1524A9;"
                         >
                             Sign In
                         </button>
