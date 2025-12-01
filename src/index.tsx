@@ -36,15 +36,15 @@ app.get('/', (c) => {
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
         <link rel="icon" type="image/png" href="/static/ycp-renoir-logo.png">
     </head>
-    <body class="bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen">
+    <body class="min-h-screen" style="background: linear-gradient(135deg, #001C44 0%, #1524A9 100%);">
         <div class="container mx-auto px-4 py-8">
             <div class="max-w-md mx-auto">
                 <div class="text-center mb-8">
-                    <img src="/static/ycp-renoir-logo.png" alt="YCP Renoir" class="h-20 mx-auto mb-4" style="filter: invert(1);">
-                    <h1 class="text-4xl font-bold mb-2" style="color: #001C44;">
+                    <img src="/static/ycp-renoir-logo.png" alt="YCP Renoir" class="h-20 mx-auto mb-4" style="filter: invert(1); mix-blend-mode: screen;">
+                    <h1 class="text-4xl font-bold mb-2 text-white">
                         The Academy
                     </h1>
-                    <p class="text-gray-600">Excellence in Consulting Training</p>
+                    <p class="text-blue-200">Excellence in Consulting Training</p>
                 </div>
 
                 <div class="bg-white rounded-lg shadow-xl p-8">
