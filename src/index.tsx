@@ -8,6 +8,7 @@ import auth from './routes/auth';
 import admin from './routes/admin';
 import consultant from './routes/consultant';
 import boss from './routes/boss';
+import pathways from './routes/pathways';
 
 const app = new Hono<{ Bindings: Bindings }>();
 
@@ -22,6 +23,7 @@ app.route('/api/auth', auth);
 app.route('/api/admin', admin);
 app.route('/api/consultant', consultant);
 app.route('/api/boss', boss);
+app.route('/api', pathways);
 
 // Default route - Login page
 app.get('/', (c) => {

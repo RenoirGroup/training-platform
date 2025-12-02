@@ -9,13 +9,15 @@ consultant.use('/*', authMiddleware);
 
 // ===== LADDER / PROGRESS =====
 
-// Get ladder (all levels with progress status)
+// Get ladder (all levels with progress status) - filtered by pathway
 consultant.get('/ladder', async (c) => {
   const user = c.get('user');
+  const pathwayId = c.req.query('pathway_id') || '1'; // Default to OXD pathway
   
   const ladder = await c.env.DB.prepare(`
     SELECT 
       l.*,
+      pl.order_index as pathway_order,
       up.status,
       up.started_at,
       up.completed_at,
@@ -27,11 +29,12 @@ consultant.get('/ladder', async (c) => {
        JOIN tests t ON ta.test_id = t.id 
        WHERE t.level_id = l.id AND ta.user_id = ?
       ) as best_score
-    FROM levels l
-    LEFT JOIN user_progress up ON l.id = up.level_id AND up.user_id = ?
-    WHERE l.active = 1
-    ORDER BY l.order_index
-  `).bind(user.userId, user.userId).all();
+    FROM pathway_levels pl
+    JOIN levels l ON pl.level_id = l.id
+    LEFT JOIN user_progress up ON l.id = up.level_id AND up.user_id = ? AND up.pathway_id = ?
+    WHERE pl.pathway_id = ? AND l.active = 1
+    ORDER BY pl.order_index
+  `).bind(user.userId, user.userId, pathwayId, pathwayId).all();
 
   return c.json({ ladder: ladder.results });
 });
@@ -39,15 +42,16 @@ consultant.get('/ladder', async (c) => {
 // Get level details with materials
 consultant.get('/levels/:levelId', async (c) => {
   const levelId = c.req.param('levelId');
+  const pathwayId = c.req.query('pathway_id') || '1'; // Default to OXD pathway
   const user = c.get('user');
   
-  // Get level info
+  // Get level info with pathway context
   const level = await c.env.DB.prepare(`
     SELECT l.*, up.status
     FROM levels l
-    LEFT JOIN user_progress up ON l.id = up.level_id AND up.user_id = ?
+    LEFT JOIN user_progress up ON l.id = up.level_id AND up.user_id = ? AND up.pathway_id = ?
     WHERE l.id = ? AND l.active = 1
-  `).bind(user.userId, levelId).first();
+  `).bind(user.userId, pathwayId, levelId).first();
 
   if (!level) {
     return c.json({ error: 'Level not found' }, 404);
@@ -103,26 +107,28 @@ consultant.get('/levels/:levelId', async (c) => {
 consultant.post('/levels/:levelId/start', async (c) => {
   const levelId = c.req.param('levelId');
   const user = c.get('user');
+  const { pathway_id } = await c.req.json();
+  const pathwayId = pathway_id || '1'; // Default to OXD pathway
 
-  // Check if progress record exists
+  // Check if progress record exists for this pathway
   const existing = await c.env.DB.prepare(
-    'SELECT * FROM user_progress WHERE user_id = ? AND level_id = ?'
-  ).bind(user.userId, levelId).first();
+    'SELECT * FROM user_progress WHERE user_id = ? AND level_id = ? AND pathway_id = ?'
+  ).bind(user.userId, levelId, pathwayId).first();
 
   if (!existing) {
-    // Check if this is the next level
-    const canAccess = await canAccessLevel(c.env.DB, user.userId, parseInt(levelId));
+    // Check if this is the next level (pathway-specific check would go here)
+    const canAccess = await canAccessLevel(c.env.DB, user.userId, parseInt(levelId), pathwayId);
     if (!canAccess) {
       return c.json({ error: 'Cannot access this level yet' }, 403);
     }
 
     await c.env.DB.prepare(
-      'INSERT INTO user_progress (user_id, level_id, status, started_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)'
-    ).bind(user.userId, levelId, 'in_progress').run();
+      'INSERT INTO user_progress (user_id, level_id, pathway_id, status, started_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)'
+    ).bind(user.userId, levelId, pathwayId, 'in_progress').run();
   } else if (existing.status === 'unlocked') {
     await c.env.DB.prepare(
-      'UPDATE user_progress SET status = ?, started_at = CURRENT_TIMESTAMP WHERE user_id = ? AND level_id = ?'
-    ).bind('in_progress', user.userId, levelId).run();
+      'UPDATE user_progress SET status = ?, started_at = CURRENT_TIMESTAMP WHERE user_id = ? AND level_id = ? AND pathway_id = ?'
+    ).bind('in_progress', user.userId, levelId, pathwayId).run();
   }
 
   return c.json({ message: 'Level started' });
@@ -181,7 +187,8 @@ consultant.get('/tests/:testId', async (c) => {
 consultant.post('/tests/:testId/submit', async (c) => {
   const testId = c.req.param('testId');
   const user = c.get('user');
-  const { answers } = await c.req.json(); // { questionId: answerOptionId or answerText }
+  const { answers, pathway_id } = await c.req.json(); // { questionId: answerOptionId or answerText, pathway_id }
+  const pathwayId = pathway_id || '1'; // Default to OXD pathway
 
   // Get test info
   const test = await c.env.DB.prepare(
@@ -401,7 +408,7 @@ consultant.post('/tests/:testId/submit', async (c) => {
   // If passed, check if all tests for this level are passed
   if (passed) {
     const levelId = test.level_id as number;
-    const allTestsPassed = await checkAllTestsPassed(c.env.DB, user.userId, levelId);
+    const allTestsPassed = await checkAllTestsPassed(c.env.DB, user.userId, levelId, pathwayId);
 
     if (allTestsPassed) {
       // Check if this is a boss level
@@ -412,11 +419,11 @@ consultant.post('/tests/:testId/submit', async (c) => {
       if (level && level.is_boss_level === 1) {
         // Boss level - mark as awaiting signoff
         await c.env.DB.prepare(
-          'UPDATE user_progress SET status = ? WHERE user_id = ? AND level_id = ?'
-        ).bind('awaiting_signoff', user.userId, levelId).run();
+          'UPDATE user_progress SET status = ? WHERE user_id = ? AND level_id = ? AND pathway_id = ?'
+        ).bind('awaiting_signoff', user.userId, levelId, pathwayId).run();
       } else {
         // Regular level - mark as completed and unlock next
-        await completeLevel(c.env.DB, user.userId, levelId);
+        await completeLevel(c.env.DB, user.userId, levelId, pathwayId);
       }
     }
 
@@ -742,30 +749,37 @@ consultant.get('/activity-feed', async (c) => {
 
 // ===== HELPER FUNCTIONS =====
 
-async function canAccessLevel(db: D1Database, userId: number, levelId: number): Promise<boolean> {
-  const level = await db.prepare(
-    'SELECT order_index FROM levels WHERE id = ?'
-  ).bind(levelId).first();
+async function canAccessLevel(db: D1Database, userId: number, levelId: number, pathwayId?: string): Promise<boolean> {
+  // Get this level's order within the pathway
+  const pathwayLevel = await db.prepare(`
+    SELECT pl.order_index, l.id
+    FROM pathway_levels pl
+    JOIN levels l ON pl.level_id = l.id
+    WHERE pl.pathway_id = ? AND pl.level_id = ? AND l.active = 1
+  `).bind(pathwayId || '1', levelId).first();
 
-  if (!level) return false;
+  if (!pathwayLevel) return false;
 
-  if (level.order_index === 1) return true;
+  // First level in pathway is always accessible
+  if (pathwayLevel.order_index === 1) return true;
 
-  // Check if previous level is completed
-  const previousLevel = await db.prepare(
-    'SELECT id FROM levels WHERE order_index = ? AND active = 1'
-  ).bind((level.order_index as number) - 1).first();
+  // Check if previous level in pathway is completed
+  const previousLevel = await db.prepare(`
+    SELECT pl.level_id
+    FROM pathway_levels pl
+    WHERE pl.pathway_id = ? AND pl.order_index = ?
+  `).bind(pathwayId || '1', (pathwayLevel.order_index as number) - 1).first();
 
   if (!previousLevel) return true;
 
   const progress = await db.prepare(
-    'SELECT status FROM user_progress WHERE user_id = ? AND level_id = ?'
-  ).bind(userId, previousLevel.id).first();
+    'SELECT status FROM user_progress WHERE user_id = ? AND level_id = ? AND pathway_id = ?'
+  ).bind(userId, previousLevel.level_id, pathwayId || '1').first();
 
   return progress && progress.status === 'completed';
 }
 
-async function checkAllTestsPassed(db: D1Database, userId: number, levelId: number): Promise<boolean> {
+async function checkAllTestsPassed(db: D1Database, userId: number, levelId: number, pathwayId?: string): Promise<boolean> {
   const tests = await db.prepare(
     'SELECT id FROM tests WHERE level_id = ?'
   ).bind(levelId).all();
@@ -783,11 +797,11 @@ async function checkAllTestsPassed(db: D1Database, userId: number, levelId: numb
   return true;
 }
 
-async function completeLevel(db: D1Database, userId: number, levelId: number) {
+async function completeLevel(db: D1Database, userId: number, levelId: number, pathwayId?: string) {
   // Mark current level as completed
   await db.prepare(
-    'UPDATE user_progress SET status = ?, completed_at = CURRENT_TIMESTAMP WHERE user_id = ? AND level_id = ?'
-  ).bind('completed', userId, levelId).run();
+    'UPDATE user_progress SET status = ?, completed_at = CURRENT_TIMESTAMP WHERE user_id = ? AND level_id = ? AND pathway_id = ?'
+  ).bind('completed', userId, levelId, pathwayId || '1').run();
 
   // Log activity
   const today = new Date().toISOString().split('T')[0];
@@ -818,24 +832,33 @@ async function completeLevel(db: D1Database, userId: number, levelId: number) {
     'UPDATE leaderboard SET rungs_completed = ?, total_points = ?, updated_at = CURRENT_TIMESTAMP WHERE user_id = ?'
   ).bind(completed?.count || 0, streaks?.total_points || 0, userId).run();
 
-  // Unlock next level
-  const nextLevel = await db.prepare(
-    'SELECT id FROM levels WHERE order_index = (SELECT order_index + 1 FROM levels WHERE id = ?) AND active = 1'
-  ).bind(levelId).first();
+  // Unlock next level within the pathway
+  const nextLevel = await db.prepare(`
+    SELECT pl.level_id 
+    FROM pathway_levels pl
+    JOIN levels l ON pl.level_id = l.id
+    WHERE pl.pathway_id = ? 
+      AND pl.order_index = (
+        SELECT pl2.order_index + 1 
+        FROM pathway_levels pl2 
+        WHERE pl2.pathway_id = ? AND pl2.level_id = ?
+      )
+      AND l.active = 1
+  `).bind(pathwayId || '1', pathwayId || '1', levelId).first();
 
   if (nextLevel) {
     const existingProgress = await db.prepare(
-      'SELECT id FROM user_progress WHERE user_id = ? AND level_id = ?'
-    ).bind(userId, nextLevel.id).first();
+      'SELECT id FROM user_progress WHERE user_id = ? AND level_id = ? AND pathway_id = ?'
+    ).bind(userId, nextLevel.level_id, pathwayId || '1').first();
 
     if (!existingProgress) {
       await db.prepare(
-        'INSERT INTO user_progress (user_id, level_id, status) VALUES (?, ?, ?)'
-      ).bind(userId, nextLevel.id, 'unlocked').run();
+        'INSERT INTO user_progress (user_id, level_id, pathway_id, status) VALUES (?, ?, ?, ?)'
+      ).bind(userId, nextLevel.level_id, pathwayId || '1', 'unlocked').run();
     } else {
       await db.prepare(
-        'UPDATE user_progress SET status = ? WHERE user_id = ? AND level_id = ?'
-      ).bind('unlocked', userId, nextLevel.id).run();
+        'UPDATE user_progress SET status = ? WHERE user_id = ? AND level_id = ? AND pathway_id = ?'
+      ).bind('unlocked', userId, nextLevel.level_id, pathwayId || '1').run();
     }
   }
 
