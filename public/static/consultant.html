@@ -390,6 +390,12 @@
                 </div>
             </div>
             <div class="flex items-center space-x-4">
+                <!-- Pathway Selector -->
+                <button onclick="showPathwaySelector()" class="px-4 py-2 rounded-lg transition-colors hover:opacity-80" style="background-color: rgba(0, 28, 68, 0.5);">
+                    <i id="current-pathway-icon" class="fas fa-chart-line mr-2"></i>
+                    <span id="current-pathway-name" class="font-bold">OXD</span>
+                    <i class="fas fa-chevron-down ml-2 text-sm"></i>
+                </button>
                 <div class="px-4 py-2 rounded-lg" style="background-color: rgba(0, 28, 68, 0.5);">
                     <i class="fas fa-fire text-orange-500 mr-2"></i>
                     <span id="streak-count" class="font-bold">0</span> day streak
@@ -485,6 +491,97 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+    <!-- Pathway Selector Modal -->
+    <div id="pathway-selector-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" style="display: none;">
+        <div class="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold">My Learning Pathways</h2>
+                <button onclick="closePathwaySelector()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            
+            <!-- Enrolled Pathways -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-3">
+                    <i class="fas fa-check-circle text-green-600 mr-2"></i>My Enrolled Pathways
+                </h3>
+                <div id="enrolled-pathways-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Browse More Pathways -->
+            <div>
+                <h3 class="text-lg font-semibold mb-3">
+                    <i class="fas fa-compass mr-2"></i>Explore More Pathways
+                </h3>
+                <div id="available-pathways-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="flex justify-end mt-6">
+                <button onclick="closePathwaySelector()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Enrollment Modal -->
+    <div id="request-enrollment-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" style="display: none;">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full">
+            <h2 class="text-2xl font-bold mb-4">Request Enrollment</h2>
+            <input type="hidden" id="request-pathway-id" />
+            
+            <div class="mb-4">
+                <div class="flex items-center space-x-3 mb-4">
+                    <i id="request-pathway-icon" class="fas fa-chart-line text-3xl"></i>
+                    <div>
+                        <h3 id="request-pathway-title" class="text-lg font-bold"></h3>
+                        <p id="request-pathway-description" class="text-sm text-gray-600"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <form onsubmit="submitEnrollmentRequest(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Why do you want to join this pathway? (optional)</label>
+                    <textarea id="request-note" class="w-full px-3 py-2 border rounded" rows="4" placeholder="Share your reasons or goals..."></textarea>
+                </div>
+                
+                <div class="flex justify-end space-x-2">
+                    <button type="button" onclick="closeRequestEnrollmentModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+                        Cancel
+                    </button>
+                    <button type="submit" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded">
+                        <i class="fas fa-paper-plane mr-2"></i>Send Request
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- First Time Pathway Selection -->
+    <div id="first-time-pathway-modal" class="fixed inset-0 bg-black bg-opacity-75 hidden items-center justify-center z-50" style="display: none;">
+        <div class="bg-white rounded-lg p-8 max-w-5xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="text-center mb-6">
+                <img src="/static/ycp-renoir-logo.png" alt="YCP Renoir" class="h-16 mx-auto mb-4">
+                <h1 class="text-3xl font-bold mb-2">Welcome to The Academy!</h1>
+                <p class="text-gray-600">Choose your first learning pathway to get started</p>
+            </div>
+            
+            <div id="first-time-pathways-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Populated by JavaScript -->
+            </div>
+            
+            <div class="text-center mt-6 text-sm text-gray-500">
+                <p>Don't worry - you can always request access to more pathways later!</p>
+            </div>
+        </div>
+    </div>
+
     <script>
         const token = localStorage.getItem('token');
         const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -625,7 +722,233 @@
             }
         }
 
+        let currentPathwayId = '1'; // Default to OXD
+        let myPathways = [];
+        
+        // ===== PATHWAY MANAGEMENT =====
+        
+        async function checkFirstTimeUser() {
+            try {
+                const response = await axios.get('/api/consultant/pathways/enrolled');
+                myPathways = response.data.pathways;
+                
+                if (myPathways.length === 0) {
+                    // First time user - show pathway selection
+                    await showFirstTimePathwaySelection();
+                } else {
+                    // Set current pathway to first enrolled pathway
+                    currentPathwayId = myPathways[0].pathway_id.toString();
+                    updatePathwayDisplay(myPathways[0]);
+                }
+            } catch (error) {
+                console.error('Error checking pathways:', error);
+            }
+        }
+        
+        async function showFirstTimePathwaySelection() {
+            try {
+                const response = await axios.get('/api/consultant/pathways/available');
+                const pathways = response.data.pathways.filter(p => !p.enrollment_id);
+                
+                const listEl = document.getElementById('first-time-pathways-list');
+                listEl.innerHTML = pathways.map(pathway => `
+                    <div class="border-2 rounded-lg p-6 hover:border-blue-500 transition-all cursor-pointer text-center"
+                         onclick="requestFirstPathway(${pathway.id})"
+                         style="border-color: ${pathway.color_primary}20;">
+                        <i class="fas ${pathway.icon} text-5xl mb-3" style="color: ${pathway.color_primary}"></i>
+                        <h3 class="text-xl font-bold mb-2">${pathway.title}</h3>
+                        <p class="text-sm text-gray-600 mb-3">${pathway.description}</p>
+                        <div class="text-sm text-gray-500">
+                            <i class="fas fa-layer-group mr-1"></i>${pathway.level_count || 0} levels
+                        </div>
+                        <button class="mt-4 w-full renoir-blue renoir-blue-hover text-white px-4 py-2 rounded"
+                                style="background-color: ${pathway.color_primary};">
+                            Choose This Pathway
+                        </button>
+                    </div>
+                `).join('');
+                
+                document.getElementById('first-time-pathway-modal').style.display = 'flex';
+            } catch (error) {
+                console.error('Error loading pathways:', error);
+            }
+        }
+        
+        async function requestFirstPathway(pathwayId) {
+            try {
+                await axios.post(`/api/consultant/pathways/${pathwayId}/request`, {
+                    request_note: 'Initial pathway selection'
+                });
+                
+                document.getElementById('first-time-pathway-modal').style.display = 'none';
+                alert('Your pathway request has been sent to your manager for approval. You\'ll receive access soon!');
+                
+                // Reload to check status
+                await checkFirstTimeUser();
+            } catch (error) {
+                alert('Error requesting pathway: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+        
+        async function loadMyPathways() {
+            try {
+                const response = await axios.get('/api/consultant/pathways/enrolled');
+                myPathways = response.data.pathways.filter(p => p.enrollment_status === 'approved');
+            } catch (error) {
+                console.error('Error loading my pathways:', error);
+            }
+        }
+        
+        function updatePathwayDisplay(pathway) {
+            document.getElementById('current-pathway-icon').className = `fas ${pathway.icon} mr-2`;
+            document.getElementById('current-pathway-name').textContent = pathway.title;
+            
+            // Update icon color dynamically
+            document.getElementById('current-pathway-icon').style.color = pathway.color_primary;
+        }
+        
+        async function showPathwaySelector() {
+            try {
+                const [enrolledRes, availableRes] = await Promise.all([
+                    axios.get('/api/consultant/pathways/enrolled'),
+                    axios.get('/api/consultant/pathways/available')
+                ]);
+                
+                const enrolled = enrolledRes.data.pathways.filter(p => p.enrollment_status === 'approved');
+                const available = availableRes.data.pathways.filter(p => 
+                    !p.enrollment_id || (p.enrollment_status !== 'approved' && p.enrollment_status !== 'pending')
+                );
+                const pending = availableRes.data.pathways.filter(p => p.enrollment_status === 'pending');
+                
+                // Render enrolled pathways
+                const enrolledEl = document.getElementById('enrolled-pathways-list');
+                if (enrolled.length === 0) {
+                    enrolledEl.innerHTML = '<p class="text-gray-500 col-span-2">No pathways enrolled yet.</p>';
+                } else {
+                    enrolledEl.innerHTML = enrolled.map(pathway => `
+                        <div class="border-2 rounded-lg p-4 ${pathway.pathway_id == currentPathwayId ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}"
+                             style="border-left: 4px solid ${pathway.color_primary}">
+                            <div class="flex items-start justify-between mb-2">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas ${pathway.icon} text-2xl" style="color: ${pathway.color_primary}"></i>
+                                    <div>
+                                        <h3 class="font-bold">${pathway.title}</h3>
+                                        ${pathway.pathway_id == currentPathwayId ? '<span class="text-xs px-2 py-1 bg-blue-600 text-white rounded">Current</span>' : ''}
+                                    </div>
+                                </div>
+                                ${pathway.pathway_id != currentPathwayId ? `
+                                    <button onclick="switchPathway(${pathway.pathway_id}, '${pathway.title}', '${pathway.icon}', '${pathway.color_primary}')" 
+                                            class="text-blue-600 hover:text-blue-800 text-sm">
+                                        <i class="fas fa-exchange-alt mr-1"></i>Switch
+                                    </button>
+                                ` : ''}
+                            </div>
+                            <p class="text-sm text-gray-600 mb-2">${pathway.description}</p>
+                            <div class="text-xs text-gray-500">
+                                <i class="fas fa-layer-group mr-1"></i>${pathway.level_count || 0} levels
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                
+                // Render available pathways
+                const availableEl = document.getElementById('available-pathways-list');
+                const allAvailable = [...available, ...pending];
+                
+                if (allAvailable.length === 0) {
+                    availableEl.innerHTML = '<p class="text-gray-500 col-span-2">No more pathways available.</p>';
+                } else {
+                    availableEl.innerHTML = allAvailable.map(pathway => {
+                        const isPending = pathway.enrollment_status === 'pending';
+                        return `
+                            <div class="border rounded-lg p-4" style="border-left: 4px solid ${pathway.color_primary}">
+                                <div class="flex items-start justify-between mb-2">
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fas ${pathway.icon} text-2xl" style="color: ${pathway.color_primary}"></i>
+                                        <div>
+                                            <h3 class="font-bold">${pathway.title}</h3>
+                                            ${isPending ? '<span class="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded">Pending Approval</span>' : ''}
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-2">${pathway.description}</p>
+                                <div class="flex items-center justify-between">
+                                    <div class="text-xs text-gray-500">
+                                        <i class="fas fa-layer-group mr-1"></i>${pathway.level_count || 0} levels
+                                    </div>
+                                    ${!isPending ? `
+                                        <button onclick="showRequestEnrollmentModal(${pathway.id}, '${pathway.title.replace(/'/g, "\\'")}', '${pathway.description.replace(/'/g, "\\'")}', '${pathway.icon}', '${pathway.color_primary}')" 
+                                                class="text-sm px-3 py-1 rounded" 
+                                                style="background-color: ${pathway.color_primary}; color: white;">
+                                            <i class="fas fa-plus mr-1"></i>Request Access
+                                        </button>
+                                    ` : '<span class="text-xs text-gray-500 italic">Awaiting manager approval</span>'}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+                
+                document.getElementById('pathway-selector-modal').style.display = 'flex';
+            } catch (error) {
+                console.error('Error loading pathways:', error);
+                alert('Error loading pathways: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+        
+        function closePathwaySelector() {
+            document.getElementById('pathway-selector-modal').style.display = 'none';
+        }
+        
+        async function switchPathway(pathwayId, title, icon, colorPrimary) {
+            currentPathwayId = pathwayId.toString();
+            updatePathwayDisplay({ title, icon, color_primary: colorPrimary });
+            closePathwaySelector();
+            
+            // Reload ladder with new pathway
+            await loadLadder();
+        }
+        
+        function showRequestEnrollmentModal(pathwayId, title, description, icon, colorPrimary) {
+            document.getElementById('request-pathway-id').value = pathwayId;
+            document.getElementById('request-pathway-title').textContent = title;
+            document.getElementById('request-pathway-description').textContent = description;
+            document.getElementById('request-pathway-icon').className = `fas ${icon} text-3xl`;
+            document.getElementById('request-pathway-icon').style.color = colorPrimary;
+            document.getElementById('request-note').value = '';
+            
+            closePathwaySelector();
+            document.getElementById('request-enrollment-modal').style.display = 'flex';
+        }
+        
+        function closeRequestEnrollmentModal() {
+            document.getElementById('request-enrollment-modal').style.display = 'none';
+        }
+        
+        async function submitEnrollmentRequest(event) {
+            event.preventDefault();
+            
+            const pathwayId = document.getElementById('request-pathway-id').value;
+            const note = document.getElementById('request-note').value;
+            
+            try {
+                await axios.post(`/api/consultant/pathways/${pathwayId}/request`, {
+                    request_note: note || null
+                });
+                
+                closeRequestEnrollmentModal();
+                alert('Your enrollment request has been sent to your manager. You\'ll receive access once approved!');
+                
+                // Reload pathways
+                await loadMyPathways();
+            } catch (error) {
+                alert('Error submitting request: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+        
         async function init() {
+            await checkFirstTimeUser();
+            await loadMyPathways();
             await loadLadder();
             await loadStats();
             await loadNoticeBoard();
@@ -633,7 +956,7 @@
 
         async function loadLadder() {
             try {
-                const response = await axios.get('/api/consultant/ladder');
+                const response = await axios.get(`/api/consultant/ladder?pathway_id=${currentPathwayId}`);
                 ladderData = response.data.ladder;
                 
                 const container = document.getElementById('ladder-container');
@@ -812,12 +1135,14 @@
             currentLevelId = levelId;
             
             try {
-                const response = await axios.get(`/api/consultant/levels/${levelId}`);
+                const response = await axios.get(`/api/consultant/levels/${levelId}?pathway_id=${currentPathwayId}`);
                 const { level: levelData, materials, tests, tasks } = response.data;
                 
                 // Start level if unlocked
                 if (levelData.status === 'unlocked') {
-                    await axios.post(`/api/consultant/levels/${levelId}/start`);
+                    await axios.post(`/api/consultant/levels/${levelId}/start`, {
+                        pathway_id: currentPathwayId
+                    });
                 }
                 
                 let html = `
@@ -1936,7 +2261,10 @@
             }
             
             try {
-                const response = await axios.post(`/api/consultant/tests/${currentTestId}/submit`, { answers });
+                const response = await axios.post(`/api/consultant/tests/${currentTestId}/submit`, { 
+                    answers,
+                    pathway_id: currentPathwayId
+                });
                 const result = response.data;
                 
                 // Log hotspot debug info to console
