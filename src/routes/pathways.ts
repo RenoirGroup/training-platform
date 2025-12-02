@@ -131,7 +131,27 @@ pathways.delete('/admin/pathways/:id', async (c) => {
   return c.json({ message: 'Pathway deleted successfully' });
 });
 
-// Assign levels to pathway
+// Get pathway levels
+pathways.get('/admin/pathways/:id/levels', async (c) => {
+  const user = c.get('user');
+  const pathwayId = c.req.param('id');
+  
+  if (user.role !== 'admin') {
+    return c.json({ error: 'Unauthorized' }, 403);
+  }
+
+  const levels = await c.env.DB.prepare(`
+    SELECT l.*, pl.order_index, pl.pathway_id, pl.level_id
+    FROM pathway_levels pl
+    JOIN levels l ON pl.level_id = l.id
+    WHERE pl.pathway_id = ?
+    ORDER BY pl.order_index
+  `).bind(pathwayId).all();
+
+  return c.json({ levels: levels.results });
+});
+
+// Assign single level to pathway
 pathways.post('/admin/pathways/:id/levels', async (c) => {
   const user = c.get('user');
   const pathwayId = c.req.param('id');
@@ -140,19 +160,58 @@ pathways.post('/admin/pathways/:id/levels', async (c) => {
     return c.json({ error: 'Unauthorized' }, 403);
   }
 
-  const { level_ids } = await c.req.json(); // Array of { level_id, order_index }
+  const { level_id } = await c.req.json();
 
-  // Delete existing assignments
-  await c.env.DB.prepare('DELETE FROM pathway_levels WHERE pathway_id = ?').bind(pathwayId).run();
+  // Get max order_index for this pathway
+  const maxOrder = await c.env.DB.prepare(
+    'SELECT COALESCE(MAX(order_index), 0) as max_order FROM pathway_levels WHERE pathway_id = ?'
+  ).bind(pathwayId).first();
 
-  // Insert new assignments
-  for (const item of level_ids) {
-    await c.env.DB.prepare(
-      'INSERT INTO pathway_levels (pathway_id, level_id, order_index) VALUES (?, ?, ?)'
-    ).bind(pathwayId, item.level_id, item.order_index).run();
+  const newOrder = ((maxOrder?.max_order as number) || 0) + 1;
+
+  await c.env.DB.prepare(
+    'INSERT INTO pathway_levels (pathway_id, level_id, order_index) VALUES (?, ?, ?)'
+  ).bind(pathwayId, level_id, newOrder).run();
+
+  return c.json({ message: 'Level assigned successfully' });
+});
+
+// Remove level from pathway
+pathways.delete('/admin/pathways/:id/levels/:levelId', async (c) => {
+  const user = c.get('user');
+  const pathwayId = c.req.param('id');
+  const levelId = c.req.param('levelId');
+  
+  if (user.role !== 'admin') {
+    return c.json({ error: 'Unauthorized' }, 403);
   }
 
-  return c.json({ message: 'Levels assigned successfully' });
+  await c.env.DB.prepare(
+    'DELETE FROM pathway_levels WHERE pathway_id = ? AND level_id = ?'
+  ).bind(pathwayId, levelId).run();
+
+  return c.json({ message: 'Level removed successfully' });
+});
+
+// Reorder pathway levels
+pathways.post('/admin/pathways/:id/reorder', async (c) => {
+  const user = c.get('user');
+  const pathwayId = c.req.param('id');
+  
+  if (user.role !== 'admin') {
+    return c.json({ error: 'Unauthorized' }, 403);
+  }
+
+  const { levels } = await c.req.json(); // Array of { level_id, order_index }
+
+  // Update each level's order
+  for (const item of levels) {
+    await c.env.DB.prepare(
+      'UPDATE pathway_levels SET order_index = ? WHERE pathway_id = ? AND level_id = ?'
+    ).bind(item.order_index, pathwayId, item.level_id).run();
+  }
+
+  return c.json({ message: 'Levels reordered successfully' });
 });
 
 // ============================================

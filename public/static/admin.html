@@ -2907,7 +2907,7 @@
         
         async function loadPathways() {
             try {
-                const response = await axios.get('/api/pathways/list');
+                const response = await axios.get('/api/admin/pathways');
                 const pathways = response.data.pathways;
                 
                 const listEl = document.getElementById('pathways-list');
@@ -2958,7 +2958,7 @@
 
         async function loadEnrollmentRequests() {
             try {
-                const response = await axios.get('/api/pathways/enrollment-requests');
+                const response = await axios.get('/api/boss/enrollment-requests');
                 const requests = response.data.requests;
                 
                 const listEl = document.getElementById('enrollment-requests-list');
@@ -3019,7 +3019,7 @@
             const active = document.getElementById('create-pathway-active').checked;
             
             try {
-                await axios.post('/api/pathways/create', {
+                await axios.post('/api/admin/pathways', {
                     title,
                     description,
                     icon,
@@ -3039,7 +3039,7 @@
 
         async function showEditPathwayModal(pathwayId) {
             try {
-                const response = await axios.get(`/api/pathways/${pathwayId}`);
+                const response = await axios.get(`/api/admin/pathways/${pathwayId}`);
                 const pathway = response.data.pathway;
                 
                 document.getElementById('edit-pathway-id').value = pathway.id;
@@ -3075,7 +3075,7 @@
             const active = document.getElementById('edit-pathway-active').checked;
             
             try {
-                await axios.put(`/api/pathways/${id}`, {
+                await axios.put(`/api/admin/pathways/${id}`, {
                     title,
                     description,
                     icon,
@@ -3099,7 +3099,7 @@
             }
             
             try {
-                await axios.delete(`/api/pathways/${pathwayId}`);
+                await axios.delete(`/api/admin/pathways/${pathwayId}`);
                 loadPathways();
                 alert('Pathway deleted successfully!');
             } catch (error) {
@@ -3110,9 +3110,9 @@
         async function showManagePathwayLevelsModal(pathwayId) {
             try {
                 const [pathwayRes, levelsRes, assignedRes] = await Promise.all([
-                    axios.get(`/api/pathways/${pathwayId}`),
+                    axios.get(`/api/admin/pathways/${pathwayId}`),
                     axios.get('/api/admin/levels'),
-                    axios.get(`/api/pathways/${pathwayId}/levels`)
+                    axios.get(`/api/admin/pathways/${pathwayId}/levels`)
                 ]);
                 
                 const pathway = pathwayRes.data.pathway;
@@ -3179,7 +3179,7 @@
 
         async function assignLevelToPathway(pathwayId, levelId) {
             try {
-                await axios.post(`/api/pathways/${pathwayId}/assign-level`, {
+                await axios.post(`/api/admin/pathways/${pathwayId}/levels`, {
                     level_id: levelId
                 });
                 showManagePathwayLevelsModal(pathwayId);
@@ -3190,7 +3190,7 @@
 
         async function removeLevelFromPathway(pathwayId, levelId) {
             try {
-                await axios.delete(`/api/pathways/${pathwayId}/levels/${levelId}`);
+                await axios.delete(`/api/admin/pathways/${pathwayId}/levels/${levelId}`);
                 showManagePathwayLevelsModal(pathwayId);
             } catch (error) {
                 alert('Error removing level: ' + (error.response?.data?.error || 'Unknown error'));
@@ -3244,7 +3244,7 @@
                 }));
             
             try {
-                await axios.post(`/api/pathways/${pathwayId}/reorder-levels`, {
+                await axios.post(`/api/admin/pathways/${pathwayId}/reorder`, {
                     levels: levelOrder
                 });
                 closeManagePathwayLevelsModal();
@@ -3257,7 +3257,7 @@
 
         async function approveEnrollment(enrollmentId, userId, pathwayId) {
             try {
-                await axios.post(`/api/pathways/enrollment/${enrollmentId}/approve`);
+                await axios.post(`/api/boss/enrollment-requests/${enrollmentId}/approve`);
                 loadEnrollmentRequests();
                 alert('Enrollment approved!');
             } catch (error) {
@@ -3269,7 +3269,7 @@
             const reason = prompt('Reason for rejection (optional):');
             
             try {
-                await axios.post(`/api/pathways/enrollment/${enrollmentId}/reject`, {
+                await axios.post(`/api/boss/enrollment-requests/${enrollmentId}/reject`, {
                     response_note: reason
                 });
                 loadEnrollmentRequests();
