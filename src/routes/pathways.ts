@@ -252,8 +252,11 @@ pathways.get('/consultant/pathways/enrolled', async (c) => {
 
   const result = await c.env.DB.prepare(`
     SELECT p.*,
-           pe.enrolled_at,
-           COUNT(DISTINCT pl.level_id) as total_levels,
+           pe.requested_at,
+           pe.reviewed_at,
+           pe.id as enrollment_id,
+           pe.pathway_id,
+           COUNT(DISTINCT pl.level_id) as level_count,
            COUNT(DISTINCT CASE WHEN up.status = 'completed' THEN up.level_id END) as completed_levels
     FROM pathways p
     JOIN pathway_enrollments pe ON p.id = pe.pathway_id
