@@ -1,7 +1,11 @@
 import { Hono } from 'hono';
-import type { Bindings } from '../types';
+import { authMiddleware } from '../utils/middleware';
+import type { Bindings, JWTPayload } from '../types';
 
-const pathways = new Hono<{ Bindings: Bindings }>();
+const pathways = new Hono<{ Bindings: Bindings; Variables: { user: JWTPayload } }>();
+
+// Apply authentication middleware to all routes
+pathways.use('/*', authMiddleware);
 
 // ============================================
 // ADMIN ROUTES - Pathway Management
