@@ -56,6 +56,9 @@
             <button onclick="showTab('levels')" class="tab-btn px-6 py-3 font-semibold border-b-4 border-transparent text-gray-600 hover:text-gray-900 transition-colors" data-tab="levels">
                 <i class="fas fa-layer-group mr-2"></i>Levels
             </button>
+            <button onclick="showTab('pathways')" class="tab-btn px-6 py-3 font-semibold border-b-4 border-transparent text-gray-600 hover:text-gray-900 transition-colors" data-tab="pathways">
+                <i class="fas fa-route mr-2"></i>Pathways
+            </button>
             <button onclick="showTab('relationships')" class="tab-btn px-6 py-3 font-semibold border-b-4 border-transparent text-gray-600 hover:text-gray-900 transition-colors" data-tab="relationships">
                 <i class="fas fa-sitemap mr-2"></i>Boss-Consultant
             </button>
@@ -87,6 +90,25 @@
                     </button>
                 </div>
                 <div id="levels-list"></div>
+            </div>
+        </div>
+
+        <!-- Pathways Tab -->
+        <div id="pathways-tab" class="tab-content hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">Learning Pathways</h2>
+                    <button onclick="showCreatePathwayModal()" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded transition-colors">
+                        <i class="fas fa-plus mr-2"></i>Create Pathway
+                    </button>
+                </div>
+                <div id="pathways-list"></div>
+            </div>
+
+            <!-- Enrollment Requests Section -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold mb-4">Enrollment Requests</h2>
+                <div id="enrollment-requests-list"></div>
             </div>
         </div>
 
@@ -445,6 +467,163 @@
         </div>
     </div>
 
+    <!-- Create Pathway Modal -->
+    <div id="create-pathway-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" style="display: none;">
+        <div class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <h2 class="text-2xl font-bold mb-4">Create Learning Pathway</h2>
+            <form onsubmit="createPathway(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Title</label>
+                    <input type="text" id="create-pathway-title" class="w-full px-3 py-2 border rounded" placeholder="e.g., OXD, Finance, Operations" required />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Description</label>
+                    <textarea id="create-pathway-description" class="w-full px-3 py-2 border rounded" rows="3" placeholder="Brief description of this pathway..." required></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Icon</label>
+                    <div class="flex items-center space-x-2">
+                        <button type="button" onclick="showIconSelector('create')" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded transition-colors">
+                            <i id="create-pathway-icon-preview" class="fas fa-chart-line text-2xl"></i>
+                        </button>
+                        <input type="hidden" id="create-pathway-icon" value="fa-chart-line" />
+                        <span class="text-sm text-gray-600">Click to choose icon</span>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Colors</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Primary Color</label>
+                            <input type="color" id="create-pathway-color-primary" class="w-full h-10 border rounded" value="#1524A9" />
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Secondary Color</label>
+                            <input type="color" id="create-pathway-color-secondary" class="w-full h-10 border rounded" value="#0077FF" />
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Order Index</label>
+                    <input type="number" id="create-pathway-order" class="w-full px-3 py-2 border rounded" value="1" min="1" required />
+                </div>
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" id="create-pathway-active" class="mr-2" checked />
+                        <span class="text-gray-700 font-bold">Active (visible to users)</span>
+                    </label>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" onclick="closeCreatePathwayModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
+                    <button type="submit" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded">Create Pathway</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Pathway Modal -->
+    <div id="edit-pathway-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" style="display: none;">
+        <div class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <h2 class="text-2xl font-bold mb-4">Edit Learning Pathway</h2>
+            <form onsubmit="updatePathway(event)">
+                <input type="hidden" id="edit-pathway-id" />
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Title</label>
+                    <input type="text" id="edit-pathway-title" class="w-full px-3 py-2 border rounded" required />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Description</label>
+                    <textarea id="edit-pathway-description" class="w-full px-3 py-2 border rounded" rows="3" required></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Icon</label>
+                    <div class="flex items-center space-x-2">
+                        <button type="button" onclick="showIconSelector('edit')" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded transition-colors">
+                            <i id="edit-pathway-icon-preview" class="fas fa-chart-line text-2xl"></i>
+                        </button>
+                        <input type="hidden" id="edit-pathway-icon" />
+                        <span class="text-sm text-gray-600">Click to choose icon</span>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Colors</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Primary Color</label>
+                            <input type="color" id="edit-pathway-color-primary" class="w-full h-10 border rounded" />
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Secondary Color</label>
+                            <input type="color" id="edit-pathway-color-secondary" class="w-full h-10 border rounded" />
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Order Index</label>
+                    <input type="number" id="edit-pathway-order" class="w-full px-3 py-2 border rounded" min="1" required />
+                </div>
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" id="edit-pathway-active" class="mr-2" />
+                        <span class="text-gray-700 font-bold">Active (visible to users)</span>
+                    </label>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" onclick="closeEditPathwayModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
+                    <button type="submit" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded">Update Pathway</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Manage Pathway Levels Modal -->
+    <div id="manage-pathway-levels-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" style="display: none;">
+        <div class="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <h2 class="text-2xl font-bold mb-4">Manage Pathway Levels: <span id="pathway-levels-title"></span></h2>
+            <input type="hidden" id="manage-pathway-id" />
+            
+            <div class="grid grid-cols-2 gap-6">
+                <!-- Available Levels -->
+                <div>
+                    <h3 class="text-lg font-bold mb-3">Available Levels</h3>
+                    <div id="available-levels-list" class="space-y-2 max-h-96 overflow-y-auto">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- Assigned Levels -->
+                <div>
+                    <h3 class="text-lg font-bold mb-3">Assigned Levels (Drag to Reorder)</h3>
+                    <div id="assigned-levels-list" class="space-y-2 max-h-96 overflow-y-auto">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-2 mt-6">
+                <button type="button" onclick="closeManagePathwayLevelsModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Close</button>
+                <button type="button" onclick="savePathwayLevels()" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded">Save Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Icon Selector Modal -->
+    <div id="icon-selector-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-[60]" style="display: none;">
+        <div class="bg-white rounded-lg p-6 max-w-3xl w-full max-h-[80vh] overflow-y-auto">
+            <h2 class="text-2xl font-bold mb-4">Choose Icon</h2>
+            <input type="hidden" id="icon-selector-mode" />
+            <div class="mb-4">
+                <input type="text" id="icon-search" placeholder="Search icons..." class="w-full px-3 py-2 border rounded" onkeyup="filterIcons()" />
+            </div>
+            <div id="icon-grid" class="grid grid-cols-8 gap-4">
+                <!-- Icons will be populated by JavaScript -->
+            </div>
+            <div class="flex justify-end mt-6">
+                <button type="button" onclick="closeIconSelector()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Edit Material Modal -->
     <div id="edit-material-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" style="display: none;">
         <div class="bg-white rounded-lg p-6 max-w-md w-full">
@@ -553,6 +732,10 @@
             // Load tab data
             if (tab === 'users') loadUsers();
             if (tab === 'levels') loadLevels();
+            if (tab === 'pathways') {
+                loadPathways();
+                loadEnrollmentRequests();
+            }
             if (tab === 'relationships') loadRelationships();
             if (tab === 'reports') loadReports();
         }
@@ -2718,6 +2901,436 @@
             } catch (error) {
                 alert('Error deleting level: ' + (error.response?.data?.error || 'Unknown error'));
             }
+        }
+
+        // ===== PATHWAY MANAGEMENT =====
+        
+        async function loadPathways() {
+            try {
+                const response = await axios.get('/api/pathways/list');
+                const pathways = response.data.pathways;
+                
+                const listEl = document.getElementById('pathways-list');
+                if (pathways.length === 0) {
+                    listEl.innerHTML = '<p class="text-gray-500">No pathways created yet.</p>';
+                    return;
+                }
+                
+                listEl.innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        ${pathways.map(pathway => `
+                            <div class="border rounded-lg p-4" style="border-left: 4px solid ${pathway.color_primary}">
+                                <div class="flex items-start justify-between mb-2">
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fas ${pathway.icon} text-2xl" style="color: ${pathway.color_primary}"></i>
+                                        <div>
+                                            <h3 class="text-lg font-bold">${pathway.title}</h3>
+                                            <span class="text-xs px-2 py-1 rounded ${pathway.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+                                                ${pathway.active ? 'Active' : 'Inactive'}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button onclick="showEditPathwayModal(${pathway.id})" class="text-blue-600 hover:text-blue-800" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="showManagePathwayLevelsModal(${pathway.id})" class="text-green-600 hover:text-green-800" title="Manage Levels">
+                                            <i class="fas fa-layer-group"></i>
+                                        </button>
+                                        <button onclick="deletePathway(${pathway.id})" class="text-red-600 hover:text-red-800" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-2">${pathway.description}</p>
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="text-gray-500">${pathway.levels_count || 0} levels assigned</span>
+                                    <span class="text-gray-500">${pathway.enrolled_count || 0} users enrolled</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading pathways:', error);
+            }
+        }
+
+        async function loadEnrollmentRequests() {
+            try {
+                const response = await axios.get('/api/pathways/enrollment-requests');
+                const requests = response.data.requests;
+                
+                const listEl = document.getElementById('enrollment-requests-list');
+                if (requests.length === 0) {
+                    listEl.innerHTML = '<p class="text-gray-500">No pending enrollment requests.</p>';
+                    return;
+                }
+                
+                listEl.innerHTML = `
+                    <div class="space-y-3">
+                        ${requests.map(req => `
+                            <div class="border rounded-lg p-4 flex items-center justify-between">
+                                <div>
+                                    <div class="font-bold">${req.user_name}</div>
+                                    <div class="text-sm text-gray-600">${req.user_email}</div>
+                                    <div class="text-sm mt-1">
+                                        <i class="fas ${req.pathway_icon}" style="color: ${req.pathway_color}"></i>
+                                        <span class="font-semibold">${req.pathway_title}</span>
+                                    </div>
+                                    ${req.request_note ? `<div class="text-sm text-gray-500 mt-1"><em>"${req.request_note}"</em></div>` : ''}
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button onclick="approveEnrollment(${req.id}, ${req.user_id}, ${req.pathway_id})" 
+                                            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+                                        <i class="fas fa-check mr-1"></i>Approve
+                                    </button>
+                                    <button onclick="rejectEnrollment(${req.id})" 
+                                            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
+                                        <i class="fas fa-times mr-1"></i>Reject
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading enrollment requests:', error);
+            }
+        }
+
+        function showCreatePathwayModal() {
+            document.getElementById('create-pathway-modal').style.display = 'flex';
+        }
+
+        function closeCreatePathwayModal() {
+            document.getElementById('create-pathway-modal').style.display = 'none';
+        }
+
+        async function createPathway(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('create-pathway-title').value;
+            const description = document.getElementById('create-pathway-description').value;
+            const icon = document.getElementById('create-pathway-icon').value;
+            const colorPrimary = document.getElementById('create-pathway-color-primary').value;
+            const colorSecondary = document.getElementById('create-pathway-color-secondary').value;
+            const orderIndex = document.getElementById('create-pathway-order').value;
+            const active = document.getElementById('create-pathway-active').checked;
+            
+            try {
+                await axios.post('/api/pathways/create', {
+                    title,
+                    description,
+                    icon,
+                    color_primary: colorPrimary,
+                    color_secondary: colorSecondary,
+                    order_index: parseInt(orderIndex),
+                    active: active ? 1 : 0
+                });
+                
+                closeCreatePathwayModal();
+                loadPathways();
+                alert('Pathway created successfully!');
+            } catch (error) {
+                alert('Error creating pathway: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+
+        async function showEditPathwayModal(pathwayId) {
+            try {
+                const response = await axios.get(`/api/pathways/${pathwayId}`);
+                const pathway = response.data.pathway;
+                
+                document.getElementById('edit-pathway-id').value = pathway.id;
+                document.getElementById('edit-pathway-title').value = pathway.title;
+                document.getElementById('edit-pathway-description').value = pathway.description;
+                document.getElementById('edit-pathway-icon').value = pathway.icon;
+                document.getElementById('edit-pathway-icon-preview').className = `fas ${pathway.icon} text-2xl`;
+                document.getElementById('edit-pathway-color-primary').value = pathway.color_primary;
+                document.getElementById('edit-pathway-color-secondary').value = pathway.color_secondary;
+                document.getElementById('edit-pathway-order').value = pathway.order_index;
+                document.getElementById('edit-pathway-active').checked = pathway.active === 1;
+                
+                document.getElementById('edit-pathway-modal').style.display = 'flex';
+            } catch (error) {
+                alert('Error loading pathway: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+
+        function closeEditPathwayModal() {
+            document.getElementById('edit-pathway-modal').style.display = 'none';
+        }
+
+        async function updatePathway(event) {
+            event.preventDefault();
+            
+            const id = document.getElementById('edit-pathway-id').value;
+            const title = document.getElementById('edit-pathway-title').value;
+            const description = document.getElementById('edit-pathway-description').value;
+            const icon = document.getElementById('edit-pathway-icon').value;
+            const colorPrimary = document.getElementById('edit-pathway-color-primary').value;
+            const colorSecondary = document.getElementById('edit-pathway-color-secondary').value;
+            const orderIndex = document.getElementById('edit-pathway-order').value;
+            const active = document.getElementById('edit-pathway-active').checked;
+            
+            try {
+                await axios.put(`/api/pathways/${id}`, {
+                    title,
+                    description,
+                    icon,
+                    color_primary: colorPrimary,
+                    color_secondary: colorSecondary,
+                    order_index: parseInt(orderIndex),
+                    active: active ? 1 : 0
+                });
+                
+                closeEditPathwayModal();
+                loadPathways();
+                alert('Pathway updated successfully!');
+            } catch (error) {
+                alert('Error updating pathway: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+
+        async function deletePathway(pathwayId) {
+            if (!confirm('Are you sure you want to delete this pathway? This will also remove all level assignments and user enrollments.')) {
+                return;
+            }
+            
+            try {
+                await axios.delete(`/api/pathways/${pathwayId}`);
+                loadPathways();
+                alert('Pathway deleted successfully!');
+            } catch (error) {
+                alert('Error deleting pathway: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+
+        async function showManagePathwayLevelsModal(pathwayId) {
+            try {
+                const [pathwayRes, levelsRes, assignedRes] = await Promise.all([
+                    axios.get(`/api/pathways/${pathwayId}`),
+                    axios.get('/api/admin/levels'),
+                    axios.get(`/api/pathways/${pathwayId}/levels`)
+                ]);
+                
+                const pathway = pathwayRes.data.pathway;
+                const allLevels = levelsRes.data.levels;
+                const assignedLevels = assignedRes.data.levels || [];
+                
+                document.getElementById('manage-pathway-id').value = pathwayId;
+                document.getElementById('pathway-levels-title').textContent = pathway.title;
+                
+                const assignedIds = new Set(assignedLevels.map(l => l.level_id));
+                const availableLevels = allLevels.filter(l => !assignedIds.has(l.id));
+                
+                // Render available levels
+                const availableEl = document.getElementById('available-levels-list');
+                availableEl.innerHTML = availableLevels.length === 0 
+                    ? '<p class="text-gray-500 text-sm">All levels are assigned to this pathway</p>'
+                    : availableLevels.map(level => `
+                        <div class="flex items-center justify-between p-3 border rounded hover:bg-gray-50">
+                            <div>
+                                <div class="font-semibold">${level.title}</div>
+                                ${level.is_boss_level ? '<span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">Boss Level</span>' : ''}
+                            </div>
+                            <button onclick="assignLevelToPathway(${pathwayId}, ${level.id})" 
+                                    class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">
+                                <i class="fas fa-plus"></i> Add
+                            </button>
+                        </div>
+                    `).join('');
+                
+                // Render assigned levels (draggable)
+                const assignedEl = document.getElementById('assigned-levels-list');
+                assignedEl.innerHTML = assignedLevels.length === 0
+                    ? '<p class="text-gray-500 text-sm">No levels assigned yet</p>'
+                    : assignedLevels.map(level => `
+                        <div class="flex items-center justify-between p-3 border rounded bg-white cursor-move" 
+                             draggable="true" 
+                             data-level-id="${level.level_id}"
+                             ondragstart="handleDragStart(event)"
+                             ondragover="handleDragOver(event)"
+                             ondrop="handleDrop(event)">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-grip-vertical text-gray-400"></i>
+                                <div>
+                                    <div class="font-semibold">${level.title}</div>
+                                    <div class="text-xs text-gray-500">Order: ${level.order_index}</div>
+                                </div>
+                            </div>
+                            <button onclick="removeLevelFromPathway(${pathwayId}, ${level.level_id})" 
+                                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
+                                <i class="fas fa-times"></i> Remove
+                            </button>
+                        </div>
+                    `).join('');
+                
+                document.getElementById('manage-pathway-levels-modal').style.display = 'flex';
+            } catch (error) {
+                alert('Error loading pathway levels: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+
+        function closeManagePathwayLevelsModal() {
+            document.getElementById('manage-pathway-levels-modal').style.display = 'none';
+        }
+
+        async function assignLevelToPathway(pathwayId, levelId) {
+            try {
+                await axios.post(`/api/pathways/${pathwayId}/assign-level`, {
+                    level_id: levelId
+                });
+                showManagePathwayLevelsModal(pathwayId);
+            } catch (error) {
+                alert('Error assigning level: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+
+        async function removeLevelFromPathway(pathwayId, levelId) {
+            try {
+                await axios.delete(`/api/pathways/${pathwayId}/levels/${levelId}`);
+                showManagePathwayLevelsModal(pathwayId);
+            } catch (error) {
+                alert('Error removing level: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+
+        // Drag and drop for reordering
+        let draggedElement = null;
+
+        function handleDragStart(e) {
+            draggedElement = e.target;
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            e.dataTransfer.dropEffect = 'move';
+            return false;
+        }
+
+        function handleDrop(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+            
+            if (draggedElement !== e.currentTarget && e.currentTarget.hasAttribute('draggable')) {
+                const allLevels = Array.from(document.getElementById('assigned-levels-list').children);
+                const draggedIndex = allLevels.indexOf(draggedElement);
+                const targetIndex = allLevels.indexOf(e.currentTarget);
+                
+                if (draggedIndex < targetIndex) {
+                    e.currentTarget.parentNode.insertBefore(draggedElement, e.currentTarget.nextSibling);
+                } else {
+                    e.currentTarget.parentNode.insertBefore(draggedElement, e.currentTarget);
+                }
+            }
+            
+            return false;
+        }
+
+        async function savePathwayLevels() {
+            const pathwayId = document.getElementById('manage-pathway-id').value;
+            const assignedLevels = Array.from(document.getElementById('assigned-levels-list').children);
+            const levelOrder = assignedLevels
+                .filter(el => el.hasAttribute('data-level-id'))
+                .map((el, index) => ({
+                    level_id: parseInt(el.getAttribute('data-level-id')),
+                    order_index: index + 1
+                }));
+            
+            try {
+                await axios.post(`/api/pathways/${pathwayId}/reorder-levels`, {
+                    levels: levelOrder
+                });
+                closeManagePathwayLevelsModal();
+                loadPathways();
+                alert('Level order saved successfully!');
+            } catch (error) {
+                alert('Error saving level order: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+
+        async function approveEnrollment(enrollmentId, userId, pathwayId) {
+            try {
+                await axios.post(`/api/pathways/enrollment/${enrollmentId}/approve`);
+                loadEnrollmentRequests();
+                alert('Enrollment approved!');
+            } catch (error) {
+                alert('Error approving enrollment: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+
+        async function rejectEnrollment(enrollmentId) {
+            const reason = prompt('Reason for rejection (optional):');
+            
+            try {
+                await axios.post(`/api/pathways/enrollment/${enrollmentId}/reject`, {
+                    response_note: reason
+                });
+                loadEnrollmentRequests();
+                alert('Enrollment rejected.');
+            } catch (error) {
+                alert('Error rejecting enrollment: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+
+        // Icon Selector
+        const iconList = [
+            'fa-chart-line', 'fa-briefcase', 'fa-laptop-code', 'fa-user-tie', 'fa-lightbulb',
+            'fa-rocket', 'fa-cogs', 'fa-handshake', 'fa-bullseye', 'fa-trophy',
+            'fa-graduation-cap', 'fa-chart-bar', 'fa-project-diagram', 'fa-tasks',
+            'fa-clipboard-check', 'fa-users', 'fa-chart-pie', 'fa-compass', 'fa-flag',
+            'fa-star', 'fa-medal', 'fa-crown', 'fa-fire', 'fa-bolt', 'fa-gem',
+            'fa-palette', 'fa-paint-brush', 'fa-pencil-ruler', 'fa-tools', 'fa-wrench',
+            'fa-hammer', 'fa-screwdriver', 'fa-flask', 'fa-microscope', 'fa-atom'
+        ];
+
+        function showIconSelector(mode) {
+            document.getElementById('icon-selector-mode').value = mode;
+            const gridEl = document.getElementById('icon-grid');
+            
+            gridEl.innerHTML = iconList.map(icon => `
+                <button type="button" 
+                        class="p-4 border rounded hover:bg-blue-50 hover:border-blue-500 transition-colors" 
+                        onclick="selectIcon('${icon}')">
+                    <i class="fas ${icon} text-2xl"></i>
+                </button>
+            `).join('');
+            
+            document.getElementById('icon-selector-modal').style.display = 'flex';
+        }
+
+        function closeIconSelector() {
+            document.getElementById('icon-selector-modal').style.display = 'none';
+        }
+
+        function selectIcon(icon) {
+            const mode = document.getElementById('icon-selector-mode').value;
+            const prefix = mode === 'create' ? 'create' : 'edit';
+            
+            document.getElementById(`${prefix}-pathway-icon`).value = icon;
+            document.getElementById(`${prefix}-pathway-icon-preview`).className = `fas ${icon} text-2xl`;
+            
+            closeIconSelector();
+        }
+
+        function filterIcons() {
+            const search = document.getElementById('icon-search').value.toLowerCase();
+            const buttons = document.querySelectorAll('#icon-grid button');
+            
+            buttons.forEach(btn => {
+                const icon = btn.querySelector('i').className;
+                if (icon.toLowerCase().includes(search)) {
+                    btn.style.display = 'block';
+                } else {
+                    btn.style.display = 'none';
+                }
+            });
         }
 
         // Initial load
