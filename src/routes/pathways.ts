@@ -65,6 +65,67 @@ pathways.get('/admin/pathways/:id', async (c) => {
   });
 });
 
+// Get pathway analytics
+pathways.get('/admin/pathways/analytics', async (c) => {
+  const user = c.get('user');
+  
+  if (user.role !== 'admin') {
+    return c.json({ error: 'Unauthorized' }, 403);
+  }
+
+  const result = await c.env.DB.prepare(`
+    SELECT 
+      p.*,
+      COUNT(DISTINCT pl.level_id) as level_count,
+      COUNT(DISTINCT CASE WHEN pe.status = 'approved' THEN pe.user_id END) as enrolled_count,
+      COUNT(DISTINCT CASE 
+        WHEN pe.status = 'approved' 
+        AND (SELECT COUNT(*) FROM user_progress up2 
+             JOIN pathway_levels pl2 ON up2.level_id = pl2.level_id 
+             WHERE up2.user_id = pe.user_id 
+             AND up2.pathway_id = p.id 
+             AND pl2.pathway_id = p.id 
+             AND up2.status = 'completed'
+            ) = COUNT(DISTINCT pl.level_id)
+        THEN pe.user_id 
+      END) as completed_count,
+      COUNT(DISTINCT CASE 
+        WHEN pe.status = 'approved' 
+        AND (SELECT COUNT(*) FROM user_progress up2 
+             WHERE up2.user_id = pe.user_id 
+             AND up2.pathway_id = p.id 
+             AND up2.status IN ('in_progress', 'unlocked')
+            ) > 0
+        THEN pe.user_id 
+      END) as in_progress_count,
+      CASE 
+        WHEN COUNT(DISTINCT CASE WHEN pe.status = 'approved' THEN pe.user_id END) > 0
+        THEN ROUND(
+          CAST(COUNT(DISTINCT CASE 
+            WHEN pe.status = 'approved' 
+            AND (SELECT COUNT(*) FROM user_progress up2 
+                 JOIN pathway_levels pl2 ON up2.level_id = pl2.level_id 
+                 WHERE up2.user_id = pe.user_id 
+                 AND up2.pathway_id = p.id 
+                 AND pl2.pathway_id = p.id 
+                 AND up2.status = 'completed'
+                ) = COUNT(DISTINCT pl.level_id)
+            THEN pe.user_id 
+          END) AS REAL) * 100.0 / 
+          COUNT(DISTINCT CASE WHEN pe.status = 'approved' THEN pe.user_id END)
+        )
+        ELSE 0
+      END as completion_rate
+    FROM pathways p
+    LEFT JOIN pathway_levels pl ON p.id = pl.pathway_id
+    LEFT JOIN pathway_enrollments pe ON p.id = pe.pathway_id
+    GROUP BY p.id
+    ORDER BY p.order_index
+  `).all();
+
+  return c.json({ analytics: result.results });
+});
+
 // Create new pathway
 pathways.post('/admin/pathways', async (c) => {
   const user = c.get('user');

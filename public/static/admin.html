@@ -127,6 +127,15 @@
 
         <!-- Reports Tab -->
         <div id="reports-tab" class="tab-content hidden">
+            <!-- Pathway Analytics -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <h3 class="text-xl font-bold mb-4">
+                    <i class="fas fa-route mr-2 text-blue-600"></i>Pathway Analytics
+                </h3>
+                <div id="pathway-analytics"></div>
+            </div>
+            
+            <!-- Original Reports -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div class="bg-white rounded-lg shadow-lg p-6">
                     <h3 class="text-xl font-bold mb-4">Progress Report</h3>
@@ -1027,8 +1036,88 @@
                 
                 document.getElementById('progress-report').innerHTML = progressHtml;
                 document.getElementById('completion-report').innerHTML = completionHtml;
+                
+                // Load pathway analytics
+                await loadPathwayAnalytics();
             } catch (error) {
                 console.error('Error loading reports:', error);
+            }
+        }
+        
+        async function loadPathwayAnalytics() {
+            try {
+                const response = await axios.get('/api/admin/pathways/analytics');
+                const analytics = response.data.analytics;
+                
+                const html = `
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        ${analytics.map(pathway => `
+                            <div class="border-2 rounded-lg p-4" style="border-left: 4px solid ${pathway.color_primary}">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas ${pathway.icon} text-2xl" style="color: ${pathway.color_primary}"></i>
+                                        <h4 class="font-bold text-lg">${pathway.title}</h4>
+                                    </div>
+                                    <span class="text-xs px-2 py-1 rounded ${pathway.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+                                        ${pathway.active ? 'Active' : 'Inactive'}
+                                    </span>
+                                </div>
+                                
+                                <!-- Enrollment Stats -->
+                                <div class="space-y-2 mb-3">
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-gray-600">Enrolled Users:</span>
+                                        <span class="font-semibold">${pathway.enrolled_count}</span>
+                                    </div>
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-gray-600">Completed:</span>
+                                        <span class="font-semibold">${pathway.completed_count}</span>
+                                    </div>
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-gray-600">In Progress:</span>
+                                        <span class="font-semibold">${pathway.in_progress_count}</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Completion Rate -->
+                                <div class="mb-3">
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span class="text-gray-600">Completion Rate:</span>
+                                        <span class="font-semibold">${pathway.completion_rate}%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="h-2 rounded-full" style="width: ${pathway.completion_rate}%; background-color: ${pathway.color_primary}"></div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Level Stats -->
+                                <div class="pt-3 border-t">
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-gray-600">
+                                            <i class="fas fa-layer-group mr-1"></i>Levels:
+                                        </span>
+                                        <span class="font-semibold">${pathway.level_count}</span>
+                                    </div>
+                                    ${pathway.avg_completion_time ? `
+                                        <div class="flex justify-between text-sm mt-1">
+                                            <span class="text-gray-600">
+                                                <i class="fas fa-clock mr-1"></i>Avg. Time:
+                                            </span>
+                                            <span class="font-semibold">${pathway.avg_completion_time} days</span>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    ${analytics.length === 0 ? '<p class="text-gray-500 text-center py-4">No pathways created yet.</p>' : ''}
+                `;
+                
+                document.getElementById('pathway-analytics').innerHTML = html;
+            } catch (error) {
+                console.error('Error loading pathway analytics:', error);
+                document.getElementById('pathway-analytics').innerHTML = '<p class="text-red-500">Error loading analytics</p>';
             }
         }
 
@@ -3109,15 +3198,30 @@
 
         async function showManagePathwayLevelsModal(pathwayId) {
             try {
-                const [pathwayRes, levelsRes, assignedRes] = await Promise.all([
+                const [pathwayRes, levelsRes, assignedRes, allPathwaysRes] = await Promise.all([
                     axios.get(`/api/admin/pathways/${pathwayId}`),
                     axios.get('/api/admin/levels'),
-                    axios.get(`/api/admin/pathways/${pathwayId}/levels`)
+                    axios.get(`/api/admin/pathways/${pathwayId}/levels`),
+                    axios.get('/api/admin/pathways')
                 ]);
                 
                 const pathway = pathwayRes.data.pathway;
                 const allLevels = levelsRes.data.levels;
                 const assignedLevels = assignedRes.data.levels || [];
+                const allPathways = allPathwaysRes.data.pathways;
+                
+                // Build a map of level_id to pathway count (how many pathways use each level)
+                const levelPathwayMap = {};
+                for (const pw of allPathways) {
+                    const pathwayLevelsRes = await axios.get(`/api/admin/pathways/${pw.id}/levels`);
+                    const pathwayLevels = pathwayLevelsRes.data.levels || [];
+                    for (const level of pathwayLevels) {
+                        if (!levelPathwayMap[level.level_id]) {
+                            levelPathwayMap[level.level_id] = [];
+                        }
+                        levelPathwayMap[level.level_id].push(pw.title);
+                    }
+                }
                 
                 document.getElementById('manage-pathway-id').value = pathwayId;
                 document.getElementById('pathway-levels-title').textContent = pathway.title;
@@ -3125,47 +3229,69 @@
                 const assignedIds = new Set(assignedLevels.map(l => l.level_id));
                 const availableLevels = allLevels.filter(l => !assignedIds.has(l.id));
                 
-                // Render available levels
+                // Render available levels with shared indicator
                 const availableEl = document.getElementById('available-levels-list');
                 availableEl.innerHTML = availableLevels.length === 0 
                     ? '<p class="text-gray-500 text-sm">All levels are assigned to this pathway</p>'
-                    : availableLevels.map(level => `
-                        <div class="flex items-center justify-between p-3 border rounded hover:bg-gray-50">
-                            <div>
-                                <div class="font-semibold">${level.title}</div>
-                                ${level.is_boss_level ? '<span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">Boss Level</span>' : ''}
+                    : availableLevels.map(level => {
+                        const sharedPathways = levelPathwayMap[level.id] || [];
+                        const isShared = sharedPathways.length > 0;
+                        return `
+                            <div class="flex items-center justify-between p-3 border rounded hover:bg-gray-50">
+                                <div class="flex-1">
+                                    <div class="font-semibold">${level.title}</div>
+                                    <div class="flex items-center gap-2 mt-1">
+                                        ${level.is_boss_level ? '<span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">Boss Level</span>' : ''}
+                                        ${isShared ? `
+                                            <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded flex items-center gap-1">
+                                                <i class="fas fa-share-nodes"></i>
+                                                Shared: ${sharedPathways.join(', ')}
+                                            </span>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                                <button onclick="assignLevelToPathway(${pathwayId}, ${level.id})" 
+                                        class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">
+                                    <i class="fas fa-plus"></i> Add
+                                </button>
                             </div>
-                            <button onclick="assignLevelToPathway(${pathwayId}, ${level.id})" 
-                                    class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">
-                                <i class="fas fa-plus"></i> Add
-                            </button>
-                        </div>
-                    `).join('');
+                        `;
+                    }).join('');
                 
-                // Render assigned levels (draggable)
+                // Render assigned levels (draggable) with shared indicators
                 const assignedEl = document.getElementById('assigned-levels-list');
                 assignedEl.innerHTML = assignedLevels.length === 0
                     ? '<p class="text-gray-500 text-sm">No levels assigned yet</p>'
-                    : assignedLevels.map(level => `
-                        <div class="flex items-center justify-between p-3 border rounded bg-white cursor-move" 
-                             draggable="true" 
-                             data-level-id="${level.level_id}"
-                             ondragstart="handleDragStart(event)"
-                             ondragover="handleDragOver(event)"
-                             ondrop="handleDrop(event)">
-                            <div class="flex items-center space-x-2">
-                                <i class="fas fa-grip-vertical text-gray-400"></i>
-                                <div>
-                                    <div class="font-semibold">${level.title}</div>
-                                    <div class="text-xs text-gray-500">Order: ${level.order_index}</div>
+                    : assignedLevels.map(level => {
+                        const sharedPathways = (levelPathwayMap[level.level_id] || []).filter(pw => pw !== pathway.title);
+                        const isShared = sharedPathways.length > 0;
+                        return `
+                            <div class="flex items-center justify-between p-3 border rounded bg-white cursor-move" 
+                                 draggable="true" 
+                                 data-level-id="${level.level_id}"
+                                 ondragstart="handleDragStart(event)"
+                                 ondragover="handleDragOver(event)"
+                                 ondrop="handleDrop(event)">
+                                <div class="flex items-center space-x-2 flex-1">
+                                    <i class="fas fa-grip-vertical text-gray-400"></i>
+                                    <div class="flex-1">
+                                        <div class="font-semibold">${level.title}</div>
+                                        ${isShared ? `
+                                            <div class="text-xs text-blue-600 mt-1">
+                                                <i class="fas fa-share-nodes"></i>
+                                                Also in: ${sharedPathways.join(', ')}
+                                            </div>
+                                        ` : ''}
+                                        <div class="text-xs text-gray-500">Order: ${level.order_index}</div>
+                                    </div>
                                 </div>
+                                <button onclick="removeLevelFromPathway(${pathwayId}, ${level.level_id})" 
+                                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
+                                    <i class="fas fa-times"></i> Remove
+                                </button>
                             </div>
-                            <button onclick="removeLevelFromPathway(${pathwayId}, ${level.level_id})" 
-                                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
-                                <i class="fas fa-times"></i> Remove
-                            </button>
-                        </div>
-                    `).join('');
+                        `;
+                    }).join('');
                 
                 document.getElementById('manage-pathway-levels-modal').style.display = 'flex';
             } catch (error) {
