@@ -12,8 +12,9 @@ boss.use('/*', authMiddleware, bossOnly);
 // Get team members (direct reports via many-to-many relationships)
 boss.get('/team', async (c) => {
   const user = c.get('user');
+  const pathwayId = c.req.query('pathway_id'); // Optional pathway filter
   
-  const team = await c.env.DB.prepare(`
+  let query = `
     SELECT 
       u.id,
       u.name,
@@ -21,20 +22,24 @@ boss.get('/team', async (c) => {
       u.created_at,
       u.last_login,
       bcr.project_name,
-      COUNT(DISTINCT up.level_id) as levels_completed,
+      COUNT(DISTINCT CASE WHEN up.status = 'completed' ${pathwayId ? 'AND up.pathway_id = ?' : ''} THEN up.level_id END) as levels_completed,
       us.total_points,
       us.current_login_streak,
       l.rank,
       l.league
     FROM boss_consultant_relationships bcr
     JOIN users u ON bcr.consultant_id = u.id
-    LEFT JOIN user_progress up ON u.id = up.user_id AND up.status = 'completed'
+    LEFT JOIN user_progress up ON u.id = up.user_id
     LEFT JOIN user_streaks us ON u.id = us.user_id
     LEFT JOIN leaderboard l ON u.id = l.user_id
     WHERE bcr.boss_id = ? AND bcr.active = 1 AND u.role = 'consultant' AND u.active = 1
     GROUP BY u.id, bcr.project_name
     ORDER BY levels_completed DESC, us.total_points DESC
-  `).bind(user.userId).all();
+  `;
+  
+  const team = pathwayId 
+    ? await c.env.DB.prepare(query).bind(pathwayId, user.userId).all()
+    : await c.env.DB.prepare(query).bind(user.userId).all();
 
   return c.json({ team: team.results });
 });

@@ -38,6 +38,26 @@
                 </div>
             </div>
             <div class="flex items-center gap-2">
+                <!-- Pathway Filter -->
+                <div class="relative">
+                    <button onclick="togglePathwayFilter()" class="px-4 py-2 rounded-lg transition-colors hover:opacity-80 flex items-center gap-2" style="background-color: rgba(0, 28, 68, 0.5);">
+                        <i id="boss-pathway-icon" class="fas fa-chart-line"></i>
+                        <span id="boss-pathway-name">All Pathways</span>
+                        <i class="fas fa-chevron-down text-sm"></i>
+                    </button>
+                    <div id="pathway-filter-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl z-50" style="max-height: 400px; overflow-y: auto;">
+                        <div class="p-2">
+                            <div class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase">Filter by Pathway</div>
+                            <button onclick="selectPathwayFilter(null, 'All Pathways', 'fa-globe')" 
+                                    class="w-full text-left px-3 py-2 hover:bg-blue-50 rounded flex items-center gap-2">
+                                <i class="fas fa-globe text-blue-600"></i>
+                                <span class="font-medium">All Pathways</span>
+                            </button>
+                            <div id="pathway-filter-list"></div>
+                        </div>
+                    </div>
+                </div>
+                
                 <button onclick="showProfileModal()" class="px-4 py-2 rounded transition-colors hover:opacity-80" style="background-color: rgba(0, 28, 68, 0.5);">
                     <i class="fas fa-user mr-2"></i><span id="user-name"></span>
                 </button>
@@ -157,6 +177,56 @@
 
         document.getElementById('user-name').textContent = user.name;
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        // Pathway filtering
+        let currentPathwayFilter = null; // null = all pathways
+        let availablePathways = [];
+
+        async function loadPathways() {
+            try {
+                const response = await axios.get('/api/pathways/browse');
+                availablePathways = response.data.pathways;
+                
+                const listEl = document.getElementById('pathway-filter-list');
+                listEl.innerHTML = availablePathways.map(pathway => `
+                    <button onclick="selectPathwayFilter(${pathway.id}, '${pathway.title.replace(/'/g, "\\'")}', '${pathway.icon}')" 
+                            class="w-full text-left px-3 py-2 hover:bg-blue-50 rounded flex items-center gap-2">
+                        <i class="fas ${pathway.icon}" style="color: ${pathway.color_primary}"></i>
+                        <span>${pathway.title}</span>
+                    </button>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading pathways:', error);
+            }
+        }
+
+        function togglePathwayFilter() {
+            const dropdown = document.getElementById('pathway-filter-dropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        function selectPathwayFilter(pathwayId, pathwayName, pathwayIcon) {
+            currentPathwayFilter = pathwayId;
+            document.getElementById('boss-pathway-name').textContent = pathwayName;
+            document.getElementById('boss-pathway-icon').className = `fas ${pathwayIcon}`;
+            document.getElementById('pathway-filter-dropdown').classList.add('hidden');
+            
+            // Reload team data with new filter
+            loadPathways();
+            loadTeam();
+            loadSignOffRequests();
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('pathway-filter-dropdown');
+            const button = event.target.closest('button');
+            if (!button || !button.onclick || button.onclick.toString().indexOf('togglePathwayFilter') === -1) {
+                if (!dropdown.contains(event.target)) {
+                    dropdown.classList.add('hidden');
+                }
+            }
+        });
 
         function logout() {
             localStorage.clear();
@@ -469,7 +539,10 @@
 
         async function loadTeam() {
             try {
-                const response = await axios.get('/api/boss/team');
+                const url = currentPathwayFilter 
+                    ? `/api/boss/team?pathway_id=${currentPathwayFilter}`
+                    : '/api/boss/team';
+                const response = await axios.get(url);
                 const team = response.data.team;
                 
                 const html = `
