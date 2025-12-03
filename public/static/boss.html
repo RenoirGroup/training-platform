@@ -184,7 +184,7 @@
 
         async function loadPathways() {
             try {
-                const response = await axios.get('/api/pathways/browse');
+                const response = await axios.get('/api/boss/pathways');
                 availablePathways = response.data.pathways;
                 
                 const listEl = document.getElementById('pathway-filter-list');

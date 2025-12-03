@@ -306,6 +306,27 @@ pathways.post('/consultant/pathways/:id/request', async (c) => {
 // BOSS ROUTES - Approve Requests
 // ============================================
 
+// Get all active pathways for boss filtering
+pathways.get('/boss/pathways', async (c) => {
+  const user = c.get('user');
+  
+  if (user.role !== 'boss' && user.role !== 'admin') {
+    return c.json({ error: 'Unauthorized' }, 403);
+  }
+
+  const result = await c.env.DB.prepare(`
+    SELECT p.*,
+           COUNT(DISTINCT pl.level_id) as level_count
+    FROM pathways p
+    LEFT JOIN pathway_levels pl ON p.id = pl.pathway_id
+    WHERE p.active = 1
+    GROUP BY p.id
+    ORDER BY p.order_index
+  `).all();
+
+  return c.json({ pathways: result.results });
+});
+
 // Get pending enrollment requests for team
 pathways.get('/boss/enrollment-requests', async (c) => {
   const user = c.get('user');
