@@ -145,12 +145,19 @@ async function changeLanguage(languageCode) {
  * Translate all elements with data-i18n attributes
  */
 function translatePage() {
+  // Wait a bit for i18next to be fully initialized
+  if (!i18next.isInitialized) {
+    console.warn('i18next not yet initialized, waiting...');
+    setTimeout(translatePage, 100);
+    return;
+  }
+
   // Translate text content
   document.querySelectorAll('[data-i18n]').forEach(element => {
     const key = element.getAttribute('data-i18n');
     const translation = i18next.t(key);
     
-    if (translation !== key) {
+    if (translation && translation !== key) {
       element.textContent = translation;
     }
   });
@@ -160,7 +167,7 @@ function translatePage() {
     const key = element.getAttribute('data-i18n-placeholder');
     const translation = i18next.t(key);
     
-    if (translation !== key) {
+    if (translation && translation !== key) {
       element.placeholder = translation;
     }
   });
