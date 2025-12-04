@@ -368,19 +368,19 @@ function createLanguageSelector(containerId, currentLanguage = null) {
   const html = `
     <div class="relative">
       <button onclick="toggleLanguageDropdown()" 
-              class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+              class="flex items-center gap-2 px-4 py-2 bg-white text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors shadow-sm">
         <span class="text-xl">${currentLang.flag}</span>
-        <span class="font-medium">${currentLang.nativeName}</span>
-        <i class="fas fa-chevron-down text-sm"></i>
+        <span class="font-medium text-gray-800">${currentLang.nativeName}</span>
+        <i class="fas fa-chevron-down text-sm text-gray-600"></i>
       </button>
       
       <div id="language-dropdown" 
-           class="hidden absolute top-full mt-2 right-0 bg-white border border-gray-300 rounded-lg shadow-lg z-50 min-w-[200px]">
+           class="hidden absolute top-full mt-2 right-0 bg-white border border-gray-300 rounded-lg shadow-2xl z-[9999] min-w-[220px] max-h-[400px] overflow-y-auto">
         ${languages.map(lang => `
           <button onclick="selectLanguage('${lang.code}')" 
-                  class="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors flex items-center gap-3 ${lang.code === current ? 'bg-blue-50' : ''}">
+                  class="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors flex items-center gap-3 border-b border-gray-100 last:border-b-0 ${lang.code === current ? 'bg-blue-50' : ''}">
             <span class="text-xl">${lang.flag}</span>
-            <span class="flex-1">${lang.nativeName}</span>
+            <span class="flex-1 text-gray-800 font-medium">${lang.nativeName}</span>
             ${lang.code === current ? '<i class="fas fa-check text-blue-600"></i>' : ''}
           </button>
         `).join('')}
