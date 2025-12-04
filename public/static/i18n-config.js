@@ -166,7 +166,29 @@ function translatePage() {
   // Translate text content
   document.querySelectorAll('[data-i18n]').forEach(element => {
     const key = element.getAttribute('data-i18n');
-    const translation = i18next.t(key);
+    
+    // Handle namespace:key format or namespace.key format
+    let translation;
+    if (key.includes(':')) {
+      // Already using colon syntax (e.g., 'auth:login.title')
+      translation = i18next.t(key);
+    } else if (key.includes('.')) {
+      // Check if first part is a namespace (e.g., 'auth.login.title')
+      const parts = key.split('.');
+      const possibleNamespace = parts[0];
+      
+      // Check if it's a loaded namespace
+      if (i18next.options.ns && i18next.options.ns.includes(possibleNamespace)) {
+        // Use namespace syntax
+        const keyWithoutNs = parts.slice(1).join('.');
+        translation = i18next.t(keyWithoutNs, { ns: possibleNamespace });
+      } else {
+        // Not a namespace, use as-is
+        translation = i18next.t(key);
+      }
+    } else {
+      translation = i18next.t(key);
+    }
     
     console.log(`Translating key: ${key} -> ${translation}`);
     
@@ -179,7 +201,24 @@ function translatePage() {
   // Translate placeholders
   document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
     const key = element.getAttribute('data-i18n-placeholder');
-    const translation = i18next.t(key);
+    
+    // Handle namespace:key format or namespace.key format
+    let translation;
+    if (key.includes(':')) {
+      translation = i18next.t(key);
+    } else if (key.includes('.')) {
+      const parts = key.split('.');
+      const possibleNamespace = parts[0];
+      
+      if (i18next.options.ns && i18next.options.ns.includes(possibleNamespace)) {
+        const keyWithoutNs = parts.slice(1).join('.');
+        translation = i18next.t(keyWithoutNs, { ns: possibleNamespace });
+      } else {
+        translation = i18next.t(key);
+      }
+    } else {
+      translation = i18next.t(key);
+    }
     
     if (translation && translation !== key) {
       element.placeholder = translation;
@@ -192,7 +231,23 @@ function translatePage() {
   // Translate titles (tooltips)
   document.querySelectorAll('[data-i18n-title]').forEach(element => {
     const key = element.getAttribute('data-i18n-title');
-    const translation = i18next.t(key);
+    
+    let translation;
+    if (key.includes(':')) {
+      translation = i18next.t(key);
+    } else if (key.includes('.')) {
+      const parts = key.split('.');
+      const possibleNamespace = parts[0];
+      
+      if (i18next.options.ns && i18next.options.ns.includes(possibleNamespace)) {
+        const keyWithoutNs = parts.slice(1).join('.');
+        translation = i18next.t(keyWithoutNs, { ns: possibleNamespace });
+      } else {
+        translation = i18next.t(key);
+      }
+    } else {
+      translation = i18next.t(key);
+    }
     
     if (translation !== key) {
       element.title = translation;
@@ -202,7 +257,23 @@ function translatePage() {
   // Translate aria-labels
   document.querySelectorAll('[data-i18n-aria]').forEach(element => {
     const key = element.getAttribute('data-i18n-aria');
-    const translation = i18next.t(key);
+    
+    let translation;
+    if (key.includes(':')) {
+      translation = i18next.t(key);
+    } else if (key.includes('.')) {
+      const parts = key.split('.');
+      const possibleNamespace = parts[0];
+      
+      if (i18next.options.ns && i18next.options.ns.includes(possibleNamespace)) {
+        const keyWithoutNs = parts.slice(1).join('.');
+        translation = i18next.t(keyWithoutNs, { ns: possibleNamespace });
+      } else {
+        translation = i18next.t(key);
+      }
+    } else {
+      translation = i18next.t(key);
+    }
     
     if (translation !== key) {
       element.setAttribute('aria-label', translation);
