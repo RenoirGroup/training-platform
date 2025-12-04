@@ -29,12 +29,14 @@ async function initI18n(namespaces = ['common']) {
     namespaces = [namespaces];
   }
 
+  console.log('Initializing i18next with language:', initialLanguage, 'namespaces:', namespaces);
+
   await i18next
     .use(i18nextHttpBackend)
     .init({
       lng: initialLanguage,
       fallbackLng: FALLBACK_LANGUAGE,
-      debug: false,
+      debug: true, // Enable debug mode temporarily
       ns: namespaces,
       defaultNS: namespaces[0],
       backend: {
@@ -42,11 +44,17 @@ async function initI18n(namespaces = ['common']) {
       },
       interpolation: {
         escapeValue: false // HTML is already escaped
-      }
+      },
+      // Add language fallback mapping
+      load: 'currentOnly', // Don't try to load language variants
+      supportedLngs: ['en-US', 'en-GB', 'ja', 'pt-BR', 'id', 'ms'],
+      nonExplicitSupportedLngs: false
     });
 
   // Update HTML lang attribute
   document.documentElement.lang = initialLanguage;
+  
+  console.log('i18next initialized. Current language:', i18next.language);
   
   return i18next;
 }
@@ -152,13 +160,19 @@ function translatePage() {
     return;
   }
 
+  console.log('Translating page with language:', i18next.language);
+  let translatedCount = 0;
+
   // Translate text content
   document.querySelectorAll('[data-i18n]').forEach(element => {
     const key = element.getAttribute('data-i18n');
     const translation = i18next.t(key);
     
+    console.log(`Translating key: ${key} -> ${translation}`);
+    
     if (translation && translation !== key) {
       element.textContent = translation;
+      translatedCount++;
     }
   });
 
@@ -169,8 +183,11 @@ function translatePage() {
     
     if (translation && translation !== key) {
       element.placeholder = translation;
+      translatedCount++;
     }
   });
+
+  console.log(`Translated ${translatedCount} elements`);
 
   // Translate titles (tooltips)
   document.querySelectorAll('[data-i18n-title]').forEach(element => {
