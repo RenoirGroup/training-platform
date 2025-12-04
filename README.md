@@ -17,9 +17,10 @@ This is a full-stack training management system designed for Renoir Consulting. 
 
 ## URLs
 
-- **Production**: https://10c6bca7.training-platform-257.pages.dev
+- **Production**: https://df2e00c2.training-platform-257.pages.dev
+- **Main Production**: https://training-platform-257.pages.dev
 - **GitHub**: https://github.com/RenoirGroup/renoir-training26
-- **Development Sandbox**: https://3000-i5jt5upplbv2n9drgj7lj-0e616f0a.sandbox.novita.ai
+- **Development Sandbox**: https://3000-i5jt5upplbv2n9drgj7lj-b9b802c4.sandbox.novita.ai
 - **Local Development**: http://localhost:3000
 
 ## Features
@@ -171,6 +172,18 @@ This is a full-stack training management system designed for Renoir Consulting. 
    - Corporate color scheme (Green #7CB342, Teal #00ACC1)
    - All pages updated with new branding
    - Professional consulting firm identity
+
+10. ✅ **Multi-Language Support (i18n)** (NEW - 2024-12-04)
+   - **Login Page**: Full Japanese translation support
+   - **Consultant Dashboard**: 100% Japanese translation
+     - Navigation, stats, journey map
+     - Profile settings, password changes
+     - Level details, tests, sign-off requests
+     - All modals, buttons, error messages
+   - **Language Selector**: Persistent language preference across sessions
+   - **Supported Languages**: English (US/UK), Japanese, Portuguese (Brazil ready), Bahasa Indonesia, Malay
+   - **Future**: Boss and Admin dashboards (currently English only)
+   - Professional business Japanese translations (ビジネス日本語)
 
 ### Features Not Yet Implemented
 
@@ -372,8 +385,10 @@ Proprietary - Internal use only
 
 ---
 
-**Last Updated**: 2025-10-29  
+**Last Updated**: 2024-12-04  
 **Status**: ✅ Production Deployed - Live on Cloudflare Pages  
-**Production URL**: https://10c6bca7.training-platform-257.pages.dev  
+**Production URL**: https://df2e00c2.training-platform-257.pages.dev  
+**Main URL**: https://training-platform-257.pages.dev  
 **Deployment Platform**: Cloudflare Pages  
-**Brand**: Renoir Consulting
+**Brand**: Renoir Consulting  
+**i18n Status**: ✅ Consultant Dashboard (Japanese) | ⏳ Boss/Admin (English only)
