@@ -19,10 +19,15 @@ const FALLBACK_LANGUAGE = 'en-US';
 /**
  * Initialize i18next with configuration
  */
-async function initI18n(namespace = 'common') {
+async function initI18n(namespaces = ['common']) {
   const savedLanguage = getSavedLanguage();
   const browserLanguage = detectBrowserLanguage();
   const initialLanguage = savedLanguage || browserLanguage || DEFAULT_LANGUAGE;
+
+  // Ensure namespaces is an array
+  if (typeof namespaces === 'string') {
+    namespaces = [namespaces];
+  }
 
   await i18next
     .use(i18nextHttpBackend)
@@ -30,8 +35,8 @@ async function initI18n(namespace = 'common') {
       lng: initialLanguage,
       fallbackLng: FALLBACK_LANGUAGE,
       debug: false,
-      ns: [namespace],
-      defaultNS: namespace,
+      ns: namespaces,
+      defaultNS: namespaces[0],
       backend: {
         loadPath: '/static/locales/{{lng}}/{{ns}}.json'
       },
