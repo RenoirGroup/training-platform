@@ -1,0 +1,97 @@
+{
+  "navigation": {
+    "team": "Team",
+    "signoffs": "Sign-offs",
+    "analytics": "Analytics",
+    "all_pathways": "All Pathways"
+  },
+  "team": {
+    "title": "Team Management",
+    "my_team": "My Team",
+    "team_members": "Team Members",
+    "no_team_members": "No team members",
+    "view_progress": "View Progress",
+    "member_progress": "Member Progress",
+    "recent_activity": "Recent Activity",
+    "no_activity": "No recent activity"
+  },
+  "stats": {
+    "name": "Name",
+    "email": "Email",
+    "levels": "Levels",
+    "points": "Points",
+    "streak": "Streak",
+    "rank": "Rank",
+    "completed": "Completed",
+    "in_progress": "In Progress",
+    "performance": "Performance"
+  },
+  "signoffs": {
+    "title": "Sign-off Requests",
+    "pending_requests": "Pending Sign-off Requests",
+    "no_requests": "No pending sign-off requests",
+    "requested_by": "Requested by",
+    "level": "Level",
+    "pathway": "Pathway",
+    "requested_at": "Requested",
+    "review": "Review",
+    "approve": "Approve",
+    "reject": "Reject",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "feedback": "Feedback",
+    "add_feedback": "Add feedback (optional for approval, required for rejection)",
+    "feedback_required": "Feedback is required for rejection",
+    "confirm_approve": "Are you sure you want to approve this sign-off?",
+    "confirm_reject": "Are you sure you want to reject this sign-off?",
+    "approved_success": "Sign-off approved!",
+    "rejected_success": "Sign-off rejected with feedback",
+    "consultant_notes": "Consultant's Notes"
+  },
+  "analytics": {
+    "title": "Team Analytics",
+    "overview": "Overview",
+    "team_performance": "Team Performance",
+    "completion_rates": "Completion Rates",
+    "average_score": "Average Score",
+    "total_levels": "Total Levels Completed",
+    "active_members": "Active Members",
+    "this_week": "This Week",
+    "this_month": "This Month",
+    "pathway_filter": "Filter by Pathway",
+    "select_pathway": "Select Pathway"
+  },
+  "pathways": {
+    "all_pathways": "All Pathways",
+    "pathway_progress": "Pathway Progress",
+    "enrolled_in": "Enrolled in",
+    "no_enrollment": "No team members enrolled in this pathway",
+    "enrollment_requests": "Enrollment Requests",
+    "no_requests": "No pending enrollment requests",
+    "approve_enrollment": "Approve Enrollment",
+    "reject_enrollment": "Reject Enrollment"
+  },
+  "progress": {
+    "title": "Progress Details",
+    "levels_completed": "Levels Completed",
+    "current_level": "Current Level",
+    "next_level": "Next Level",
+    "total_points": "Total Points",
+    "current_streak": "Current Streak",
+    "test_history": "Test History",
+    "no_tests": "No tests taken yet",
+    "recent_tests": "Recent Tests",
+    "test_score": "Score",
+    "test_date": "Date",
+    "passed": "Passed",
+    "failed": "Failed"
+  },
+  "messages": {
+    "error_loading_team": "Error loading team",
+    "error_loading_requests": "Error loading sign-off requests",
+    "error_approving": "Error approving sign-off",
+    "error_rejecting": "Error rejecting sign-off",
+    "error_loading_details": "Error loading sign-off details",
+    "error_loading_progress": "Error loading progress"
+  }
+}

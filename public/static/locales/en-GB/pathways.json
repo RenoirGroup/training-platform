@@ -1,0 +1,82 @@
+{
+  "common": {
+    "pathway": "Pathway",
+    "pathways": "Pathways",
+    "my_pathways": "My Pathways",
+    "all_pathways": "All Pathways",
+    "current_pathway": "Current Pathway",
+    "select_pathway": "Select Pathway",
+    "switch_pathway": "Switch Pathway",
+    "no_pathway": "No Pathway Selected"
+  },
+  "enrollment": {
+    "enroll": "Enroll",
+    "request_enrollment": "Request Enrollment",
+    "enrollment_status": "Enrollment Status",
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "enrolled": "Enrolled",
+    "not_enrolled": "Not Enrolled",
+    "enrollment_date": "Enrollment Date",
+    "requested_date": "Requested Date",
+    "reviewed_date": "Reviewed Date"
+  },
+  "details": {
+    "description": "Description",
+    "levels": "Levels",
+    "duration": "Duration",
+    "difficulty": "Difficulty",
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "prerequisites": "Prerequisites",
+    "outcomes": "Learning Outcomes"
+  },
+  "progress": {
+    "progress": "Progress",
+    "levels_completed": "Levels Completed",
+    "completion_rate": "Completion Rate",
+    "in_progress": "In Progress",
+    "not_started": "Not Started",
+    "completed": "Completed",
+    "start_pathway": "Start Pathway",
+    "continue_pathway": "Continue Pathway",
+    "restart_pathway": "Restart Pathway"
+  },
+  "admin": {
+    "create_pathway": "Create Pathway",
+    "edit_pathway": "Edit Pathway",
+    "delete_pathway": "Delete Pathway",
+    "pathway_settings": "Pathway Settings",
+    "assign_levels": "Assign Levels",
+    "manage_levels": "Manage Levels",
+    "reorder_levels": "Reorder Levels",
+    "pathway_analytics": "Pathway Analytics",
+    "enrollment_requests": "Enrollment Requests",
+    "approve_request": "Approve Request",
+    "reject_request": "Reject Request"
+  },
+  "analytics": {
+    "enrolled_users": "Enrolled Users",
+    "completed_users": "Completed Users",
+    "average_completion_time": "Avg. Completion Time",
+    "completion_rate": "Completion Rate",
+    "popular_pathways": "Popular Pathways",
+    "no_data": "No analytics data available"
+  },
+  "messages": {
+    "enrollment_requested": "Enrollment request submitted successfully",
+    "enrollment_approved": "Enrollment approved",
+    "enrollment_rejected": "Enrollment rejected",
+    "pathway_created": "Pathway created successfully",
+    "pathway_updated": "Pathway updated successfully",
+    "pathway_deleted": "Pathway deleted successfully",
+    "cannot_delete_with_users": "Cannot delete pathway with enrolled users",
+    "levels_assigned": "Levels assigned successfully",
+    "error_loading_pathways": "Error loading pathways",
+    "error_requesting_enrollment": "Error requesting enrollment",
+    "switch_pathway_confirm": "Switch to {{pathway}}?",
+    "pathway_switched": "Switched to {{pathway}}"
+  }
+}
