@@ -53,6 +53,7 @@ auth.post('/login', async (c) => {
         name: user.name,
         role: user.role,
         boss_id: user.boss_id,
+        preferred_language: user.preferred_language || 'en-US',
       },
     });
   } catch (error) {
@@ -121,7 +122,7 @@ auth.get('/me', async (c) => {
   }
 
   const user = await c.env.DB.prepare(
-    'SELECT id, email, name, role, boss_id, active, created_at, last_login FROM users WHERE id = ?'
+    'SELECT id, email, name, role, boss_id, active, created_at, last_login, preferred_language FROM users WHERE id = ?'
   ).bind(payload.userId).first();
 
   if (!user) {
@@ -129,6 +130,80 @@ auth.get('/me', async (c) => {
   }
 
   return c.json({ user });
+});
+
+// Get user preferences (including language)
+auth.get('/user/preferences', async (c) => {
+  try {
+    const authHeader = c.req.header('Authorization');
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return c.json({ error: 'Unauthorized' }, 401);
+    }
+
+    const token = authHeader.substring(7);
+    const { verifyToken } = await import('../utils/auth');
+    const payload = await verifyToken(token);
+
+    if (!payload) {
+      return c.json({ error: 'Invalid token' }, 401);
+    }
+
+    const user = await c.env.DB.prepare(
+      'SELECT preferred_language FROM users WHERE id = ?'
+    ).bind(payload.userId).first();
+
+    if (!user) {
+      return c.json({ error: 'User not found' }, 404);
+    }
+
+    return c.json({ 
+      preferred_language: user.preferred_language || 'en-US'
+    });
+  } catch (error) {
+    console.error('Get preferences error:', error);
+    return c.json({ error: 'Failed to get preferences' }, 500);
+  }
+});
+
+// Update user preferences (including language)
+auth.put('/user/preferences', async (c) => {
+  try {
+    const authHeader = c.req.header('Authorization');
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return c.json({ error: 'Unauthorized' }, 401);
+    }
+
+    const token = authHeader.substring(7);
+    const { verifyToken } = await import('../utils/auth');
+    const payload = await verifyToken(token);
+
+    if (!payload) {
+      return c.json({ error: 'Invalid token' }, 401);
+    }
+
+    const { preferred_language } = await c.req.json();
+
+    // Validate language code
+    const validLanguages = ['en-US', 'en-GB', 'ja', 'pt-BR', 'id', 'ms'];
+    if (preferred_language && !validLanguages.includes(preferred_language)) {
+      return c.json({ error: 'Invalid language code' }, 400);
+    }
+
+    // Update user preference
+    await c.env.DB.prepare(
+      'UPDATE users SET preferred_language = ? WHERE id = ?'
+    ).bind(preferred_language || 'en-US', payload.userId).run();
+
+    return c.json({ 
+      message: 'Preferences updated successfully',
+      preferred_language: preferred_language || 'en-US'
+    });
+  } catch (error) {
+    console.error('Update preferences error:', error);
+    return c.json({ error: 'Failed to update preferences' }, 500);
+  }
 });
 
 // Change password (requires authentication)
