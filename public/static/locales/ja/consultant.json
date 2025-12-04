@@ -1,0 +1,121 @@
+{
+  "navigation": {
+    "journey_map": "Your Journey Map",
+    "my_progress": "My Progress",
+    "my_pathways": "My Pathways",
+    "back_to_ladder": "Back to Journey Map",
+    "back_to_level": "Back to Level"
+  },
+  "stats": {
+    "achievements": "Achievements",
+    "levels_completed": "Levels Completed",
+    "current_streak": "Current Streak",
+    "total_points": "Total Points",
+    "rank": "Rank",
+    "league": "League",
+    "days": "days"
+  },
+  "ladder": {
+    "title": "Your Journey Map",
+    "subtitle": "Your path to excellence",
+    "no_levels": "No levels available in this pathway",
+    "start_your_journey": "Start Your Journey",
+    "locked": "Locked",
+    "unlocked": "Unlocked",
+    "in_progress": "In Progress",
+    "completed": "Completed",
+    "awaiting_signoff": "Awaiting Sign-off"
+  },
+  "level": {
+    "start_level": "Start Level",
+    "training_materials": "Training Materials",
+    "tests": "Tests",
+    "tasks": "Tasks",
+    "no_materials": "No training materials available",
+    "no_tests": "No tests available",
+    "no_tasks": "No tasks available",
+    "materials_count": "{{count}} Materials",
+    "tests_count": "{{count}} Tests",
+    "view_material": "View Material",
+    "take_test": "Take Test",
+    "request_signoff": "Request Sign-off",
+    "signoff_requested": "Sign-off Requested",
+    "level_locked": "This level is locked. Complete previous levels first.",
+    "boss_level": "Boss Level"
+  },
+  "test": {
+    "title": "Test",
+    "question": "Question {{number}} of {{total}}",
+    "submit_test": "Submit Test",
+    "submitting": "Submitting...",
+    "select_answer": "Select your answer",
+    "select_all_that_apply": "Select all that apply",
+    "true_false": "True or False",
+    "type_your_answer": "Type your answer",
+    "fill_in_blank": "Fill in the blank",
+    "matching": "Match the items",
+    "ranking": "Rank in order",
+    "hotspot": "Click on the hotspot",
+    "essay": "Essay Question",
+    "test_completed": "Test Completed!",
+    "your_score": "Your Score",
+    "passed": "Passed",
+    "failed": "Failed",
+    "try_again": "Try Again",
+    "next_level": "Next Level",
+    "passing_score": "Passing score: {{score}}%",
+    "time_remaining": "Time Remaining",
+    "no_time_limit": "No Time Limit"
+  },
+  "pathways": {
+    "select_pathway": "Select Your Learning Pathway",
+    "my_pathways": "My Enrolled Pathways",
+    "explore_pathways": "Explore More Pathways",
+    "current_pathway": "Current Pathway",
+    "switch_pathway": "Switch to this pathway",
+    "request_enrollment": "Request Enrollment",
+    "enrollment_requested": "Enrollment Requested",
+    "enrollment_pending": "Pending",
+    "enrollment_approved": "Approved",
+    "enrollment_rejected": "Rejected",
+    "no_pathways": "No pathways available",
+    "levels_count": "{{count}} levels",
+    "progress": "Progress: {{completed}}/{{total}} levels",
+    "request_note": "Add a note with your request (optional)",
+    "submit_request": "Submit Request",
+    "request_submitted": "Enrollment request submitted successfully",
+    "select_first_pathway": "Welcome! Please select your first learning pathway to begin your journey."
+  },
+  "signoff": {
+    "request_signoff": "Request Sign-off",
+    "signoff_note": "Add notes for your boss",
+    "submit_request": "Submit Sign-off Request",
+    "request_submitted": "Sign-off request submitted successfully",
+    "awaiting_approval": "Awaiting Boss Approval",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "feedback": "Feedback from Boss"
+  },
+  "achievements": {
+    "recent_achievements": "Recent Achievements",
+    "no_achievements": "No achievements yet",
+    "unlocked": "Unlocked!",
+    "view_all": "View All Achievements"
+  },
+  "notices": {
+    "notice_board": "Notice Board",
+    "no_notices": "No recent activity",
+    "started_level": "Started level",
+    "completed_level": "Completed level",
+    "passed_test": "Passed test",
+    "earned_achievement": "Earned achievement"
+  },
+  "messages": {
+    "level_started": "Level started successfully",
+    "test_submitted": "Test submitted successfully",
+    "signoff_requested": "Sign-off requested successfully",
+    "error_loading_data": "Error loading data",
+    "error_submitting": "Error submitting",
+    "confirm_submit": "Are you sure you want to submit this test?"
+  }
+}
