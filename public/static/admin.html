@@ -3047,7 +3047,7 @@
 
         async function loadEnrollmentRequests() {
             try {
-                const response = await axios.get('/api/boss/enrollment-requests');
+                const response = await axios.get('/api/admin/enrollment-requests');
                 const requests = response.data.requests;
                 
                 const listEl = document.getElementById('enrollment-requests-list');
@@ -3061,10 +3061,12 @@
                         ${requests.map(req => `
                             <div class="border rounded-lg p-4 flex items-center justify-between">
                                 <div>
-                                    <div class="font-bold">${req.user_name}</div>
-                                    <div class="text-sm text-gray-600">${req.user_email}</div>
+                                    <div class="font-bold">${req.consultant_name}</div>
+                                    <div class="text-sm text-gray-600">${req.consultant_email}</div>
+                                    ${req.boss_name ? `<div class="text-xs text-gray-500">Boss: ${req.boss_name}</div>` : ''}
+                                    ${req.division ? `<div class="text-xs text-gray-500">Division: ${req.division} | Region: ${req.region || 'N/A'}</div>` : ''}
                                     <div class="text-sm mt-1">
-                                        <i class="fas ${req.pathway_icon}" style="color: ${req.pathway_color}"></i>
+                                        <i class="fas ${req.pathway_icon}" style="color: ${req.color_primary}"></i>
                                         <span class="font-semibold">${req.pathway_title}</span>
                                     </div>
                                     ${req.request_note ? `<div class="text-sm text-gray-500 mt-1"><em>"${req.request_note}"</em></div>` : ''}
@@ -3383,7 +3385,7 @@
 
         async function approveEnrollment(enrollmentId, userId, pathwayId) {
             try {
-                await axios.post(`/api/boss/enrollment-requests/${enrollmentId}/approve`);
+                await axios.post(`/api/admin/enrollment-requests/${enrollmentId}/approve`);
                 loadEnrollmentRequests();
                 alert('Enrollment approved!');
             } catch (error) {
@@ -3395,7 +3397,7 @@
             const reason = prompt('Reason for rejection (optional):');
             
             try {
-                await axios.post(`/api/boss/enrollment-requests/${enrollmentId}/reject`, {
+                await axios.post(`/api/admin/enrollment-requests/${enrollmentId}/reject`, {
                     response_note: reason
                 });
                 loadEnrollmentRequests();

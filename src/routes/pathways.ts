@@ -476,6 +476,97 @@ pathways.post('/boss/enrollment-requests/:id/reject', async (c) => {
   return c.json({ message: 'Enrollment rejected' });
 });
 
+// ============================================
+// ADMIN ROUTES - View All Enrollment Requests
+// ============================================
+
+// Get all enrollment requests (admin can see all)
+pathways.get('/admin/enrollment-requests', async (c) => {
+  const user = c.get('user');
+
+  if (user.role !== 'admin') {
+    return c.json({ error: 'Unauthorized' }, 403);
+  }
+
+  const result = await c.env.DB.prepare(`
+    SELECT pe.*,
+           u.name as consultant_name,
+           u.email as consultant_email,
+           u.role as consultant_role,
+           u.division,
+           u.region,
+           u.location,
+           u.title,
+           p.title as pathway_title,
+           p.description as pathway_description,
+           p.icon as pathway_icon,
+           p.color_primary,
+           b.name as boss_name
+    FROM pathway_enrollments pe
+    JOIN users u ON pe.user_id = u.id
+    JOIN pathways p ON pe.pathway_id = p.id
+    LEFT JOIN users b ON u.boss_id = b.id
+    WHERE pe.status = 'pending'
+    ORDER BY pe.requested_at DESC
+  `).all();
+
+  return c.json({ requests: result.results });
+});
+
+// Approve enrollment request (admin)
+pathways.post('/admin/enrollment-requests/:id/approve', async (c) => {
+  const user = c.get('user');
+  const requestId = c.req.param('id');
+  const { response_note } = await c.req.json();
+
+  if (user.role !== 'admin') {
+    return c.json({ error: 'Unauthorized' }, 403);
+  }
+
+  const request = await c.env.DB.prepare(
+    'SELECT * FROM pathway_enrollments WHERE id = ?'
+  ).bind(requestId).first();
+
+  if (!request) {
+    return c.json({ error: 'Request not found' }, 404);
+  }
+
+  await c.env.DB.prepare(
+    'UPDATE pathway_enrollments SET status = ?, response_note = ?, reviewed_at = CURRENT_TIMESTAMP, reviewed_by = ? WHERE id = ?'
+  ).bind('approved', response_note || null, user.userId, requestId).run();
+
+  return c.json({ message: 'Enrollment approved' });
+});
+
+// Reject enrollment request (admin)
+pathways.post('/admin/enrollment-requests/:id/reject', async (c) => {
+  const user = c.get('user');
+  const requestId = c.req.param('id');
+  const { response_note } = await c.req.json();
+
+  if (user.role !== 'admin') {
+    return c.json({ error: 'Unauthorized' }, 403);
+  }
+
+  const request = await c.env.DB.prepare(
+    'SELECT * FROM pathway_enrollments WHERE id = ?'
+  ).bind(requestId).first();
+
+  if (!request) {
+    return c.json({ error: 'Request not found' }, 404);
+  }
+
+  await c.env.DB.prepare(
+    'UPDATE pathway_enrollments SET status = ?, response_note = ?, reviewed_at = CURRENT_TIMESTAMP, reviewed_by = ? WHERE id = ?'
+  ).bind('rejected', response_note || null, user.userId, requestId).run();
+
+  return c.json({ message: 'Enrollment rejected' });
+});
+
+// ============================================
+// BOSS ROUTES - View Team Progress
+// ============================================
+
 // Get team progress by pathway
 pathways.get('/boss/team/pathway/:pathwayId', async (c) => {
   const user = c.get('user');
