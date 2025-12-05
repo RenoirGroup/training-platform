@@ -3313,6 +3313,13 @@
         }
 
         async function loadAssignUsers(pathwayId) {
+            const availableListEl = document.getElementById('available-users-list');
+            const enrolledListEl = document.getElementById('enrolled-users-list');
+            
+            // Show loading state
+            availableListEl.innerHTML = '<p class="text-gray-500 text-sm">Loading...</p>';
+            enrolledListEl.innerHTML = '<p class="text-gray-500 text-sm">Loading...</p>';
+            
             try {
                 console.log('Loading users for pathway:', pathwayId);
                 
@@ -3328,7 +3335,6 @@
                 const enrolledUsers = enrolledRes.data.users || [];
                 
                 // Available users list
-                const availableListEl = document.getElementById('available-users-list');
                 if (availableUsers.length === 0) {
                     availableListEl.innerHTML = '<p class="text-gray-500 text-sm">No available consultants</p>';
                 } else {
@@ -3353,7 +3359,6 @@
                 }
                 
                 // Enrolled users list
-                const enrolledListEl = document.getElementById('enrolled-users-list');
                 if (enrolledUsers.length === 0) {
                     enrolledListEl.innerHTML = '<p class="text-gray-500 text-sm">No enrolled users yet</p>';
                 } else {
