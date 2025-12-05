@@ -563,6 +563,55 @@ pathways.post('/admin/enrollment-requests/:id/reject', async (c) => {
   return c.json({ message: 'Enrollment rejected' });
 });
 
+// Get available users for pathway assignment (admin)
+pathways.get('/admin/pathways/:pathwayId/available-users', async (c) => {
+  const user = c.get('user');
+  const pathwayId = c.req.param('pathwayId');
+
+  if (user.role !== 'admin') {
+    return c.json({ error: 'Unauthorized' }, 403);
+  }
+
+  // Get all consultants who are NOT already enrolled in this pathway
+  const result = await c.env.DB.prepare(`
+    SELECT u.id, u.name, u.email, u.role, u.division, u.region, u.location, u.title
+    FROM users u
+    WHERE u.role IN ('consultant', 'boss', 'region_manager', 'business_unit_manager')
+      AND u.active = 1
+      AND u.id NOT IN (
+        SELECT user_id 
+        FROM pathway_enrollments 
+        WHERE pathway_id = ? AND status IN ('approved', 'pending')
+      )
+    ORDER BY u.name
+  `).bind(pathwayId).all();
+
+  return c.json({ users: result.results });
+});
+
+// Get enrolled users for pathway (admin)
+pathways.get('/admin/pathways/:pathwayId/enrolled', async (c) => {
+  const user = c.get('user');
+  const pathwayId = c.req.param('pathwayId');
+
+  if (user.role !== 'admin') {
+    return c.json({ error: 'Unauthorized' }, 403);
+  }
+
+  const result = await c.env.DB.prepare(`
+    SELECT u.id, u.name, u.email, u.role, u.division, u.region, u.location, u.title,
+           pe.enrolled_at,
+           enrolledBy.name as enrolled_by_name
+    FROM users u
+    JOIN pathway_enrollments pe ON u.id = pe.user_id
+    LEFT JOIN users enrolledBy ON pe.enrolled_by = enrolledBy.id
+    WHERE pe.pathway_id = ? AND pe.status = 'approved'
+    ORDER BY pe.enrolled_at DESC
+  `).bind(pathwayId).all();
+
+  return c.json({ users: result.results });
+});
+
 // ============================================
 // BOSS ROUTES - View Team Progress
 // ============================================
