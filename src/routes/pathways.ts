@@ -573,27 +573,35 @@ pathways.get('/admin/pathways/:pathwayId/available-users', async (c) => {
   }
 
   try {
-    // Get all users who are NOT already enrolled in this pathway
-    const result = await c.env.DB.prepare(`
-      SELECT u.id, u.name, u.email, u.role, 
-             COALESCE(u.division, '') as division, 
-             COALESCE(u.region, '') as region, 
-             COALESCE(u.location, '') as location, 
-             COALESCE(u.title, '') as title
-      FROM users u
-      WHERE u.role != 'admin'
-        AND u.id NOT IN (
-          SELECT user_id 
-          FROM pathway_enrollments 
-          WHERE pathway_id = ? AND status IN ('approved', 'pending')
-        )
-      ORDER BY u.name
+    // Step 1: Get all enrolled user IDs for this pathway
+    const enrolledResult = await c.env.DB.prepare(`
+      SELECT user_id FROM pathway_enrollments 
+      WHERE pathway_id = ? AND status IN ('approved', 'pending')
     `).bind(pathwayId).all();
+    
+    const enrolledIds = (enrolledResult.results || []).map(r => r.user_id);
+    
+    // Step 2: Get all non-admin users
+    const allUsersResult = await c.env.DB.prepare(`
+      SELECT id, name, email, role, division, region, location, title
+      FROM users 
+      WHERE role != 'admin'
+      ORDER BY name
+    `).all();
+    
+    // Step 3: Filter out enrolled users in JavaScript
+    const availableUsers = (allUsersResult.results || []).filter(
+      u => !enrolledIds.includes(u.id)
+    );
 
-    return c.json({ users: result.results || [] });
+    return c.json({ users: availableUsers });
   } catch (error) {
     console.error('Error fetching available users:', error);
-    return c.json({ error: 'Failed to fetch users', details: String(error) }, 500);
+    return c.json({ 
+      error: 'Failed to fetch users', 
+      details: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined
+    }, 500);
   }
 });
 
@@ -607,25 +615,57 @@ pathways.get('/admin/pathways/:pathwayId/enrolled', async (c) => {
   }
 
   try {
-    const result = await c.env.DB.prepare(`
-      SELECT u.id, u.name, u.email, u.role, 
-             COALESCE(u.division, '') as division, 
-             COALESCE(u.region, '') as region, 
-             COALESCE(u.location, '') as location, 
-             COALESCE(u.title, '') as title,
-             pe.enrolled_at,
-             COALESCE(enrolledBy.name, 'System') as enrolled_by_name
-      FROM users u
-      JOIN pathway_enrollments pe ON u.id = pe.user_id
-      LEFT JOIN users enrolledBy ON pe.enrolled_by = enrolledBy.id
-      WHERE pe.pathway_id = ? AND pe.status = 'approved'
-      ORDER BY pe.enrolled_at DESC
+    // Step 1: Get enrollments
+    const enrollments = await c.env.DB.prepare(`
+      SELECT user_id, enrolled_at, enrolled_by
+      FROM pathway_enrollments 
+      WHERE pathway_id = ? AND status = 'approved'
+      ORDER BY enrolled_at DESC
     `).bind(pathwayId).all();
+    
+    if (!enrollments.results || enrollments.results.length === 0) {
+      return c.json({ users: [] });
+    }
+    
+    // Step 2: Get user details for enrolled users
+    const userIds = enrollments.results.map(e => e.user_id);
+    const placeholders = userIds.map(() => '?').join(',');
+    
+    const usersResult = await c.env.DB.prepare(`
+      SELECT id, name, email, role, division, region, location, title
+      FROM users 
+      WHERE id IN (${placeholders})
+    `).bind(...userIds).all();
+    
+    // Step 3: Get enrolled_by names
+    const enrolledByIds = enrollments.results.map(e => e.enrolled_by).filter(id => id);
+    const enrolledByResult = enrolledByIds.length > 0 ? await c.env.DB.prepare(`
+      SELECT id, name FROM users WHERE id IN (${enrolledByIds.map(() => '?').join(',')})
+    `).bind(...enrolledByIds).all() : { results: [] };
+    
+    // Step 4: Combine the data
+    const enrolledByMap = {};
+    (enrolledByResult.results || []).forEach(u => {
+      enrolledByMap[u.id] = u.name;
+    });
+    
+    const users = enrollments.results.map(enrollment => {
+      const userInfo = (usersResult.results || []).find(u => u.id === enrollment.user_id);
+      return {
+        ...userInfo,
+        enrolled_at: enrollment.enrolled_at,
+        enrolled_by_name: enrolledByMap[enrollment.enrolled_by] || 'System'
+      };
+    });
 
-    return c.json({ users: result.results || [] });
+    return c.json({ users });
   } catch (error) {
     console.error('Error fetching enrolled users:', error);
-    return c.json({ error: 'Failed to fetch enrolled users', details: String(error) }, 500);
+    return c.json({ 
+      error: 'Failed to fetch enrolled users', 
+      details: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined
+    }, 500);
   }
 });
 
