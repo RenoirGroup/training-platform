@@ -573,12 +573,15 @@ pathways.get('/admin/pathways/:pathwayId/available-users', async (c) => {
   }
 
   try {
-    // Get all consultants who are NOT already enrolled in this pathway
+    // Get all users who are NOT already enrolled in this pathway
     const result = await c.env.DB.prepare(`
-      SELECT u.id, u.name, u.email, u.role, u.division, u.region, u.location, u.title
+      SELECT u.id, u.name, u.email, u.role, 
+             COALESCE(u.division, '') as division, 
+             COALESCE(u.region, '') as region, 
+             COALESCE(u.location, '') as location, 
+             COALESCE(u.title, '') as title
       FROM users u
-      WHERE u.role IN ('consultant', 'boss', 'region_manager', 'business_unit_manager')
-        AND (u.active = 1 OR u.active IS NULL)
+      WHERE u.role != 'admin'
         AND u.id NOT IN (
           SELECT user_id 
           FROM pathway_enrollments 
@@ -590,7 +593,7 @@ pathways.get('/admin/pathways/:pathwayId/available-users', async (c) => {
     return c.json({ users: result.results || [] });
   } catch (error) {
     console.error('Error fetching available users:', error);
-    return c.json({ error: 'Failed to fetch users', details: error.message }, 500);
+    return c.json({ error: 'Failed to fetch users', details: String(error) }, 500);
   }
 });
 
@@ -605,9 +608,13 @@ pathways.get('/admin/pathways/:pathwayId/enrolled', async (c) => {
 
   try {
     const result = await c.env.DB.prepare(`
-      SELECT u.id, u.name, u.email, u.role, u.division, u.region, u.location, u.title,
+      SELECT u.id, u.name, u.email, u.role, 
+             COALESCE(u.division, '') as division, 
+             COALESCE(u.region, '') as region, 
+             COALESCE(u.location, '') as location, 
+             COALESCE(u.title, '') as title,
              pe.enrolled_at,
-             enrolledBy.name as enrolled_by_name
+             COALESCE(enrolledBy.name, 'System') as enrolled_by_name
       FROM users u
       JOIN pathway_enrollments pe ON u.id = pe.user_id
       LEFT JOIN users enrolledBy ON pe.enrolled_by = enrolledBy.id
@@ -618,7 +625,7 @@ pathways.get('/admin/pathways/:pathwayId/enrolled', async (c) => {
     return c.json({ users: result.results || [] });
   } catch (error) {
     console.error('Error fetching enrolled users:', error);
-    return c.json({ error: 'Failed to fetch enrolled users', details: error.message }, 500);
+    return c.json({ error: 'Failed to fetch enrolled users', details: String(error) }, 500);
   }
 });
 
