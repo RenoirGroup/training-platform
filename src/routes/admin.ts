@@ -25,7 +25,7 @@ admin.get('/users', async (c) => {
 // Create user
 admin.post('/users', async (c) => {
   try {
-    const { email, password, name, role, boss_id } = await c.req.json();
+    const { email, password, name, role, boss_id, division, region, location, title } = await c.req.json();
 
     // Validate required fields
     if (!email || !password || !name || !role) {
@@ -55,8 +55,8 @@ admin.post('/users', async (c) => {
     const passwordHash = await hashPassword(password);
 
     const result = await c.env.DB.prepare(
-      'INSERT INTO users (email, password_hash, name, role, boss_id) VALUES (?, ?, ?, ?, ?)'
-    ).bind(email, passwordHash, name, role, boss_id || null).run();
+      'INSERT INTO users (email, password_hash, name, role, boss_id, division, region, location, title) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
+    ).bind(email, passwordHash, name, role, boss_id || null, division || null, region || null, location || null, title || null).run();
 
     const userId = result.meta.last_row_id;
 
@@ -100,7 +100,7 @@ admin.post('/users', async (c) => {
 admin.put('/users/:id', async (c) => {
   try {
     const id = c.req.param('id');
-    const { name, email, role, boss_id, active, password } = await c.req.json();
+    const { name, email, role, boss_id, active, password, division, region, location, title } = await c.req.json();
 
     // Validate email format
     if (email) {
@@ -119,13 +119,13 @@ admin.put('/users/:id', async (c) => {
       
       const passwordHash = await hashPassword(password);
       await c.env.DB.prepare(
-        'UPDATE users SET name = ?, email = ?, role = ?, boss_id = ?, active = ?, password_hash = ? WHERE id = ?'
-      ).bind(name, email, role, boss_id || null, active !== undefined ? active : 1, passwordHash, id).run();
+        'UPDATE users SET name = ?, email = ?, role = ?, boss_id = ?, active = ?, password_hash = ?, division = ?, region = ?, location = ?, title = ? WHERE id = ?'
+      ).bind(name, email, role, boss_id || null, active !== undefined ? active : 1, passwordHash, division || null, region || null, location || null, title || null, id).run();
     } else {
       // Update without changing password
       await c.env.DB.prepare(
-        'UPDATE users SET name = ?, email = ?, role = ?, boss_id = ?, active = ? WHERE id = ?'
-      ).bind(name, email, role, boss_id || null, active !== undefined ? active : 1, id).run();
+        'UPDATE users SET name = ?, email = ?, role = ?, boss_id = ?, active = ?, division = ?, region = ?, location = ?, title = ? WHERE id = ?'
+      ).bind(name, email, role, boss_id || null, active !== undefined ? active : 1, division || null, region || null, location || null, title || null, id).run();
     }
 
     return c.json({ message: 'User updated successfully' });
@@ -582,6 +582,110 @@ admin.delete('/boss-relationships/:id', async (c) => {
   await c.env.DB.prepare('DELETE FROM boss_consultant_relationships WHERE id = ?').bind(id).run();
   
   return c.json({ message: 'Relationship deleted' });
+});
+
+// ===== PATHWAY ASSIGNMENT =====
+
+// Assign consultant to pathway
+admin.post('/pathways/:pathwayId/assign', async (c) => {
+  try {
+    const pathwayId = c.req.param('pathwayId');
+    const { consultant_id } = await c.req.json();
+
+    if (!consultant_id) {
+      return c.json({ error: 'Consultant ID is required' }, 400);
+    }
+
+    // Check if already enrolled
+    const existing = await c.env.DB.prepare(
+      'SELECT id FROM pathway_enrollments WHERE consultant_id = ? AND pathway_id = ? AND status = ?'
+    ).bind(consultant_id, pathwayId, 'approved').first();
+
+    if (existing) {
+      return c.json({ error: 'Consultant already enrolled in this pathway' }, 409);
+    }
+
+    // Create or update enrollment
+    await c.env.DB.prepare(
+      'INSERT OR REPLACE INTO pathway_enrollments (consultant_id, pathway_id, status, approved_at, approved_by) VALUES (?, ?, ?, datetime(\'now\'), ?)'
+    ).bind(consultant_id, pathwayId, 'approved', c.var.user.id).run();
+
+    // Unlock first level of pathway
+    const firstLevel = await c.env.DB.prepare(
+      'SELECT level_id FROM pathway_levels WHERE pathway_id = ? ORDER BY order_index LIMIT 1'
+    ).bind(pathwayId).first();
+
+    if (firstLevel) {
+      await c.env.DB.prepare(
+        'INSERT OR IGNORE INTO user_progress (user_id, level_id, status, pathway_id) VALUES (?, ?, ?, ?)'
+      ).bind(consultant_id, firstLevel.level_id, 'unlocked', pathwayId).run();
+    }
+
+    return c.json({ message: 'Consultant assigned to pathway successfully' });
+  } catch (error: any) {
+    console.error('Assign pathway error:', error);
+    return c.json({ error: 'Failed to assign pathway' }, 500);
+  }
+});
+
+// Remove consultant from pathway
+admin.delete('/pathways/:pathwayId/assign/:consultantId', async (c) => {
+  try {
+    const pathwayId = c.req.param('pathwayId');
+    const consultantId = c.req.param('consultantId');
+
+    await c.env.DB.prepare(
+      'DELETE FROM pathway_enrollments WHERE consultant_id = ? AND pathway_id = ?'
+    ).bind(consultantId, pathwayId).run();
+
+    return c.json({ message: 'Consultant removed from pathway' });
+  } catch (error: any) {
+    console.error('Remove pathway assignment error:', error);
+    return c.json({ error: 'Failed to remove assignment' }, 500);
+  }
+});
+
+// Get consultants for pathway assignment (filtered by division/region if manager)
+admin.get('/pathways/:pathwayId/available-consultants', async (c) => {
+  try {
+    const pathwayId = c.req.param('pathwayId');
+    const currentUser = c.var.user;
+
+    let query = `
+      SELECT 
+        u.id, u.name, u.email, u.division, u.region, u.location, u.title,
+        pe.id as enrollment_id, pe.status as enrollment_status
+      FROM users u
+      LEFT JOIN pathway_enrollments pe ON u.id = pe.consultant_id AND pe.pathway_id = ?
+      WHERE u.role = 'consultant' AND u.active = 1
+    `;
+
+    const bindings: any[] = [pathwayId];
+
+    // Filter by hierarchy
+    if (currentUser.role === 'business_unit_manager') {
+      query += ' AND u.division = ?';
+      bindings.push(currentUser.division);
+    } else if (currentUser.role === 'region_manager') {
+      query += ' AND u.region = ?';
+      bindings.push(currentUser.region);
+    } else if (currentUser.role === 'boss') {
+      query += ` AND u.id IN (
+        SELECT consultant_id FROM boss_consultant_relationships 
+        WHERE boss_id = ? AND active = 1
+      )`;
+      bindings.push(currentUser.id);
+    }
+
+    query += ' ORDER BY u.name';
+
+    const result = await c.env.DB.prepare(query).bind(...bindings).all();
+
+    return c.json({ consultants: result.results });
+  } catch (error: any) {
+    console.error('Get available consultants error:', error);
+    return c.json({ error: 'Failed to fetch consultants' }, 500);
+  }
 });
 
 // ===== REPORTING =====

@@ -6,8 +6,12 @@ export type User = {
   id: number;
   email: string;
   name: string;
-  role: 'admin' | 'consultant' | 'boss';
+  role: 'admin' | 'consultant' | 'boss' | 'region_manager' | 'business_unit_manager';
   boss_id?: number;
+  division?: string;
+  region?: string;
+  location?: string;
+  title?: string;
   active: number;
   created_at: string;
   last_login?: string;
