@@ -171,8 +171,26 @@
                     <select id="new-role" class="w-full px-3 py-2 border rounded" required>
                         <option value="consultant">Consultant</option>
                         <option value="boss">Boss</option>
+                        <option value="region_manager">Region Manager</option>
+                        <option value="business_unit_manager">Business Unit Manager</option>
                         <option value="admin">Admin</option>
                     </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Division / Business Unit</label>
+                    <input type="text" id="new-division" class="w-full px-3 py-2 border rounded" placeholder="e.g., Asia Pacific, Europe" />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Region</label>
+                    <input type="text" id="new-region" class="w-full px-3 py-2 border rounded" placeholder="e.g., Southeast Asia, EMEA" />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Location</label>
+                    <input type="text" id="new-location" class="w-full px-3 py-2 border rounded" placeholder="e.g., Singapore Office, London Office" />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Title / Position</label>
+                    <input type="text" id="new-title" class="w-full px-3 py-2 border rounded" placeholder="e.g., Junior Consultant, Senior Analyst" />
                 </div>
                 <div class="mb-4" id="boss-select-container">
                     <label class="block text-gray-700 font-bold mb-2">Assign Boss</label>
@@ -205,8 +223,26 @@
                     <select id="edit-role" class="w-full px-3 py-2 border rounded" required>
                         <option value="consultant">Consultant</option>
                         <option value="boss">Boss</option>
+                        <option value="region_manager">Region Manager</option>
+                        <option value="business_unit_manager">Business Unit Manager</option>
                         <option value="admin">Admin</option>
                     </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Division / Business Unit</label>
+                    <input type="text" id="edit-division" class="w-full px-3 py-2 border rounded" placeholder="e.g., Asia Pacific, Europe" />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Region</label>
+                    <input type="text" id="edit-region" class="w-full px-3 py-2 border rounded" placeholder="e.g., Southeast Asia, EMEA" />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Location</label>
+                    <input type="text" id="edit-location" class="w-full px-3 py-2 border rounded" placeholder="e.g., Singapore Office, London Office" />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Title / Position</label>
+                    <input type="text" id="edit-title" class="w-full px-3 py-2 border rounded" placeholder="e.g., Junior Consultant, Senior Analyst" />
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 font-bold mb-2">Assign Boss</label>
@@ -585,6 +621,39 @@
         </div>
     </div>
 
+    <!-- Assign Users to Pathway Modal -->
+    <div id="assign-users-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" style="display: none;">
+        <div class="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <h2 class="text-2xl font-bold mb-4">Assign Users to: <span id="assign-pathway-title"></span></h2>
+            <input type="hidden" id="assign-pathway-id" />
+            
+            <div class="grid grid-cols-2 gap-6">
+                <!-- Available Users -->
+                <div>
+                    <h3 class="text-lg font-bold mb-3">Available Consultants</h3>
+                    <div class="mb-3">
+                        <input type="text" id="search-available-users" class="w-full px-3 py-2 border rounded" placeholder="Search by name, division, region..." />
+                    </div>
+                    <div id="available-users-list" class="space-y-2 max-h-96 overflow-y-auto">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- Enrolled Users -->
+                <div>
+                    <h3 class="text-lg font-bold mb-3">Enrolled Users</h3>
+                    <div id="enrolled-users-list" class="space-y-2 max-h-96 overflow-y-auto">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-end mt-4">
+                <button type="button" onclick="closeAssignUsersModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Manage Pathway Levels Modal -->
     <div id="manage-pathway-levels-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" style="display: none;">
         <div class="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
@@ -761,6 +830,9 @@
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Division</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Region</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Location</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Boss</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
@@ -769,16 +841,22 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                             ${users.map(u => `
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">${u.name}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">${u.email}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="font-medium">${u.name}</div>
+                                        ${u.title ? `<div class="text-xs text-gray-500">${u.title}</div>` : ''}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">${u.email}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span class="px-2 py-1 text-xs rounded ${getRoleBadgeClass(u.role)}">
-                                            ${u.role}
+                                            ${u.role.replace('_', ' ')}
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">${u.boss_name || 'N/A'}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">${u.division || '-'}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">${u.region || '-'}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">${u.location || '-'}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">${u.boss_name || 'N/A'}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        ${u.active ? '<span class="text-green-600 font-medium">Active</span>' : '<span class="text-gray-400 font-medium">Inactive</span>'}
+                                        ${u.active ? '<span class="text-green-600 font-medium text-sm">Active</span>' : '<span class="text-gray-400 font-medium text-sm">Inactive</span>'}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center space-x-3">
@@ -837,7 +915,11 @@
                 email: document.getElementById('new-email').value,
                 password: document.getElementById('new-password').value,
                 role: document.getElementById('new-role').value,
-                boss_id: document.getElementById('new-boss').value || null
+                boss_id: document.getElementById('new-boss').value || null,
+                division: document.getElementById('new-division').value || null,
+                region: document.getElementById('new-region').value || null,
+                location: document.getElementById('new-location').value || null,
+                title: document.getElementById('new-title').value || null
             };
             
             try {
@@ -858,7 +940,11 @@
                 name: document.getElementById('edit-name').value,
                 email: document.getElementById('edit-email').value,
                 role: document.getElementById('edit-role').value,
-                boss_id: document.getElementById('edit-boss').value || null
+                boss_id: document.getElementById('edit-boss').value || null,
+                division: document.getElementById('edit-division').value || null,
+                region: document.getElementById('edit-region').value || null,
+                location: document.getElementById('edit-location').value || null,
+                title: document.getElementById('edit-title').value || null
             };
             
             try {
@@ -889,6 +975,10 @@
                 document.getElementById('edit-name').value = user.name;
                 document.getElementById('edit-email').value = user.email;
                 document.getElementById('edit-role').value = user.role;
+                document.getElementById('edit-division').value = user.division || '';
+                document.getElementById('edit-region').value = user.region || '';
+                document.getElementById('edit-location').value = user.location || '';
+                document.getElementById('edit-title').value = user.title || '';
                 
                 const editBossSelect = document.getElementById('edit-boss');
                 editBossSelect.innerHTML = '<option value="">None</option>' + bosses.map(b => 
@@ -3020,6 +3110,9 @@
                                         </div>
                                     </div>
                                     <div class="flex space-x-2">
+                                        <button onclick="showAssignUsersModal(${pathway.id}, '${pathway.title.replace(/'/g, "\\'")}')" class="text-purple-600 hover:text-purple-800" title="Assign Users">
+                                            <i class="fas fa-user-plus"></i>
+                                        </button>
                                         <button onclick="showEditPathwayModal(${pathway.id})" class="text-blue-600 hover:text-blue-800" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </button>
@@ -3195,6 +3288,155 @@
                 alert('Pathway deleted successfully!');
             } catch (error) {
                 alert('Error deleting pathway: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+
+        async function showAssignUsersModal(pathwayId, pathwayTitle) {
+            try {
+                document.getElementById('assign-pathway-id').value = pathwayId;
+                document.getElementById('assign-pathway-title').textContent = pathwayTitle;
+                
+                await loadAssignUsers(pathwayId);
+                
+                document.getElementById('assign-users-modal').classList.remove('hidden');
+                document.getElementById('assign-users-modal').style.display = 'flex';
+            } catch (error) {
+                console.error('Error loading assign users modal:', error);
+                alert('Error loading users');
+            }
+        }
+
+        function closeAssignUsersModal() {
+            document.getElementById('assign-users-modal').classList.add('hidden');
+            document.getElementById('assign-users-modal').style.display = 'none';
+            loadPathways(); // Refresh pathway counts
+        }
+
+        async function loadAssignUsers(pathwayId) {
+            try {
+                const [usersRes, enrolledRes] = await Promise.all([
+                    axios.get(`/api/admin/pathways/${pathwayId}/available-users`),
+                    axios.get(`/api/admin/pathways/${pathwayId}/enrolled`)
+                ]);
+                
+                const availableUsers = usersRes.data.users;
+                const enrolledUsers = enrolledRes.data.users;
+                
+                // Available users list
+                const availableListEl = document.getElementById('available-users-list');
+                if (availableUsers.length === 0) {
+                    availableListEl.innerHTML = '<p class="text-gray-500 text-sm">No available consultants</p>';
+                } else {
+                    availableListEl.innerHTML = availableUsers.map(user => `
+                        <div class="border rounded p-3 hover:bg-gray-50">
+                            <div class="flex items-center justify-between">
+                                <div class="flex-1">
+                                    <div class="font-medium">${user.name}</div>
+                                    <div class="text-xs text-gray-500">${user.email}</div>
+                                    ${user.division ? `<div class="text-xs text-gray-600 mt-1">
+                                        <i class="fas fa-building mr-1"></i>${user.division}
+                                        ${user.region ? ` | ${user.region}` : ''}
+                                    </div>` : ''}
+                                </div>
+                                <button onclick="assignUserToPathway(${pathwayId}, ${user.id})" 
+                                        class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">
+                                    <i class="fas fa-plus mr-1"></i>Assign
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                
+                // Enrolled users list
+                const enrolledListEl = document.getElementById('enrolled-users-list');
+                if (enrolledUsers.length === 0) {
+                    enrolledListEl.innerHTML = '<p class="text-gray-500 text-sm">No enrolled users yet</p>';
+                } else {
+                    enrolledListEl.innerHTML = enrolledUsers.map(user => `
+                        <div class="border rounded p-3 bg-green-50">
+                            <div class="flex items-center justify-between">
+                                <div class="flex-1">
+                                    <div class="font-medium">${user.name}</div>
+                                    <div class="text-xs text-gray-500">${user.email}</div>
+                                    ${user.division ? `<div class="text-xs text-gray-600 mt-1">
+                                        <i class="fas fa-building mr-1"></i>${user.division}
+                                        ${user.region ? ` | ${user.region}` : ''}
+                                    </div>` : ''}
+                                    <div class="text-xs text-gray-500 mt-1">
+                                        Enrolled by: ${user.enrolled_by_name || 'System'} on ${new Date(user.enrolled_at).toLocaleDateString()}
+                                    </div>
+                                </div>
+                                <button onclick="removeUserFromPathway(${pathwayId}, ${user.id})" 
+                                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
+                                    <i class="fas fa-times mr-1"></i>Remove
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                
+                // Setup search filter
+                document.getElementById('search-available-users').oninput = (e) => {
+                    const search = e.target.value.toLowerCase();
+                    const filtered = availableUsers.filter(u => 
+                        u.name.toLowerCase().includes(search) ||
+                        u.email.toLowerCase().includes(search) ||
+                        (u.division && u.division.toLowerCase().includes(search)) ||
+                        (u.region && u.region.toLowerCase().includes(search))
+                    );
+                    
+                    availableListEl.innerHTML = filtered.map(user => `
+                        <div class="border rounded p-3 hover:bg-gray-50">
+                            <div class="flex items-center justify-between">
+                                <div class="flex-1">
+                                    <div class="font-medium">${user.name}</div>
+                                    <div class="text-xs text-gray-500">${user.email}</div>
+                                    ${user.division ? `<div class="text-xs text-gray-600 mt-1">
+                                        <i class="fas fa-building mr-1"></i>${user.division}
+                                        ${user.region ? ` | ${user.region}` : ''}
+                                    </div>` : ''}
+                                </div>
+                                <button onclick="assignUserToPathway(${pathwayId}, ${user.id})" 
+                                        class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">
+                                    <i class="fas fa-plus mr-1"></i>Assign
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                };
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+
+        async function assignUserToPathway(pathwayId, userId) {
+            try {
+                await axios.post(`/api/admin/pathways/${pathwayId}/assign`, { user_id: userId });
+                await loadAssignUsers(pathwayId);
+                // Show success message briefly
+                const btn = event.target.closest('button');
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> Assigned!';
+                btn.disabled = true;
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.disabled = false;
+                }, 1000);
+            } catch (error) {
+                alert('Error assigning user: ' + (error.response?.data?.error || 'Unknown error'));
+            }
+        }
+
+        async function removeUserFromPathway(pathwayId, userId) {
+            if (!confirm('Are you sure you want to remove this user from the pathway?')) {
+                return;
+            }
+            
+            try {
+                await axios.delete(`/api/admin/pathways/${pathwayId}/assign/${userId}`);
+                await loadAssignUsers(pathwayId);
+            } catch (error) {
+                alert('Error removing user: ' + (error.response?.data?.error || 'Unknown error'));
             }
         }
 
