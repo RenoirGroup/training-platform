@@ -3314,13 +3314,18 @@
 
         async function loadAssignUsers(pathwayId) {
             try {
+                console.log('Loading users for pathway:', pathwayId);
+                
                 const [usersRes, enrolledRes] = await Promise.all([
                     axios.get(`/api/admin/pathways/${pathwayId}/available-users`),
                     axios.get(`/api/admin/pathways/${pathwayId}/enrolled`)
                 ]);
                 
-                const availableUsers = usersRes.data.users;
-                const enrolledUsers = enrolledRes.data.users;
+                console.log('Available users response:', usersRes.data);
+                console.log('Enrolled users response:', enrolledRes.data);
+                
+                const availableUsers = usersRes.data.users || [];
+                const enrolledUsers = enrolledRes.data.users || [];
                 
                 // Available users list
                 const availableListEl = document.getElementById('available-users-list');
@@ -3406,6 +3411,13 @@
                 };
             } catch (error) {
                 console.error('Error loading users:', error);
+                console.error('Error details:', error.response?.data);
+                
+                const availableListEl = document.getElementById('available-users-list');
+                const enrolledListEl = document.getElementById('enrolled-users-list');
+                
+                availableListEl.innerHTML = `<p class="text-red-500 text-sm">Error loading users: ${error.message}</p>`;
+                enrolledListEl.innerHTML = `<p class="text-red-500 text-sm">Error loading enrolled users</p>`;
             }
         }
 
