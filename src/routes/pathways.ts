@@ -566,35 +566,14 @@ pathways.post('/admin/enrollment-requests/:id/reject', async (c) => {
 // Get available users for pathway assignment (admin)
 pathways.get('/admin/pathways/:pathwayId/available-users', async (c) => {
   const user = c.get('user');
-  const pathwayId = c.req.param('pathwayId');
 
   if (user.role !== 'admin') {
     return c.json({ error: 'Unauthorized' }, 403);
   }
 
   try {
-    // Get all enrolled user IDs for this pathway
-    const enrolledResult = await c.env.DB.prepare(`
-      SELECT user_id FROM pathway_enrollments 
-      WHERE pathway_id = ? AND status IN ('approved', 'pending')
-    `).bind(pathwayId).all();
-    
-    const enrolledIds = (enrolledResult.results || []).map(r => r.user_id);
-    
-    // Get all non-admin users
-    const allUsersResult = await c.env.DB.prepare(`
-      SELECT id, name, email, role, division, region, location, title
-      FROM users 
-      WHERE role != 'admin'
-      ORDER BY name
-    `).all();
-    
-    // Filter out enrolled users
-    const availableUsers = (allUsersResult.results || []).filter(
-      u => !enrolledIds.includes(u.id)
-    );
-
-    return c.json({ users: availableUsers });
+    const result = await c.env.DB.prepare(`SELECT id, name, email FROM users LIMIT 10`).all();
+    return c.json({ users: result.results || [] });
   } catch (error) {
     return c.json({ 
       error: 'Database error', 
@@ -606,32 +585,12 @@ pathways.get('/admin/pathways/:pathwayId/available-users', async (c) => {
 // Get enrolled users for pathway (admin)
 pathways.get('/admin/pathways/:pathwayId/enrolled', async (c) => {
   const user = c.get('user');
-  const pathwayId = c.req.param('pathwayId');
 
   if (user.role !== 'admin') {
     return c.json({ error: 'Unauthorized' }, 403);
   }
 
-  try {
-    // Get enrollments with user details
-    const result = await c.env.DB.prepare(`
-      SELECT u.id, u.name, u.email, u.role, u.division, u.region, u.location, u.title,
-             pe.enrolled_at,
-             enrolledBy.name as enrolled_by_name
-      FROM pathway_enrollments pe
-      JOIN users u ON pe.user_id = u.id
-      LEFT JOIN users enrolledBy ON pe.enrolled_by = enrolledBy.id
-      WHERE pe.pathway_id = ? AND pe.status = 'approved'
-      ORDER BY pe.enrolled_at DESC
-    `).bind(pathwayId).all();
-
-    return c.json({ users: result.results || [] });
-  } catch (error) {
-    return c.json({ 
-      error: 'Database error', 
-      message: error instanceof Error ? error.message : String(error)
-    }, 500);
-  }
+  return c.json({ users: [] });
 });
 
 // ============================================

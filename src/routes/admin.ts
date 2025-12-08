@@ -592,39 +592,63 @@ admin.post('/pathways/:pathwayId/assign', async (c) => {
     const pathwayId = c.req.param('pathwayId');
     const { user_id } = await c.req.json();
 
+    console.log('[ASSIGN] Starting assignment:', { pathwayId, user_id });
+
     if (!user_id) {
+      console.log('[ASSIGN] Error: Missing user_id');
       return c.json({ error: 'User ID is required' }, 400);
     }
 
     // Check if already enrolled
+    console.log('[ASSIGN] Checking if already enrolled...');
     const existing = await c.env.DB.prepare(
       'SELECT id FROM pathway_enrollments WHERE user_id = ? AND pathway_id = ? AND status = ?'
     ).bind(user_id, pathwayId, 'approved').first();
 
     if (existing) {
+      console.log('[ASSIGN] User already enrolled');
       return c.json({ error: 'User already enrolled in this pathway' }, 409);
     }
 
+    // Get enrolled_by user ID (may be null)
+    const currentUser = c.get('user');
+    const enrolledBy = currentUser?.userId || null;
+    console.log('[ASSIGN] Enrolled by:', enrolledBy);
+
     // Create enrollment
+    console.log('[ASSIGN] Creating enrollment...');
     await c.env.DB.prepare(
       'INSERT INTO pathway_enrollments (user_id, pathway_id, status, enrolled_at, enrolled_by) VALUES (?, ?, ?, datetime(\'now\'), ?)'
-    ).bind(user_id, pathwayId, 'approved', c.get('user').userId).run();
+    ).bind(user_id, pathwayId, 'approved', enrolledBy).run();
+
+    console.log('[ASSIGN] Enrollment created successfully');
 
     // Unlock first level of pathway
+    console.log('[ASSIGN] Getting first level...');
     const firstLevel = await c.env.DB.prepare(
       'SELECT level_id FROM pathway_levels WHERE pathway_id = ? ORDER BY order_index LIMIT 1'
     ).bind(pathwayId).first();
 
     if (firstLevel) {
+      console.log('[ASSIGN] Unlocking first level:', firstLevel.level_id);
       await c.env.DB.prepare(
         'INSERT OR IGNORE INTO user_progress (user_id, level_id, status, pathway_id) VALUES (?, ?, ?, ?)'
       ).bind(user_id, firstLevel.level_id, 'unlocked', pathwayId).run();
+      console.log('[ASSIGN] First level unlocked');
+    } else {
+      console.log('[ASSIGN] No levels found for this pathway');
     }
 
+    console.log('[ASSIGN] Assignment complete!');
     return c.json({ message: 'User assigned to pathway successfully' });
   } catch (error: any) {
-    console.error('Assign pathway error:', error);
-    return c.json({ error: 'Failed to assign pathway', details: error.message }, 500);
+    console.error('[ASSIGN] Error:', error);
+    console.error('[ASSIGN] Error stack:', error.stack);
+    return c.json({ 
+      error: 'Failed to assign pathway', 
+      details: error.message,
+      stack: error.stack 
+    }, 500);
   }
 });
 
