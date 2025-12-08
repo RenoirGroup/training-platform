@@ -3428,7 +3428,8 @@
 
         async function assignUserToPathway(pathwayId, userId) {
             try {
-                await axios.post(`/api/admin/pathways/${pathwayId}/assign`, { user_id: userId });
+                const response = await axios.post(`/api/admin/pathways/${pathwayId}/assign`, { user_id: userId });
+                console.log('[ASSIGN] Success:', response.data);
                 await loadAssignUsers(pathwayId);
                 // Show success message briefly
                 const btn = event.target.closest('button');
@@ -3440,7 +3441,10 @@
                     btn.disabled = false;
                 }, 1000);
             } catch (error) {
-                alert('Error assigning user: ' + (error.response?.data?.error || 'Unknown error'));
+                console.error('[ASSIGN] Error:', error);
+                console.error('[ASSIGN] Response:', error.response?.data);
+                const errorMsg = error.response?.data?.error || error.response?.data?.details || error.message || 'Unknown error';
+                alert('Error assigning user: ' + errorMsg);
             }
         }
 

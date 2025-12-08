@@ -590,7 +590,40 @@ pathways.get('/admin/pathways/:pathwayId/enrolled', async (c) => {
     return c.json({ error: 'Unauthorized' }, 403);
   }
 
-  return c.json({ users: [] });
+  try {
+    const pathwayId = c.req.param('pathwayId');
+
+    console.log('[ENROLLED] Fetching enrolled users for pathway:', pathwayId);
+
+    // Get all enrolled users for this pathway
+    const result = await c.env.DB.prepare(`
+      SELECT 
+        u.id,
+        u.name,
+        u.email,
+        u.role,
+        COALESCE(u.division, '') as division,
+        COALESCE(u.region, '') as region,
+        COALESCE(u.location, '') as location,
+        COALESCE(u.title, '') as title,
+        pe.requested_at as enrolled_at,
+        pe.status,
+        enroller.name as enrolled_by_name
+      FROM pathway_enrollments pe
+      JOIN users u ON pe.user_id = u.id
+      LEFT JOIN users enroller ON pe.enrolled_by = enroller.id
+      WHERE pe.pathway_id = ?
+        AND pe.status = 'approved'
+      ORDER BY pe.requested_at DESC
+    `).bind(pathwayId).all();
+
+    console.log('[ENROLLED] Found users:', result.results?.length || 0);
+
+    return c.json({ users: result.results || [] });
+  } catch (error: any) {
+    console.error('[ENROLLED] Error:', error);
+    return c.json({ error: 'Failed to fetch enrolled users', details: error.message }, 500);
+  }
 });
 
 // ============================================
