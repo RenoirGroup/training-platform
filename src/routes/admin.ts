@@ -590,25 +590,25 @@ admin.delete('/boss-relationships/:id', async (c) => {
 admin.post('/pathways/:pathwayId/assign', async (c) => {
   try {
     const pathwayId = c.req.param('pathwayId');
-    const { consultant_id } = await c.req.json();
+    const { user_id } = await c.req.json();
 
-    if (!consultant_id) {
-      return c.json({ error: 'Consultant ID is required' }, 400);
+    if (!user_id) {
+      return c.json({ error: 'User ID is required' }, 400);
     }
 
     // Check if already enrolled
     const existing = await c.env.DB.prepare(
-      'SELECT id FROM pathway_enrollments WHERE consultant_id = ? AND pathway_id = ? AND status = ?'
-    ).bind(consultant_id, pathwayId, 'approved').first();
+      'SELECT id FROM pathway_enrollments WHERE user_id = ? AND pathway_id = ? AND status = ?'
+    ).bind(user_id, pathwayId, 'approved').first();
 
     if (existing) {
-      return c.json({ error: 'Consultant already enrolled in this pathway' }, 409);
+      return c.json({ error: 'User already enrolled in this pathway' }, 409);
     }
 
-    // Create or update enrollment
+    // Create enrollment
     await c.env.DB.prepare(
-      'INSERT OR REPLACE INTO pathway_enrollments (consultant_id, pathway_id, status, approved_at, approved_by) VALUES (?, ?, ?, datetime(\'now\'), ?)'
-    ).bind(consultant_id, pathwayId, 'approved', c.var.user.id).run();
+      'INSERT INTO pathway_enrollments (user_id, pathway_id, status, enrolled_at, enrolled_by) VALUES (?, ?, ?, datetime(\'now\'), ?)'
+    ).bind(user_id, pathwayId, 'approved', c.get('user').userId).run();
 
     // Unlock first level of pathway
     const firstLevel = await c.env.DB.prepare(
@@ -618,30 +618,30 @@ admin.post('/pathways/:pathwayId/assign', async (c) => {
     if (firstLevel) {
       await c.env.DB.prepare(
         'INSERT OR IGNORE INTO user_progress (user_id, level_id, status, pathway_id) VALUES (?, ?, ?, ?)'
-      ).bind(consultant_id, firstLevel.level_id, 'unlocked', pathwayId).run();
+      ).bind(user_id, firstLevel.level_id, 'unlocked', pathwayId).run();
     }
 
-    return c.json({ message: 'Consultant assigned to pathway successfully' });
+    return c.json({ message: 'User assigned to pathway successfully' });
   } catch (error: any) {
     console.error('Assign pathway error:', error);
-    return c.json({ error: 'Failed to assign pathway' }, 500);
+    return c.json({ error: 'Failed to assign pathway', details: error.message }, 500);
   }
 });
 
-// Remove consultant from pathway
-admin.delete('/pathways/:pathwayId/assign/:consultantId', async (c) => {
+// Remove user from pathway
+admin.delete('/pathways/:pathwayId/assign/:userId', async (c) => {
   try {
     const pathwayId = c.req.param('pathwayId');
-    const consultantId = c.req.param('consultantId');
+    const userId = c.req.param('userId');
 
     await c.env.DB.prepare(
-      'DELETE FROM pathway_enrollments WHERE consultant_id = ? AND pathway_id = ?'
-    ).bind(consultantId, pathwayId).run();
+      'DELETE FROM pathway_enrollments WHERE user_id = ? AND pathway_id = ?'
+    ).bind(userId, pathwayId).run();
 
-    return c.json({ message: 'Consultant removed from pathway' });
+    return c.json({ message: 'User removed from pathway' });
   } catch (error: any) {
     console.error('Remove pathway assignment error:', error);
-    return c.json({ error: 'Failed to remove assignment' }, 500);
+    return c.json({ error: 'Failed to remove assignment', details: error.message }, 500);
   }
 });
 
