@@ -1347,15 +1347,15 @@
                 }
                 
                 listEl.innerHTML = materials.map(m => `
-                    <div class="bg-white border rounded p-3 flex justify-between items-center">
-                        <div class="flex-1">
+                    <div class="bg-white border rounded p-3 flex justify-between items-center gap-4">
+                        <div class="flex-1 min-w-0">
                             <h4 class="font-semibold">${m.title}</h4>
                             <p class="text-sm text-gray-600">${m.material_type} - Order: ${m.order_index}</p>
-                            <a href="${m.sharepoint_url}" target="_blank" class="text-sm text-blue-600 hover:underline">
+                            <a href="${m.sharepoint_url}" target="_blank" class="text-sm text-blue-600 hover:underline block truncate" title="${m.sharepoint_url}">
                                 <i class="fas fa-external-link-alt mr-1"></i>${m.sharepoint_url}
                             </a>
                         </div>
-                        <div class="flex items-center space-x-3">
+                        <div class="flex items-center space-x-3 flex-shrink-0">
                             <button onclick="editMaterial(${m.id})" class="text-blue-500 hover:text-blue-700 transition-colors" title="Edit Material">
                                 <i class="fas fa-edit text-xl"></i>
                             </button>

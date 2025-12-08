@@ -49,7 +49,7 @@
                         <div class="p-2">
                             <div class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase">Filter by Pathway</div>
                             <button onclick="selectPathwayFilter(null, 'All Pathways', 'fa-globe')" 
-                                    class="w-full text-left px-3 py-2 hover:bg-blue-50 rounded flex items-center gap-2">
+                                    class="w-full text-left px-3 py-2 hover:bg-blue-50 rounded flex items-center gap-2 text-gray-800">
                                 <i class="fas fa-globe text-blue-600"></i>
                                 <span class="font-medium">All Pathways</span>
                             </button>
@@ -190,9 +190,9 @@
                 const listEl = document.getElementById('pathway-filter-list');
                 listEl.innerHTML = availablePathways.map(pathway => `
                     <button onclick="selectPathwayFilter(${pathway.id}, '${pathway.title.replace(/'/g, "\\'")}', '${pathway.icon}')" 
-                            class="w-full text-left px-3 py-2 hover:bg-blue-50 rounded flex items-center gap-2">
+                            class="w-full text-left px-3 py-2 hover:bg-blue-50 rounded flex items-center gap-2 text-gray-800">
                         <i class="fas ${pathway.icon}" style="color: ${pathway.color_primary}"></i>
-                        <span>${pathway.title}</span>
+                        <span class="font-medium">${pathway.title}</span>
                     </button>
                 `).join('');
             } catch (error) {
