@@ -613,12 +613,42 @@ pathways.get('/admin/pathways/:pathwayId/available-users', async (c) => {
   }
 
   try {
-    const result = await c.env.DB.prepare(`SELECT id, name, email FROM users LIMIT 10`).all();
+    const pathwayId = c.req.param('pathwayId');
+
+    console.log('[AVAILABLE] Fetching available users for pathway:', pathwayId);
+
+    // Get all users who are NOT enrolled in this pathway (or have non-approved status)
+    const result = await c.env.DB.prepare(`
+      SELECT 
+        u.id,
+        u.name,
+        u.email,
+        u.role,
+        COALESCE(u.division, '') as division,
+        COALESCE(u.region, '') as region,
+        COALESCE(u.location, '') as location,
+        COALESCE(u.title, '') as title
+      FROM users u
+      WHERE u.active = 1
+        AND u.role != 'admin'
+        AND NOT EXISTS (
+          SELECT 1 
+          FROM pathway_enrollments pe 
+          WHERE pe.user_id = u.id 
+            AND pe.pathway_id = ?
+            AND pe.status = 'approved'
+        )
+      ORDER BY u.name
+    `).bind(pathwayId).all();
+
+    console.log('[AVAILABLE] Found users:', result.results?.length || 0);
+
     return c.json({ users: result.results || [] });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('[AVAILABLE] Error:', error);
     return c.json({ 
       error: 'Database error', 
-      message: error instanceof Error ? error.message : String(error)
+      message: error?.message || String(error)
     }, 500);
   }
 });
