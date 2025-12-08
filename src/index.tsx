@@ -116,6 +116,21 @@ app.get('/', (c) => {
         <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
         <script src="/static/i18n-config.js"></script>
         <script>
+            // Check if user is already logged in (prevent back button loop)
+            const existingToken = localStorage.getItem('token');
+            const existingUser = JSON.parse(localStorage.getItem('user') || '{}');
+            
+            if (existingToken && existingUser.role) {
+                // User is already logged in, redirect to their dashboard
+                if (existingUser.role === 'admin') {
+                    window.location.replace('/static/admin.html');
+                } else if (existingUser.role === 'boss') {
+                    window.location.replace('/static/boss.html');
+                } else {
+                    window.location.replace('/static/consultant.html');
+                }
+            }
+
             // Initialize i18n
             (async function() {
                 await initI18n(['common', 'auth']);
@@ -141,14 +156,14 @@ app.get('/', (c) => {
                     localStorage.setItem('token', response.data.token);
                     localStorage.setItem('user', JSON.stringify(response.data.user));
                     
-                    // Redirect based on role
+                    // Redirect based on role (use replace to avoid back button issues)
                     const role = response.data.user.role;
                     if (role === 'admin') {
-                        window.location.href = '/admin';
+                        window.location.replace('/static/admin.html');
                     } else if (role === 'boss') {
-                        window.location.href = '/boss';
+                        window.location.replace('/static/boss.html');
                     } else {
-                        window.location.href = '/consultant';
+                        window.location.replace('/static/consultant.html');
                     }
                 } catch (error) {
                     errorDiv.textContent = error.response?.data?.error || i18next.t('auth:errors.login_failed');
