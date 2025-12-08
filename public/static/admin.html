@@ -3349,7 +3349,7 @@
                                         ${user.region ? ` | ${user.region}` : ''}
                                     </div>` : ''}
                                 </div>
-                                <button onclick="assignUserToPathway(${pathwayId}, ${user.id})" 
+                                <button onclick="assignUserToPathway(${pathwayId}, ${user.id}, this)" 
                                         class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">
                                     <i class="fas fa-plus mr-1"></i>Assign
                                 </button>
@@ -3406,7 +3406,7 @@
                                         ${user.region ? ` | ${user.region}` : ''}
                                     </div>` : ''}
                                 </div>
-                                <button onclick="assignUserToPathway(${pathwayId}, ${user.id})" 
+                                <button onclick="assignUserToPathway(${pathwayId}, ${user.id}, this)" 
                                         class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">
                                     <i class="fas fa-plus mr-1"></i>Assign
                                 </button>
@@ -3426,20 +3426,23 @@
             }
         }
 
-        async function assignUserToPathway(pathwayId, userId) {
+        async function assignUserToPathway(pathwayId, userId, btnElement) {
             try {
                 const response = await axios.post(`/api/admin/pathways/${pathwayId}/assign`, { user_id: userId });
                 console.log('[ASSIGN] Success:', response.data);
-                await loadAssignUsers(pathwayId);
+                
                 // Show success message briefly
-                const btn = event.target.closest('button');
-                const originalHTML = btn.innerHTML;
-                btn.innerHTML = '<i class="fas fa-check"></i> Assigned!';
-                btn.disabled = true;
-                setTimeout(() => {
-                    btn.innerHTML = originalHTML;
-                    btn.disabled = false;
-                }, 1000);
+                if (btnElement) {
+                    const originalHTML = btnElement.innerHTML;
+                    btnElement.innerHTML = '<i class="fas fa-check"></i> Assigned!';
+                    btnElement.disabled = true;
+                    setTimeout(() => {
+                        btnElement.innerHTML = originalHTML;
+                        btnElement.disabled = false;
+                    }, 1000);
+                }
+                
+                await loadAssignUsers(pathwayId);
             } catch (error) {
                 console.error('[ASSIGN] Error:', error);
                 console.error('[ASSIGN] Response:', error.response?.data);
