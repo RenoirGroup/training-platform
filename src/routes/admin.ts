@@ -618,7 +618,7 @@ admin.post('/pathways/:pathwayId/assign', async (c) => {
     // Create enrollment
     console.log('[ASSIGN] Creating enrollment...');
     await c.env.DB.prepare(
-      'INSERT INTO pathway_enrollments (user_id, pathway_id, status, enrolled_at, enrolled_by) VALUES (?, ?, ?, datetime(\'now\'), ?)'
+      'INSERT INTO pathway_enrollments (user_id, pathway_id, status, requested_at, enrolled_by) VALUES (?, ?, ?, datetime(\'now\'), ?)'
     ).bind(user_id, pathwayId, 'approved', enrolledBy).run();
 
     console.log('[ASSIGN] Enrollment created successfully');
