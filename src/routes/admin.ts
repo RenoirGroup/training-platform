@@ -599,27 +599,37 @@ admin.post('/pathways/:pathwayId/assign', async (c) => {
       return c.json({ error: 'User ID is required' }, 400);
     }
 
-    // Check if already enrolled
-    console.log('[ASSIGN] Checking if already enrolled...');
+    // Check if ANY enrollment exists (regardless of status)
+    console.log('[ASSIGN] Checking for existing enrollment...');
     const existing = await c.env.DB.prepare(
-      'SELECT id FROM pathway_enrollments WHERE user_id = ? AND pathway_id = ? AND status = ?'
-    ).bind(user_id, pathwayId, 'approved').first();
-
-    if (existing) {
-      console.log('[ASSIGN] User already enrolled');
-      return c.json({ error: 'User already enrolled in this pathway' }, 409);
-    }
+      'SELECT id, status FROM pathway_enrollments WHERE user_id = ? AND pathway_id = ?'
+    ).bind(user_id, pathwayId).first();
 
     // Get enrolled_by user ID (may be null)
     const currentUser = c.get('user');
     const enrolledBy = currentUser?.userId || null;
     console.log('[ASSIGN] Enrolled by:', enrolledBy);
 
-    // Create enrollment
-    console.log('[ASSIGN] Creating enrollment...');
-    await c.env.DB.prepare(
-      'INSERT INTO pathway_enrollments (user_id, pathway_id, status, requested_at, enrolled_by) VALUES (?, ?, ?, datetime(\'now\'), ?)'
-    ).bind(user_id, pathwayId, 'approved', enrolledBy).run();
+    if (existing) {
+      console.log('[ASSIGN] Found existing enrollment with status:', existing.status);
+      
+      if (existing.status === 'approved') {
+        console.log('[ASSIGN] User already approved for this pathway');
+        return c.json({ error: 'User already enrolled in this pathway' }, 409);
+      }
+      
+      // Update existing enrollment to approved
+      console.log('[ASSIGN] Updating existing enrollment to approved...');
+      await c.env.DB.prepare(
+        'UPDATE pathway_enrollments SET status = ?, requested_at = datetime(\'now\'), enrolled_by = ? WHERE id = ?'
+      ).bind('approved', enrolledBy, existing.id).run();
+    } else {
+      // Create new enrollment
+      console.log('[ASSIGN] Creating new enrollment...');
+      await c.env.DB.prepare(
+        'INSERT INTO pathway_enrollments (user_id, pathway_id, status, requested_at, enrolled_by) VALUES (?, ?, ?, datetime(\'now\'), ?)'
+      ).bind(user_id, pathwayId, 'approved', enrolledBy).run();
+    }
 
     console.log('[ASSIGN] Enrollment created successfully');
 
