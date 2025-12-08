@@ -315,6 +315,7 @@ pathways.get('/consultant/pathways/enrolled', async (c) => {
     SELECT p.*,
            pe.requested_at,
            pe.reviewed_at,
+           pe.status as enrollment_status,
            pe.id as enrollment_id,
            pe.pathway_id,
            COUNT(DISTINCT pl.level_id) as level_count,
@@ -517,7 +518,15 @@ pathways.get('/admin/enrollment-requests', async (c) => {
 pathways.post('/admin/enrollment-requests/:id/approve', async (c) => {
   const user = c.get('user');
   const requestId = c.req.param('id');
-  const { response_note } = await c.req.json();
+  
+  // Parse body safely (may be empty)
+  let response_note = null;
+  try {
+    const body = await c.req.json();
+    response_note = body?.response_note || null;
+  } catch (e) {
+    // Empty body is OK for approval
+  }
 
   if (user.role !== 'admin') {
     return c.json({ error: 'Unauthorized' }, 403);
@@ -533,7 +542,7 @@ pathways.post('/admin/enrollment-requests/:id/approve', async (c) => {
 
   await c.env.DB.prepare(
     'UPDATE pathway_enrollments SET status = ?, response_note = ?, reviewed_at = CURRENT_TIMESTAMP, reviewed_by = ? WHERE id = ?'
-  ).bind('approved', response_note || null, user.userId, requestId).run();
+  ).bind('approved', response_note, user.userId, requestId).run();
 
   return c.json({ message: 'Enrollment approved' });
 });

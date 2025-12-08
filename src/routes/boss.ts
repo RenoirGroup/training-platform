@@ -23,7 +23,7 @@ boss.get('/team', async (c) => {
       u.last_login,
       bcr.project_name,
       COUNT(DISTINCT CASE WHEN up.status = 'completed' ${pathwayId ? 'AND up.pathway_id = ?' : ''} THEN up.level_id END) as levels_completed,
-      us.total_points,
+      COALESCE(us.total_points, 0) as total_points,
       us.current_login_streak,
       l.rank,
       l.league
@@ -34,7 +34,7 @@ boss.get('/team', async (c) => {
     LEFT JOIN leaderboard l ON u.id = l.user_id
     WHERE bcr.boss_id = ? AND bcr.active = 1 AND u.role = 'consultant' AND u.active = 1
     GROUP BY u.id, bcr.project_name
-    ORDER BY levels_completed DESC, us.total_points DESC
+    ORDER BY total_points DESC, levels_completed DESC
   `;
   
   const team = pathwayId 
