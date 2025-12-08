@@ -33,38 +33,7 @@ pathways.get('/admin/pathways', async (c) => {
   return c.json({ pathways: result.results });
 });
 
-// Get single pathway details
-pathways.get('/admin/pathways/:id', async (c) => {
-  const user = c.get('user');
-  const pathwayId = c.req.param('id');
-  
-  if (user.role !== 'admin') {
-    return c.json({ error: 'Unauthorized' }, 403);
-  }
-
-  const pathway = await c.env.DB.prepare(
-    'SELECT * FROM pathways WHERE id = ?'
-  ).bind(pathwayId).first();
-
-  if (!pathway) {
-    return c.json({ error: 'Pathway not found' }, 404);
-  }
-
-  // Get assigned levels
-  const levels = await c.env.DB.prepare(`
-    SELECT l.*, pl.order_index as pathway_order
-    FROM pathway_levels pl
-    JOIN levels l ON pl.level_id = l.id
-    WHERE pl.pathway_id = ?
-    ORDER BY pl.order_index
-  `).bind(pathwayId).all();
-
-  return c.json({ 
-    pathway,
-    levels: levels.results 
-  });
-});
-
+// IMPORTANT: Analytics route must come BEFORE :id route to avoid matching "analytics" as an id
 // Get pathway analytics
 pathways.get('/admin/pathways/analytics', async (c) => {
   const user = c.get('user');
@@ -155,6 +124,38 @@ pathways.get('/admin/pathways/analytics', async (c) => {
     console.error('[ANALYTICS] Error:', error);
     return c.json({ error: 'Failed to load analytics', details: error.message }, 500);
   }
+});
+
+// Get single pathway details
+pathways.get('/admin/pathways/:id', async (c) => {
+  const user = c.get('user');
+  const pathwayId = c.req.param('id');
+  
+  if (user.role !== 'admin') {
+    return c.json({ error: 'Unauthorized' }, 403);
+  }
+
+  const pathway = await c.env.DB.prepare(
+    'SELECT * FROM pathways WHERE id = ?'
+  ).bind(pathwayId).first();
+
+  if (!pathway) {
+    return c.json({ error: 'Pathway not found' }, 404);
+  }
+
+  // Get assigned levels
+  const levels = await c.env.DB.prepare(`
+    SELECT l.*, pl.order_index as pathway_order
+    FROM pathway_levels pl
+    JOIN levels l ON pl.level_id = l.id
+    WHERE pl.pathway_id = ?
+    ORDER BY pl.order_index
+  `).bind(pathwayId).all();
+
+  return c.json({ 
+    pathway,
+    levels: levels.results 
+  });
 });
 
 // Create new pathway
