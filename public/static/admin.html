@@ -786,6 +786,188 @@
         </div>
     </div>
 
+    <!-- Create Cohort Modal -->
+    <div id="create-cohort-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" style="display: none;">
+        <div class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <h3 class="text-2xl font-bold mb-4"><i class="fas fa-users-cog mr-2"></i>Create New Cohort</h3>
+            <form id="create-cohort-form" onsubmit="createCohort(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Cohort Name *</label>
+                    <input type="text" id="cohort-name" class="w-full px-3 py-2 border rounded" placeholder="e.g., Q1 2024 New Joiners" required />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Description</label>
+                    <textarea id="cohort-description" class="w-full px-3 py-2 border rounded" rows="3" placeholder="Brief description of this cohort..."></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Cohort Manager</label>
+                    <select id="cohort-manager" class="w-full px-3 py-2 border rounded">
+                        <option value="">-- No Manager Assigned --</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" onclick="closeCreateCohortModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
+                    <button type="submit" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded">
+                        <i class="fas fa-save mr-2"></i>Create Cohort
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Cohort Modal -->
+    <div id="edit-cohort-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" style="display: none;">
+        <div class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <h3 class="text-2xl font-bold mb-4"><i class="fas fa-edit mr-2"></i>Edit Cohort</h3>
+            <input type="hidden" id="edit-cohort-id" />
+            <form id="edit-cohort-form" onsubmit="updateCohort(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Cohort Name *</label>
+                    <input type="text" id="edit-cohort-name" class="w-full px-3 py-2 border rounded" required />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Description</label>
+                    <textarea id="edit-cohort-description" class="w-full px-3 py-2 border rounded" rows="3"></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Cohort Manager</label>
+                    <select id="edit-cohort-manager" class="w-full px-3 py-2 border rounded">
+                        <option value="">-- No Manager Assigned --</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" onclick="closeEditCohortModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
+                    <button type="submit" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded">
+                        <i class="fas fa-save mr-2"></i>Update Cohort
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Manage Cohort Details Modal -->
+    <div id="manage-cohort-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" style="display: none;">
+        <div class="bg-white rounded-lg p-6 max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold"><i class="fas fa-users-cog mr-2"></i><span id="manage-cohort-name">Cohort Details</span></h3>
+                <button onclick="closeManageCohortModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            
+            <input type="hidden" id="manage-cohort-id" />
+            
+            <!-- Tab Navigation -->
+            <div class="flex space-x-2 mb-6 border-b border-gray-300">
+                <button onclick="showCohortTab('members')" class="cohort-tab-btn px-6 py-3 font-semibold border-b-4 transition-colors" data-cohort-tab="members" style="border-color: #7CB342; color: #7CB342;">
+                    <i class="fas fa-users mr-2"></i>Members
+                </button>
+                <button onclick="showCohortTab('pathways')" class="cohort-tab-btn px-6 py-3 font-semibold border-b-4 border-transparent text-gray-600 hover:text-gray-900 transition-colors" data-cohort-tab="pathways">
+                    <i class="fas fa-route mr-2"></i>Learning Paths
+                </button>
+                <button onclick="showCohortTab('progress')" class="cohort-tab-btn px-6 py-3 font-semibold border-b-4 border-transparent text-gray-600 hover:text-gray-900 transition-colors" data-cohort-tab="progress">
+                    <i class="fas fa-chart-line mr-2"></i>Progress
+                </button>
+            </div>
+
+            <!-- Members Tab -->
+            <div id="cohort-members-tab" class="cohort-tab-content">
+                <div class="flex justify-between items-center mb-4">
+                    <h4 class="text-xl font-semibold">Cohort Members</h4>
+                    <button onclick="showAddMembersModal()" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded">
+                        <i class="fas fa-user-plus mr-2"></i>Add Members
+                    </button>
+                </div>
+                <div id="cohort-members-list" class="space-y-2"></div>
+            </div>
+
+            <!-- Pathways Tab -->
+            <div id="cohort-pathways-tab" class="cohort-tab-content hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h4 class="text-xl font-semibold">Assigned Learning Paths</h4>
+                    <button onclick="showAssignPathwayModal()" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded">
+                        <i class="fas fa-plus mr-2"></i>Assign Learning Path
+                    </button>
+                </div>
+                <div id="cohort-pathways-list" class="space-y-4"></div>
+            </div>
+
+            <!-- Progress Tab -->
+            <div id="cohort-progress-tab" class="cohort-tab-content hidden">
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Select Learning Path</label>
+                    <select id="progress-pathway-select" class="w-full px-3 py-2 border rounded" onchange="loadCohortPathwayProgress()">
+                        <option value="">-- Select a Learning Path --</option>
+                    </select>
+                </div>
+                <div id="cohort-progress-details" class="space-y-4"></div>
+            </div>
+
+            <div class="flex justify-end mt-6">
+                <button onclick="closeManageCohortModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Members to Cohort Modal -->
+    <div id="add-members-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-[60]" style="display: none;">
+        <div class="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <h3 class="text-2xl font-bold mb-4"><i class="fas fa-user-plus mr-2"></i>Add Members to Cohort</h3>
+            
+            <!-- Search Box -->
+            <div class="mb-4">
+                <input type="text" id="search-users-to-add" class="w-full px-3 py-2 border rounded" placeholder="Search by name, email..." onkeyup="filterUsersToAdd()" />
+            </div>
+
+            <!-- Available Users List -->
+            <div class="mb-4">
+                <div class="flex items-center mb-2">
+                    <input type="checkbox" id="select-all-users" class="mr-2" onchange="toggleSelectAll()" />
+                    <label for="select-all-users" class="font-semibold">Select All</label>
+                </div>
+                <div id="available-users-list" class="max-h-96 overflow-y-auto space-y-2 border rounded p-3"></div>
+            </div>
+
+            <div class="flex justify-end space-x-2">
+                <button type="button" onclick="closeAddMembersModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
+                <button onclick="addMembersToCohort()" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded">
+                    <i class="fas fa-save mr-2"></i>Add Selected Members
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign Pathway to Cohort Modal -->
+    <div id="assign-pathway-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-[60]" style="display: none;">
+        <div class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <h3 class="text-2xl font-bold mb-4"><i class="fas fa-route mr-2"></i>Assign Learning Path</h3>
+            
+            <form id="assign-pathway-form" onsubmit="assignPathwayToCohort(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Learning Path *</label>
+                    <select id="assign-pathway-select" class="w-full px-3 py-2 border rounded" required>
+                        <option value="">-- Select a Learning Path --</option>
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Deadline (Optional)</label>
+                    <input type="date" id="assign-pathway-deadline" class="w-full px-3 py-2 border rounded" />
+                    <p class="text-sm text-gray-600 mt-1">Set a completion deadline for this cohort</p>
+                </div>
+
+                <div class="flex justify-end space-x-2">
+                    <button type="button" onclick="closeAssignPathwayModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
+                    <button type="submit" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded">
+                        <i class="fas fa-save mr-2"></i>Assign Learning Path
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
     <script>
         const token = localStorage.getItem('token');
@@ -831,6 +1013,7 @@
             // Load tab data
             if (tab === 'users') loadUsers();
             if (tab === 'levels') loadLevels();
+            if (tab === 'cohorts') loadCohorts();
             if (tab === 'pathways') {
                 loadPathways();
                 loadEnrollmentRequests();
@@ -3781,6 +3964,578 @@
                     btn.style.display = 'none';
                 }
             });
+        }
+
+        // ============================================
+        // COHORT MANAGEMENT FUNCTIONS
+        // ============================================
+
+        let currentCohortId = null;
+        let availableUsersForCohort = [];
+
+        // Load all cohorts
+        async function loadCohorts() {
+            try {
+                const response = await axios.get('/api/admin/cohorts');
+                const cohorts = response.data.cohorts;
+                
+                const listEl = document.getElementById('cohorts-list');
+                if (cohorts.length === 0) {
+                    listEl.innerHTML = '<p class="text-gray-500">No cohorts created yet. Create one to get started!</p>';
+                    return;
+                }
+
+                listEl.innerHTML = cohorts.map(cohort => `
+                    <div class="border border-gray-300 rounded-lg p-4 hover:shadow-md transition-shadow ${cohort.id === 1 ? 'bg-gray-50' : ''}">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <h3 class="text-xl font-bold mb-2">
+                                    <i class="fas fa-users-cog mr-2"></i>${cohort.name}
+                                    ${cohort.id === 1 ? '<span class="text-xs bg-gray-300 text-gray-700 px-2 py-1 rounded ml-2">SYSTEM</span>' : ''}
+                                </h3>
+                                ${cohort.description ? `<p class="text-gray-600 mb-2">${cohort.description}</p>` : ''}
+                                <div class="flex flex-wrap gap-4 text-sm text-gray-600">
+                                    <span><i class="fas fa-user mr-1"></i>Manager: ${cohort.manager_name || 'None'}</span>
+                                    <span><i class="fas fa-users mr-1"></i>${cohort.member_count || 0} Members</span>
+                                    <span><i class="fas fa-route mr-1"></i>${cohort.pathway_count || 0} Learning Paths</span>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2 ml-4">
+                                <button onclick="showManageCohortModal(${cohort.id})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded" title="Manage Cohort">
+                                    <i class="fas fa-cog"></i>
+                                </button>
+                                ${cohort.id !== 1 ? `
+                                <button onclick="showEditCohortModal(${cohort.id})" class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button onclick="deleteCohort(${cohort.id})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading cohorts:', error);
+                alert('Failed to load cohorts');
+            }
+        }
+
+        // Show create cohort modal
+        function showCreateCohortModal() {
+            loadManagersList('cohort-manager');
+            document.getElementById('create-cohort-modal').style.display = 'flex';
+        }
+
+        function closeCreateCohortModal() {
+            document.getElementById('create-cohort-modal').style.display = 'none';
+            document.getElementById('create-cohort-form').reset();
+        }
+
+        // Create cohort
+        async function createCohort(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('cohort-name').value;
+            const description = document.getElementById('cohort-description').value;
+            const manager_id = document.getElementById('cohort-manager').value || null;
+
+            try {
+                await axios.post('/api/admin/cohorts', {
+                    name,
+                    description,
+                    manager_id
+                });
+                
+                closeCreateCohortModal();
+                alert('Cohort created successfully!');
+                await loadCohorts();
+            } catch (error) {
+                console.error('Error creating cohort:', error);
+                alert('Error creating cohort: ' + (error.response?.data?.error || error.message));
+            }
+        }
+
+        // Show edit cohort modal
+        async function showEditCohortModal(cohortId) {
+            try {
+                const response = await axios.get(`/api/admin/cohorts/${cohortId}`);
+                const cohort = response.data.cohort;
+                
+                document.getElementById('edit-cohort-id').value = cohort.id;
+                document.getElementById('edit-cohort-name').value = cohort.name;
+                document.getElementById('edit-cohort-description').value = cohort.description || '';
+                
+                await loadManagersList('edit-cohort-manager');
+                document.getElementById('edit-cohort-manager').value = cohort.manager_id || '';
+                
+                document.getElementById('edit-cohort-modal').style.display = 'flex';
+            } catch (error) {
+                console.error('Error loading cohort:', error);
+                alert('Failed to load cohort details');
+            }
+        }
+
+        function closeEditCohortModal() {
+            document.getElementById('edit-cohort-modal').style.display = 'none';
+        }
+
+        // Update cohort
+        async function updateCohort(e) {
+            e.preventDefault();
+            
+            const cohortId = document.getElementById('edit-cohort-id').value;
+            const name = document.getElementById('edit-cohort-name').value;
+            const description = document.getElementById('edit-cohort-description').value;
+            const manager_id = document.getElementById('edit-cohort-manager').value || null;
+
+            try {
+                await axios.put(`/api/admin/cohorts/${cohortId}`, {
+                    name,
+                    description,
+                    manager_id
+                });
+                
+                closeEditCohortModal();
+                alert('Cohort updated successfully!');
+                await loadCohorts();
+            } catch (error) {
+                console.error('Error updating cohort:', error);
+                alert('Error updating cohort: ' + (error.response?.data?.error || error.message));
+            }
+        }
+
+        // Delete cohort
+        async function deleteCohort(cohortId) {
+            if (!confirm('Are you sure you want to delete this cohort? This action cannot be undone.')) {
+                return;
+            }
+
+            try {
+                await axios.delete(`/api/admin/cohorts/${cohortId}`);
+                alert('Cohort deleted successfully!');
+                await loadCohorts();
+            } catch (error) {
+                console.error('Error deleting cohort:', error);
+                alert('Error deleting cohort: ' + (error.response?.data?.error || error.message));
+            }
+        }
+
+        // Show manage cohort modal
+        async function showManageCohortModal(cohortId) {
+            try {
+                currentCohortId = cohortId;
+                
+                const response = await axios.get(`/api/admin/cohorts/${cohortId}`);
+                const cohort = response.data.cohort;
+                
+                document.getElementById('manage-cohort-id').value = cohort.id;
+                document.getElementById('manage-cohort-name').textContent = cohort.name;
+                
+                document.getElementById('manage-cohort-modal').style.display = 'flex';
+                
+                await showCohortTab('members');
+            } catch (error) {
+                console.error('Error loading cohort details:', error);
+                alert('Failed to load cohort details');
+            }
+        }
+
+        function closeManageCohortModal() {
+            document.getElementById('manage-cohort-modal').style.display = 'none';
+            currentCohortId = null;
+        }
+
+        // Show cohort tab
+        async function showCohortTab(tab) {
+            document.querySelectorAll('.cohort-tab-content').forEach(el => el.classList.add('hidden'));
+            
+            document.querySelectorAll('.cohort-tab-btn').forEach(el => {
+                el.classList.remove('border-green-600', 'text-green-700');
+                el.classList.add('border-transparent', 'text-gray-600');
+                el.style.borderColor = 'transparent';
+                el.style.color = '#4B5563';
+            });
+            
+            document.getElementById(`cohort-${tab}-tab`).classList.remove('hidden');
+            
+            const activeBtn = document.querySelector(`[data-cohort-tab="${tab}"]`);
+            if (activeBtn) {
+                activeBtn.style.borderColor = '#7CB342';
+                activeBtn.style.color = '#7CB342';
+            }
+            
+            if (tab === 'members') {
+                await loadCohortMembers();
+            } else if (tab === 'pathways') {
+                await loadCohortPathways();
+            } else if (tab === 'progress') {
+                await loadCohortProgress();
+            }
+        }
+
+        // Load cohort members
+        async function loadCohortMembers() {
+            try {
+                const response = await axios.get(`/api/admin/cohorts/${currentCohortId}`);
+                const members = response.data.members;
+                
+                const listEl = document.getElementById('cohort-members-list');
+                if (members.length === 0) {
+                    listEl.innerHTML = '<p class="text-gray-500">No members in this cohort yet.</p>';
+                    return;
+                }
+
+                listEl.innerHTML = members.map(member => `
+                    <div class="flex justify-between items-center p-3 border rounded hover:bg-gray-50">
+                        <div>
+                            <p class="font-semibold">${member.name}</p>
+                            <p class="text-sm text-gray-600">${member.email}</p>
+                            ${member.division || member.region ? `
+                                <p class="text-xs text-gray-500">
+                                    ${member.division ? member.division : ''}${member.division && member.region ? ' | ' : ''}${member.region ? member.region : ''}
+                                </p>
+                            ` : ''}
+                        </div>
+                        <button onclick="removeMemberFromCohort(${currentCohortId}, ${member.id})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
+                            <i class="fas fa-times mr-1"></i>Remove
+                        </button>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading cohort members:', error);
+            }
+        }
+
+        // Show add members modal
+        async function showAddMembersModal() {
+            try {
+                const usersResponse = await axios.get('/api/admin/users');
+                const allUsers = usersResponse.data.users;
+                
+                const cohortResponse = await axios.get(`/api/admin/cohorts/${currentCohortId}`);
+                const currentMembers = cohortResponse.data.members;
+                const currentMemberIds = currentMembers.map(m => m.id);
+                
+                availableUsersForCohort = allUsers.filter(u => !currentMemberIds.includes(u.id) && u.role !== 'admin');
+                
+                renderAvailableUsers();
+                document.getElementById('add-members-modal').style.display = 'flex';
+            } catch (error) {
+                console.error('Error loading users:', error);
+                alert('Failed to load users');
+            }
+        }
+
+        function closeAddMembersModal() {
+            document.getElementById('add-members-modal').style.display = 'none';
+            document.getElementById('search-users-to-add').value = '';
+            availableUsersForCohort = [];
+        }
+
+        function renderAvailableUsers() {
+            const listEl = document.getElementById('available-users-list');
+            if (availableUsersForCohort.length === 0) {
+                listEl.innerHTML = '<p class="text-gray-500">No available users to add.</p>';
+                return;
+            }
+
+            listEl.innerHTML = availableUsersForCohort.map(user => `
+                <div class="flex items-center p-2 border rounded hover:bg-gray-50">
+                    <input type="checkbox" class="user-checkbox mr-3" data-user-id="${user.id}" />
+                    <div class="flex-1">
+                        <p class="font-semibold">${user.name}</p>
+                        <p class="text-sm text-gray-600">${user.email}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterUsersToAdd() {
+            const search = document.getElementById('search-users-to-add').value.toLowerCase();
+            const checkboxes = document.querySelectorAll('.user-checkbox');
+            
+            checkboxes.forEach(cb => {
+                const container = cb.closest('.flex');
+                const text = container.textContent.toLowerCase();
+                container.style.display = text.includes(search) ? 'flex' : 'none';
+            });
+        }
+
+        function toggleSelectAll() {
+            const selectAll = document.getElementById('select-all-users').checked;
+            document.querySelectorAll('.user-checkbox').forEach(cb => {
+                if (cb.closest('.flex').style.display !== 'none') {
+                    cb.checked = selectAll;
+                }
+            });
+        }
+
+        async function addMembersToCohort() {
+            const selectedUserIds = Array.from(document.querySelectorAll('.user-checkbox:checked'))
+                .map(cb => parseInt(cb.dataset.userId));
+            
+            if (selectedUserIds.length === 0) {
+                alert('Please select at least one user to add');
+                return;
+            }
+
+            try {
+                await axios.post(`/api/admin/cohorts/${currentCohortId}/members`, {
+                    user_ids: selectedUserIds
+                });
+                
+                closeAddMembersModal();
+                alert(`${selectedUserIds.length} member(s) added successfully!`);
+                await loadCohortMembers();
+            } catch (error) {
+                console.error('Error adding members:', error);
+                alert('Error adding members: ' + (error.response?.data?.error || error.message));
+            }
+        }
+
+        async function removeMemberFromCohort(cohortId, userId) {
+            if (!confirm('Are you sure you want to remove this member from the cohort?')) {
+                return;
+            }
+
+            try {
+                await axios.delete(`/api/admin/cohorts/${cohortId}/members/${userId}`);
+                alert('Member removed successfully!');
+                await loadCohortMembers();
+            } catch (error) {
+                console.error('Error removing member:', error);
+                alert('Error removing member: ' + (error.response?.data?.error || error.message));
+            }
+        }
+
+        // Load cohort pathways
+        async function loadCohortPathways() {
+            try {
+                const response = await axios.get(`/api/admin/cohorts/${currentCohortId}`);
+                const pathways = response.data.pathways;
+                
+                const listEl = document.getElementById('cohort-pathways-list');
+                if (pathways.length === 0) {
+                    listEl.innerHTML = '<p class="text-gray-500">No learning paths assigned yet.</p>';
+                    return;
+                }
+
+                listEl.innerHTML = pathways.map(pathway => `
+                    <div class="border rounded-lg p-4 hover:shadow-md transition-shadow" style="border-left: 4px solid ${pathway.color_primary};">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <h4 class="text-lg font-bold mb-2">
+                                    <i class="${pathway.icon} mr-2" style="color: ${pathway.color_primary};"></i>
+                                    ${pathway.title}
+                                </h4>
+                                ${pathway.description ? `<p class="text-gray-600 text-sm mb-2">${pathway.description}</p>` : ''}
+                                <div class="flex gap-4 text-sm text-gray-600">
+                                    ${pathway.deadline ? `
+                                        <span class="flex items-center">
+                                            <i class="fas fa-calendar-alt mr-1"></i>
+                                            Deadline: ${new Date(pathway.deadline).toLocaleDateString()}
+                                            ${new Date(pathway.deadline) < new Date() ? '<span class="text-red-600 font-bold ml-1">(OVERDUE)</span>' : ''}
+                                        </span>
+                                    ` : '<span class="text-gray-400">No deadline set</span>'}
+                                </div>
+                            </div>
+                            <div class="flex space-x-2 ml-4">
+                                <button onclick="updatePathwayDeadline(${pathway.id})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm" title="Update Deadline">
+                                    <i class="fas fa-calendar-edit"></i>
+                                </button>
+                                <button onclick="removePathwayFromCohort(${pathway.id})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm" title="Remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading cohort pathways:', error);
+            }
+        }
+
+        async function showAssignPathwayModal() {
+            try {
+                const response = await axios.get('/api/admin/pathways');
+                const pathways = response.data.pathways;
+                
+                const select = document.getElementById('assign-pathway-select');
+                select.innerHTML = '<option value="">-- Select a Learning Path --</option>' +
+                    pathways.map(p => `<option value="${p.id}">${p.title}</option>`).join('');
+                
+                document.getElementById('assign-pathway-modal').style.display = 'flex';
+            } catch (error) {
+                console.error('Error loading pathways:', error);
+                alert('Failed to load pathways');
+            }
+        }
+
+        function closeAssignPathwayModal() {
+            document.getElementById('assign-pathway-modal').style.display = 'none';
+            document.getElementById('assign-pathway-form').reset();
+        }
+
+        async function assignPathwayToCohort(e) {
+            e.preventDefault();
+            
+            const pathway_id = document.getElementById('assign-pathway-select').value;
+            const deadline = document.getElementById('assign-pathway-deadline').value || null;
+
+            try {
+                await axios.post(`/api/admin/cohorts/${currentCohortId}/pathways`, {
+                    pathway_id,
+                    deadline
+                });
+                
+                closeAssignPathwayModal();
+                alert('Learning path assigned successfully! All cohort members have been enrolled.');
+                await loadCohortPathways();
+            } catch (error) {
+                console.error('Error assigning pathway:', error);
+                alert('Error assigning pathway: ' + (error.response?.data?.error || error.message));
+            }
+        }
+
+        async function updatePathwayDeadline(pathwayId) {
+            const newDeadline = prompt('Enter new deadline (YYYY-MM-DD) or leave empty to remove:');
+            if (newDeadline === null) return;
+            
+            try {
+                await axios.put(`/api/admin/cohorts/${currentCohortId}/pathways/${pathwayId}`, {
+                    deadline: newDeadline || null
+                });
+                
+                alert('Deadline updated successfully!');
+                await loadCohortPathways();
+            } catch (error) {
+                console.error('Error updating deadline:', error);
+                alert('Error updating deadline: ' + (error.response?.data?.error || error.message));
+            }
+        }
+
+        async function removePathwayFromCohort(pathwayId) {
+            if (!confirm('Are you sure you want to remove this learning path from the cohort?')) {
+                return;
+            }
+
+            try {
+                await axios.delete(`/api/admin/cohorts/${currentCohortId}/pathways/${pathwayId}`);
+                alert('Learning path removed successfully!');
+                await loadCohortPathways();
+            } catch (error) {
+                console.error('Error removing pathway:', error);
+                alert('Error removing pathway: ' + (error.response?.data?.error || error.message));
+            }
+        }
+
+        // Load cohort progress
+        async function loadCohortProgress() {
+            try {
+                const response = await axios.get(`/api/admin/cohorts/${currentCohortId}/progress`);
+                const pathways = response.data.pathways;
+                
+                const select = document.getElementById('progress-pathway-select');
+                select.innerHTML = '<option value="">-- Select a Learning Path --</option>' +
+                    pathways.map(p => `<option value="${p.id}">${p.title}</option>`).join('');
+                
+                document.getElementById('cohort-progress-details').innerHTML = '<p class="text-gray-500">Select a learning path to view progress</p>';
+            } catch (error) {
+                console.error('Error loading cohort progress:', error);
+            }
+        }
+
+        async function loadCohortPathwayProgress() {
+            const pathwayId = document.getElementById('progress-pathway-select').value;
+            
+            if (!pathwayId) {
+                document.getElementById('cohort-progress-details').innerHTML = '<p class="text-gray-500">Select a learning path to view progress</p>';
+                return;
+            }
+
+            try {
+                const response = await axios.get(`/api/admin/cohorts/${currentCohortId}/pathways/${pathwayId}/progress`);
+                const { pathway, members } = response.data;
+                
+                const detailsEl = document.getElementById('cohort-progress-details');
+                detailsEl.innerHTML = `
+                    <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                        <h4 class="font-bold text-lg mb-2">
+                            <i class="${pathway.icon} mr-2" style="color: ${pathway.color_primary};"></i>
+                            ${pathway.title}
+                        </h4>
+                        <div class="flex gap-6 text-sm">
+                            <span><strong>Total Levels:</strong> ${pathway.total_levels}</span>
+                            ${pathway.deadline ? `
+                                <span>
+                                    <strong>Deadline:</strong> ${new Date(pathway.deadline).toLocaleDateString()}
+                                    ${new Date(pathway.deadline) < new Date() ? '<span class="text-red-600 font-bold">(OVERDUE)</span>' : ''}
+                                </span>
+                            ` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="px-4 py-2 text-left">Name</th>
+                                    <th class="px-4 py-2 text-left">Email</th>
+                                    <th class="px-4 py-2 text-left">Division</th>
+                                    <th class="px-4 py-2 text-left">Region</th>
+                                    <th class="px-4 py-2 text-center">Completed Levels</th>
+                                    <th class="px-4 py-2 text-center">Progress</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${members.map(member => `
+                                    <tr class="border-t hover:bg-gray-50">
+                                        <td class="px-4 py-2">${member.name}</td>
+                                        <td class="px-4 py-2">${member.email}</td>
+                                        <td class="px-4 py-2">${member.division || 'N/A'}</td>
+                                        <td class="px-4 py-2">${member.region || 'N/A'}</td>
+                                        <td class="px-4 py-2 text-center">${member.completed_levels} / ${pathway.total_levels}</td>
+                                        <td class="px-4 py-2">
+                                            <div class="flex items-center">
+                                                <div class="flex-1 bg-gray-200 rounded-full h-4 mr-2">
+                                                    <div class="bg-green-600 h-4 rounded-full" style="width: ${member.completion_percentage}%"></div>
+                                                </div>
+                                                <span class="text-sm font-semibold">${member.completion_percentage}%</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading pathway progress:', error);
+                alert('Failed to load progress');
+            }
+        }
+
+        // Load managers list helper
+        async function loadManagersList(selectId) {
+            try {
+                const response = await axios.get('/api/admin/users');
+                const users = response.data.users;
+                const managers = users.filter(u => u.role === 'admin' || u.role === 'boss');
+                
+                const select = document.getElementById(selectId);
+                const currentValue = select.value;
+                
+                select.innerHTML = '<option value="">-- No Manager Assigned --</option>' +
+                    managers.map(m => `<option value="${m.id}">${m.name} (${m.role})</option>`).join('');
+                
+                if (currentValue) {
+                    select.value = currentValue;
+                }
+            } catch (error) {
+                console.error('Error loading managers:', error);
+            }
         }
 
         // Initial load
