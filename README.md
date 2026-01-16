@@ -17,9 +17,10 @@ This is a full-stack training management system designed for Renoir Consulting. 
 
 ## URLs
 
-- **Production**: https://df2e00c2.training-platform-257.pages.dev
-- **Main Production**: https://training-platform-257.pages.dev
-- **GitHub**: https://github.com/RenoirGroup/renoir-training26
+- **Production (YCP Account)**: https://aac9f846.training-platform-366.pages.dev
+- **Cloudflare Dashboard**: https://dash.cloudflare.com/d051fdf708da167d1668ff4c62f0cb14/workers-and-pages/view/training-platform
+- **Old Production (Gmail - Archived)**: https://df2e00c2.training-platform-257.pages.dev
+- **GitHub**: [To be created in new organization]
 - **Development Sandbox**: https://3000-i5jt5upplbv2n9drgj7lj-b9b802c4.sandbox.novita.ai
 - **Local Development**: http://localhost:3000
 
@@ -385,10 +386,12 @@ Proprietary - Internal use only
 
 ---
 
-**Last Updated**: 2024-12-04  
-**Status**: ✅ Production Deployed - Live on Cloudflare Pages  
-**Production URL**: https://df2e00c2.training-platform-257.pages.dev  
-**Main URL**: https://training-platform-257.pages.dev  
-**Deployment Platform**: Cloudflare Pages  
+**Last Updated**: 2026-01-16  
+**Status**: ✅ Production Deployed - Migrated to YCP Cloudflare Account  
+**Production URL**: https://aac9f846.training-platform-366.pages.dev  
+**Deployment Platform**: Cloudflare Pages (YCP Account)  
+**Database**: Cloudflare D1 (ID: 7ecb2e4d-fc5a-4c2d-b008-68a533708cf1)  
 **Brand**: Renoir Consulting  
-**i18n Status**: ✅ Consultant Dashboard (Japanese) | ⏳ Boss/Admin (English only)
+**i18n Status**: ✅ Consultant Dashboard (Japanese) | ⏳ Boss/Admin (English only)  
+**Data Migration**: ✅ Complete - All data migrated from old Gmail account (2026-01-16)  
+**Total Users**: 6 | **Total Levels**: 27 | **Total Pathways**: 6 | **Total Cohorts**: 2
