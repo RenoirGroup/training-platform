@@ -1,0 +1,60 @@
+[
+  {
+    "results": [
+      {
+        "id": 1,
+        "user_id": 3,
+        "achievement_id": 1,
+        "earned_at": "2025-10-29 00:38:36"
+      },
+      {
+        "id": 2,
+        "user_id": 3,
+        "achievement_id": 8,
+        "earned_at": "2025-10-29 00:38:37"
+      },
+      {
+        "id": 3,
+        "user_id": 8,
+        "achievement_id": 1,
+        "earned_at": "2025-10-31 06:17:33"
+      },
+      {
+        "id": 4,
+        "user_id": 8,
+        "achievement_id": 8,
+        "earned_at": "2025-10-31 06:17:34"
+      },
+      {
+        "id": 5,
+        "user_id": 11,
+        "achievement_id": 1,
+        "earned_at": "2025-11-10 02:25:42"
+      },
+      {
+        "id": 6,
+        "user_id": 11,
+        "achievement_id": 8,
+        "earned_at": "2025-11-10 02:25:43"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "ENAM",
+      "served_by_colo": "EWR",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.134
+      },
+      "duration": 0.134,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 2318336,
+      "rows_read": 6,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

@@ -1,0 +1,15 @@
+
+{
+  "error": {
+    "text": "A request to the Cloudflare API (/accounts/64eafbdb81651010ebdd24644fa3e2fd/d1/database/e11032ed-0a53-4ffb-86c4-6a0ef9b9fed3/query) failed.",
+    "notes": [
+      {
+        "text": "Authentication error [code: 10000]"
+      }
+    ],
+    "kind": "error",
+    "name": "APIError",
+    "code": 10000,
+    "accountTag": "64eafbdb81651010ebdd24644fa3e2fd"
+  }
+}

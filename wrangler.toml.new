@@ -1,0 +1,9 @@
+name = "training-platform"
+compatibility_date = "2025-10-28"
+pages_build_output_dir = "./dist"
+compatibility_flags = ["nodejs_compat"]
+
+[[ d1_databases ]]
+binding = "DB"
+database_name = "training-platform-production"
+database_id = "7ecb2e4d-fc5a-4c2d-b008-68a533708cf1"

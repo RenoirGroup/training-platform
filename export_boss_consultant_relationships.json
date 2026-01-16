@@ -1,0 +1,48 @@
+[
+  {
+    "results": [
+      {
+        "id": 1,
+        "boss_id": 2,
+        "consultant_id": 3,
+        "project_name": null,
+        "active": 1,
+        "created_at": "2025-10-28 12:40:19"
+      },
+      {
+        "id": 2,
+        "boss_id": 2,
+        "consultant_id": 8,
+        "project_name": null,
+        "active": 1,
+        "created_at": "2025-10-31 06:05:23"
+      },
+      {
+        "id": 5,
+        "boss_id": 2,
+        "consultant_id": 4,
+        "project_name": null,
+        "active": 1,
+        "created_at": "2025-12-04 05:40:06"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "ENAM",
+      "served_by_colo": "EWR",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.1781
+      },
+      "duration": 0.1781,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 2318336,
+      "rows_read": 3,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

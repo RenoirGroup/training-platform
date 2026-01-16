@@ -1,0 +1,17 @@
+INSERT INTO user_progress (id, user_id, level_id, pathway_id, status, started_at, completed_at, cohort_id) VALUES (1, 3, 7, 1, 'completed', '2025-11-04 03:23:53', '2025-11-12 05:51:26', 1);
+INSERT INTO user_progress (id, user_id, level_id, pathway_id, status, started_at, completed_at, cohort_id) VALUES (2, 3, 6, 1, 'completed', '2025-10-31 04:53:47', '2025-11-04 02:44:53', 1);
+INSERT INTO user_progress (id, user_id, level_id, pathway_id, status, started_at, completed_at, cohort_id) VALUES (3, 4, 6, 1, 'unlocked', NULL, NULL, 1);
+INSERT INTO user_progress (id, user_id, level_id, pathway_id, status, started_at, completed_at, cohort_id) VALUES (4, 8, 6, 1, 'completed', '2025-10-31 06:07:36', '2025-10-31 07:54:39', 1);
+INSERT INTO user_progress (id, user_id, level_id, pathway_id, status, started_at, completed_at, cohort_id) VALUES (5, 8, 7, 1, 'in_progress', '2025-11-03 05:38:03', NULL, 1);
+INSERT INTO user_progress (id, user_id, level_id, pathway_id, status, started_at, completed_at, cohort_id) VALUES (6, 11, 6, 1, 'completed', '2025-11-10 02:25:10', '2025-11-10 02:25:38', 1);
+INSERT INTO user_progress (id, user_id, level_id, pathway_id, status, started_at, completed_at, cohort_id) VALUES (7, 11, 7, 1, 'in_progress', '2025-11-10 02:25:58', NULL, 1);
+INSERT INTO user_progress (id, user_id, level_id, pathway_id, status, started_at, completed_at, cohort_id) VALUES (8, 3, 9, 1, 'in_progress', '2025-11-12 08:39:22', NULL, 1);
+INSERT INTO user_progress (id, user_id, level_id, pathway_id, status, started_at, completed_at, cohort_id) VALUES (9, 1, 20, 5, 'unlocked', NULL, NULL, 1);
+INSERT INTO user_progress (id, user_id, level_id, pathway_id, status, started_at, completed_at, cohort_id) VALUES (10, 2, 20, 5, 'unlocked', NULL, NULL, 1);
+INSERT INTO user_progress (id, user_id, level_id, pathway_id, status, started_at, completed_at, cohort_id) VALUES (11, 3, 20, 5, 'in_progress', '2025-12-08 07:45:21', NULL, 1);
+INSERT INTO user_progress (id, user_id, level_id, pathway_id, status, started_at, completed_at, cohort_id) VALUES (12, 4, 20, 5, 'unlocked', NULL, NULL, 1);
+INSERT INTO user_progress (id, user_id, level_id, pathway_id, status, started_at, completed_at, cohort_id) VALUES (14, 1, 6, 2, 'unlocked', NULL, NULL, 1);
+INSERT INTO user_progress (id, user_id, level_id, pathway_id, status, started_at, completed_at, cohort_id) VALUES (15, 8, 6, 2, 'unlocked', NULL, NULL, 1);
+INSERT INTO user_progress (id, user_id, level_id, pathway_id, status, started_at, completed_at, cohort_id) VALUES (16, 2, 6, 2, 'unlocked', NULL, NULL, 1);
+INSERT INTO user_progress (id, user_id, level_id, pathway_id, status, started_at, completed_at, cohort_id) VALUES (17, 4, 9, 6, 'unlocked', NULL, NULL, 1);
+INSERT INTO user_progress (id, user_id, level_id, pathway_id, status, started_at, completed_at, cohort_id) VALUES (18, 3, 27, 7, 'in_progress', '2026-01-15 14:00:30', NULL, 1);

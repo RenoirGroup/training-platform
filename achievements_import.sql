@@ -1,0 +1,15 @@
+INSERT INTO achievements (id, code, title, description, icon, points) VALUES (1, 'first_test', 'First Steps', 'Complete your first test', '🎯', 10);
+INSERT INTO achievements (id, code, title, description, icon, points) VALUES (2, 'streak_10', 'Dedicated Learner', 'Maintain a 10-day streak', '🔥', 50);
+INSERT INTO achievements (id, code, title, description, icon, points) VALUES (3, 'streak_50', 'Training Master', 'Maintain a 50-day streak', '💪', 200);
+INSERT INTO achievements (id, code, title, description, icon, points) VALUES (4, 'streak_100', 'Legend', 'Maintain a 100-day streak', '👑', 500);
+INSERT INTO achievements (id, code, title, description, icon, points) VALUES (5, 'level_10', 'Rising Star', 'Complete 10 levels', '⭐', 100);
+INSERT INTO achievements (id, code, title, description, icon, points) VALUES (6, 'level_25', 'Expert', 'Complete 25 levels', '🏆', 250);
+INSERT INTO achievements (id, code, title, description, icon, points) VALUES (7, 'level_50', 'Master', 'Complete 50 levels', '💎', 500);
+INSERT INTO achievements (id, code, title, description, icon, points) VALUES (8, 'perfect_score', 'Perfectionist', 'Get 100% on a test', '💯', 25);
+INSERT INTO achievements (id, code, title, description, icon, points) VALUES (9, 'speed_demon', 'Speed Demon', 'Complete a test in under 5 minutes', '⚡', 30);
+INSERT INTO achievements (id, code, title, description, icon, points) VALUES (10, 'comeback', 'Never Give Up', 'Pass a test after failing', '💪', 20);
+INSERT INTO achievements (id, code, title, description, icon, points) VALUES (11, 'boss_complete', 'Boss Slayer', 'Complete your first boss level', '🐉', 75);
+INSERT INTO achievements (id, code, title, description, icon, points) VALUES (12, 'boss_perfect', 'Boss Master', 'Get all boss levels approved without rejection', '👑', 150);
+INSERT INTO achievements (id, code, title, description, icon, points) VALUES (13, 'top_10', 'Elite Performer', 'Reach top 10 on leaderboard', '🥇', 100);
+INSERT INTO achievements (id, code, title, description, icon, points) VALUES (14, 'top_3', 'Podium Finisher', 'Reach top 3 on leaderboard', '🥈', 200);
+INSERT INTO achievements (id, code, title, description, icon, points) VALUES (15, 'rank_1', 'Champion', 'Reach #1 on leaderboard', '🏅', 500);

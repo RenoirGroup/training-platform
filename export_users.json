@@ -1,0 +1,120 @@
+[
+  {
+    "results": [
+      {
+        "id": 1,
+        "email": "admin@training.com",
+        "password_hash": "$2a$10$bYp0rjnlmeQK5teL0zSQE.i.zhAD2zEICiVN57O/Z2FfSirmTE222",
+        "name": "System Admin",
+        "role": "admin",
+        "boss_id": null,
+        "active": 1,
+        "created_at": "2025-10-28 09:04:38",
+        "last_login": "2026-01-16 05:06:57",
+        "preferred_language": "en-US",
+        "division": null,
+        "region": null,
+        "location": null,
+        "title": null
+      },
+      {
+        "id": 2,
+        "email": "boss@training.com",
+        "password_hash": "$2a$10$hpk4FXC0EXumkILY3qhOf.K6xYpybs7ZVWgj8UCYW4PFlcrSAhOeq",
+        "name": "Jane Boss",
+        "role": "boss",
+        "boss_id": null,
+        "active": 1,
+        "created_at": "2025-10-28 09:04:47",
+        "last_login": "2025-12-10 08:51:18",
+        "preferred_language": "en-US",
+        "division": null,
+        "region": null,
+        "location": null,
+        "title": null
+      },
+      {
+        "id": 3,
+        "email": "consultant1@training.com",
+        "password_hash": "$2a$10$J76AEMkd1igkiEcjTSumLebNex5wSO4WlfasKlryMQKOGO9nFH.Ye",
+        "name": "John Consultant",
+        "role": "consultant",
+        "boss_id": 2,
+        "active": 1,
+        "created_at": "2025-10-28 09:04:47",
+        "last_login": "2026-01-15 13:59:48",
+        "preferred_language": "en-US",
+        "division": null,
+        "region": null,
+        "location": null,
+        "title": null
+      },
+      {
+        "id": 4,
+        "email": "consultant2@training.com",
+        "password_hash": "$2a$10$J76AEMkd1igkiEcjTSumLebNex5wSO4WlfasKlryMQKOGO9nFH.Ye",
+        "name": "Sarah Smith",
+        "role": "consultant",
+        "boss_id": 2,
+        "active": 1,
+        "created_at": "2025-10-28 09:04:47",
+        "last_login": null,
+        "preferred_language": "en-US",
+        "division": null,
+        "region": null,
+        "location": null,
+        "title": null
+      },
+      {
+        "id": 8,
+        "email": "consultant5@training.com",
+        "password_hash": "$2a$10$VFyiqZK/P5t1/LAfyqbGiOspTn.m4lbbWw5gKVLPXEHcBZ5jfzywC",
+        "name": "Aryna Sabalenka",
+        "role": "consultant",
+        "boss_id": 2,
+        "active": 1,
+        "created_at": "2025-10-31 06:04:50",
+        "last_login": "2025-12-08 08:04:22",
+        "preferred_language": "en-US",
+        "division": null,
+        "region": null,
+        "location": null,
+        "title": null
+      },
+      {
+        "id": 11,
+        "email": "tester@training.com",
+        "password_hash": "$2a$10$92TWKeNeh.2WXRcLlaW3F.B5Z6SCsv6.McsBNGM0YKmT.1WYSrYXO",
+        "name": "Tester",
+        "role": "consultant",
+        "boss_id": 2,
+        "active": 1,
+        "created_at": "2025-11-10 02:24:36",
+        "last_login": "2025-11-10 02:25:01",
+        "preferred_language": "en-US",
+        "division": "OXD",
+        "region": "SEA",
+        "location": "Malaysia",
+        "title": "Consultant"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "ENAM",
+      "served_by_colo": "EWR",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.1926
+      },
+      "duration": 0.1926,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 2318336,
+      "rows_read": 6,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

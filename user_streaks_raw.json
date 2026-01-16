@@ -1,0 +1,108 @@
+[
+  {
+    "results": [
+      {
+        "id": 1,
+        "user_id": 3,
+        "current_login_streak": 1,
+        "longest_login_streak": 5,
+        "current_test_streak": 1,
+        "longest_test_streak": 1,
+        "current_practice_streak": 0,
+        "longest_practice_streak": 0,
+        "last_login_date": "2026-01-15",
+        "last_test_date": "2025-11-12",
+        "last_practice_date": null,
+        "total_points": 65
+      },
+      {
+        "id": 2,
+        "user_id": 4,
+        "current_login_streak": 0,
+        "longest_login_streak": 0,
+        "current_test_streak": 0,
+        "longest_test_streak": 0,
+        "current_practice_streak": 0,
+        "longest_practice_streak": 0,
+        "last_login_date": null,
+        "last_test_date": null,
+        "last_practice_date": null,
+        "total_points": 0
+      },
+      {
+        "id": 3,
+        "user_id": 1,
+        "current_login_streak": 2,
+        "longest_login_streak": 6,
+        "current_test_streak": 0,
+        "longest_test_streak": 0,
+        "current_practice_streak": 0,
+        "longest_practice_streak": 0,
+        "last_login_date": "2026-01-16",
+        "last_test_date": null,
+        "last_practice_date": null,
+        "total_points": 0
+      },
+      {
+        "id": 4,
+        "user_id": 2,
+        "current_login_streak": 1,
+        "longest_login_streak": 4,
+        "current_test_streak": 0,
+        "longest_test_streak": 0,
+        "current_practice_streak": 0,
+        "longest_practice_streak": 0,
+        "last_login_date": "2025-12-10",
+        "last_test_date": null,
+        "last_practice_date": null,
+        "total_points": 0
+      },
+      {
+        "id": 8,
+        "user_id": 8,
+        "current_login_streak": 1,
+        "longest_login_streak": 2,
+        "current_test_streak": 1,
+        "longest_test_streak": 1,
+        "current_practice_streak": 0,
+        "longest_practice_streak": 0,
+        "last_login_date": "2025-12-08",
+        "last_test_date": "2025-10-31",
+        "last_practice_date": null,
+        "total_points": 45
+      },
+      {
+        "id": 11,
+        "user_id": 11,
+        "current_login_streak": 1,
+        "longest_login_streak": 1,
+        "current_test_streak": 1,
+        "longest_test_streak": 1,
+        "current_practice_streak": 0,
+        "longest_practice_streak": 0,
+        "last_login_date": "2025-11-10",
+        "last_test_date": "2025-11-10",
+        "last_practice_date": null,
+        "total_points": 45
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "ENAM",
+      "served_by_colo": "EWR",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.1991
+      },
+      "duration": 0.1991,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 2318336,
+      "rows_read": 6,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

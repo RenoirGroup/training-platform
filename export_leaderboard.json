@@ -1,0 +1,64 @@
+[
+  {
+    "results": [
+      {
+        "id": 1,
+        "user_id": 3,
+        "rungs_completed": 2,
+        "days_used": 0,
+        "total_points": 65,
+        "rank": 2,
+        "league": "bronze",
+        "updated_at": "2025-11-12 05:51:27"
+      },
+      {
+        "id": 2,
+        "user_id": 4,
+        "rungs_completed": 0,
+        "days_used": 0,
+        "total_points": 0,
+        "rank": 3,
+        "league": "bronze",
+        "updated_at": "2025-10-28 09:04:47"
+      },
+      {
+        "id": 6,
+        "user_id": 8,
+        "rungs_completed": 1,
+        "days_used": 0,
+        "total_points": 45,
+        "rank": 1,
+        "league": "bronze",
+        "updated_at": "2025-10-31 07:54:40"
+      },
+      {
+        "id": 9,
+        "user_id": 11,
+        "rungs_completed": 1,
+        "days_used": 0,
+        "total_points": 10,
+        "rank": null,
+        "league": "bronze",
+        "updated_at": "2025-11-10 02:25:40"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "ENAM",
+      "served_by_colo": "EWR",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.2086
+      },
+      "duration": 0.2086,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 2318336,
+      "rows_read": 4,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

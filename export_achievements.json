@@ -1,0 +1,144 @@
+[
+  {
+    "results": [
+      {
+        "id": 1,
+        "code": "first_test",
+        "title": "First Steps",
+        "description": "Complete your first test",
+        "icon": "🎯",
+        "points": 10
+      },
+      {
+        "id": 2,
+        "code": "streak_10",
+        "title": "Dedicated Learner",
+        "description": "Maintain a 10-day streak",
+        "icon": "🔥",
+        "points": 50
+      },
+      {
+        "id": 3,
+        "code": "streak_50",
+        "title": "Training Master",
+        "description": "Maintain a 50-day streak",
+        "icon": "💪",
+        "points": 200
+      },
+      {
+        "id": 4,
+        "code": "streak_100",
+        "title": "Legend",
+        "description": "Maintain a 100-day streak",
+        "icon": "👑",
+        "points": 500
+      },
+      {
+        "id": 5,
+        "code": "level_10",
+        "title": "Rising Star",
+        "description": "Complete 10 levels",
+        "icon": "⭐",
+        "points": 100
+      },
+      {
+        "id": 6,
+        "code": "level_25",
+        "title": "Expert",
+        "description": "Complete 25 levels",
+        "icon": "🏆",
+        "points": 250
+      },
+      {
+        "id": 7,
+        "code": "level_50",
+        "title": "Master",
+        "description": "Complete 50 levels",
+        "icon": "💎",
+        "points": 500
+      },
+      {
+        "id": 8,
+        "code": "perfect_score",
+        "title": "Perfectionist",
+        "description": "Get 100% on a test",
+        "icon": "💯",
+        "points": 25
+      },
+      {
+        "id": 9,
+        "code": "speed_demon",
+        "title": "Speed Demon",
+        "description": "Complete a test in under 5 minutes",
+        "icon": "⚡",
+        "points": 30
+      },
+      {
+        "id": 10,
+        "code": "comeback",
+        "title": "Never Give Up",
+        "description": "Pass a test after failing",
+        "icon": "💪",
+        "points": 20
+      },
+      {
+        "id": 11,
+        "code": "boss_complete",
+        "title": "Boss Slayer",
+        "description": "Complete your first boss level",
+        "icon": "🐉",
+        "points": 75
+      },
+      {
+        "id": 12,
+        "code": "boss_perfect",
+        "title": "Boss Master",
+        "description": "Get all boss levels approved without rejection",
+        "icon": "👑",
+        "points": 150
+      },
+      {
+        "id": 13,
+        "code": "top_10",
+        "title": "Elite Performer",
+        "description": "Reach top 10 on leaderboard",
+        "icon": "🥇",
+        "points": 100
+      },
+      {
+        "id": 14,
+        "code": "top_3",
+        "title": "Podium Finisher",
+        "description": "Reach top 3 on leaderboard",
+        "icon": "🥈",
+        "points": 200
+      },
+      {
+        "id": 15,
+        "code": "rank_1",
+        "title": "Champion",
+        "description": "Reach #1 on leaderboard",
+        "icon": "🏅",
+        "points": 500
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "ENAM",
+      "served_by_colo": "EWR",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.23
+      },
+      "duration": 0.23,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 2318336,
+      "rows_read": 15,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

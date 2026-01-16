@@ -1,0 +1,90 @@
+[
+  {
+    "results": [
+      {
+        "id": 1,
+        "title": "OXD",
+        "description": "Operational Excellence Development - Core consulting skills and methodologies",
+        "icon": "fa-chart-line",
+        "color_primary": "#1524A9",
+        "color_secondary": "#0077FF",
+        "order_index": 1,
+        "active": 1,
+        "created_at": "2025-12-02 12:40:40"
+      },
+      {
+        "id": 2,
+        "title": "YCP Introductory Training Path",
+        "description": "Introductory basic training for all YCP professionals (Test Path- Keith!)",
+        "icon": "fa-pencil-ruler",
+        "color_primary": "#1524a9",
+        "color_secondary": "#0077ff",
+        "order_index": 2,
+        "active": 1,
+        "created_at": "2025-12-03 00:09:58"
+      },
+      {
+        "id": 4,
+        "title": "M&A ",
+        "description": "New M&A module",
+        "icon": "fa-flag",
+        "color_primary": "#1524a9",
+        "color_secondary": "#0077ff",
+        "order_index": 1,
+        "active": 1,
+        "created_at": "2025-12-04 06:09:52"
+      },
+      {
+        "id": 5,
+        "title": "New Joiner Training - Non-Technical (Test, Hiroko)",
+        "description": "Quarterly NJT for new hires for the past 3 months.",
+        "icon": "fa-rocket",
+        "color_primary": "#1524a9",
+        "color_secondary": "#0077ff",
+        "order_index": 1,
+        "active": 1,
+        "created_at": "2025-12-04 08:08:50"
+      },
+      {
+        "id": 6,
+        "title": "Digital Strategy",
+        "description": "End-to-end service from high level strategy, operational excellence, to digital solutions",
+        "icon": "fa-medal",
+        "color_primary": "#a515a8",
+        "color_secondary": "#00ffd5",
+        "order_index": 1,
+        "active": 1,
+        "created_at": "2025-12-08 07:51:59"
+      },
+      {
+        "id": 7,
+        "title": "Intensive Training - Feb 2026 Cohort",
+        "description": "Program for those who joined as MSD Associates and Analysts between Oct and Dec 2025.",
+        "icon": "fa-fire",
+        "color_primary": "#1524a9",
+        "color_secondary": "#0077ff",
+        "order_index": 1,
+        "active": 1,
+        "created_at": "2026-01-15 13:16:31"
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "ENAM",
+      "served_by_colo": "EWR",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.2291
+      },
+      "duration": 0.2291,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 2318336,
+      "rows_read": 6,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

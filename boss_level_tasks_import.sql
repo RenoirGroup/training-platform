@@ -1,0 +1,6 @@
+INSERT INTO boss_level_tasks (id, level_id, task_description, order_index, created_at) VALUES (4, 19, 'Has the consultant developed an MCS brown paper with the client (with limited PM / Analyst support)?', 1, '2025-10-31 02:40:27');
+INSERT INTO boss_level_tasks (id, level_id, task_description, order_index, created_at) VALUES (5, 19, 'Has the consultant successfully run a client session to critique the MCS brown paper', 2, '2025-10-31 02:41:11');
+INSERT INTO boss_level_tasks (id, level_id, task_description, order_index, created_at) VALUES (6, 19, 'Has the consultant developed a comprehensive opportunities log, based on the findings of the MCS?', 3, '2025-10-31 02:42:11');
+INSERT INTO boss_level_tasks (id, level_id, task_description, order_index, created_at) VALUES (7, 4, 'Can the consultant articulate the Renoir process, including the major stages and stage gates?', 1, '2025-10-31 02:43:46');
+INSERT INTO boss_level_tasks (id, level_id, task_description, order_index, created_at) VALUES (8, 4, 'Has the consultant been able to put together a MAT charter for their area?', 2, '2025-10-31 02:44:39');
+INSERT INTO boss_level_tasks (id, level_id, task_description, order_index, created_at) VALUES (10, 7, 'Review Tests & Questions', 1, '2025-11-03 09:36:31');

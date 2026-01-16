@@ -1,0 +1,2 @@
+INSERT INTO cohort_groups (id, name, description, manager_id, created_at, updated_at, active) VALUES (1, 'Legacy Enrollments', 'Auto-created cohort for existing pathway enrollments before cohort system', NULL, '2026-01-16 03:50:27', '2026-01-16 03:50:27', 1);
+INSERT INTO cohort_groups (id, name, description, manager_id, created_at, updated_at, active) VALUES (2, 'Intensive Training 2026Q1', 'New associates and analysts in MSD who joined between Oct and Dec 2025', 1, '2026-01-16 05:50:34', '2026-01-16 05:50:34', 1);

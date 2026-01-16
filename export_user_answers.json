@@ -1,0 +1,3417 @@
+[
+  {
+    "results": [
+      {
+        "id": 11,
+        "attempt_id": 3,
+        "question_id": 4,
+        "answer_option_id": 33,
+        "answer_text": "33",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 12,
+        "attempt_id": 3,
+        "question_id": 6,
+        "answer_option_id": 37,
+        "answer_text": "37",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 13,
+        "attempt_id": 3,
+        "question_id": 8,
+        "answer_option_id": 39,
+        "answer_text": "39",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 14,
+        "attempt_id": 3,
+        "question_id": 9,
+        "answer_option_id": null,
+        "answer_text": "[\"Control\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 15,
+        "attempt_id": 4,
+        "question_id": 4,
+        "answer_option_id": 33,
+        "answer_text": "33",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 16,
+        "attempt_id": 4,
+        "question_id": 6,
+        "answer_option_id": 37,
+        "answer_text": "37",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 17,
+        "attempt_id": 4,
+        "question_id": 8,
+        "answer_option_id": 39,
+        "answer_text": "39",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 18,
+        "attempt_id": 4,
+        "question_id": 9,
+        "answer_option_id": null,
+        "answer_text": "[\"Control\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 19,
+        "attempt_id": 5,
+        "question_id": 4,
+        "answer_option_id": 33,
+        "answer_text": "33",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 20,
+        "attempt_id": 5,
+        "question_id": 6,
+        "answer_option_id": 36,
+        "answer_text": "36",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 21,
+        "attempt_id": 5,
+        "question_id": 8,
+        "answer_option_id": 39,
+        "answer_text": "39",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 22,
+        "attempt_id": 5,
+        "question_id": 9,
+        "answer_option_id": null,
+        "answer_text": "[\"Control\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 23,
+        "attempt_id": 6,
+        "question_id": 4,
+        "answer_option_id": 33,
+        "answer_text": "33",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 24,
+        "attempt_id": 6,
+        "question_id": 6,
+        "answer_option_id": 37,
+        "answer_text": "37",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 25,
+        "attempt_id": 6,
+        "question_id": 8,
+        "answer_option_id": 39,
+        "answer_text": "39",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 26,
+        "attempt_id": 6,
+        "question_id": 9,
+        "answer_option_id": null,
+        "answer_text": "[\"Control\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 27,
+        "attempt_id": 7,
+        "question_id": 4,
+        "answer_option_id": 33,
+        "answer_text": "33",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 28,
+        "attempt_id": 7,
+        "question_id": 6,
+        "answer_option_id": 37,
+        "answer_text": "37",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 29,
+        "attempt_id": 7,
+        "question_id": 8,
+        "answer_option_id": 39,
+        "answer_text": "39",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 30,
+        "attempt_id": 7,
+        "question_id": 9,
+        "answer_option_id": null,
+        "answer_text": "[\"Control\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 31,
+        "attempt_id": 8,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"41\",\"43\",\"45\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 32,
+        "attempt_id": 8,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis\",\"Focus Process\",\"Governance\",\"Development\",\"Implementation\",\"Sustainability\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 33,
+        "attempt_id": 8,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":11,\"y\":59,\"xPercent\":1.7684887459807075,\"yPercent\":11.799999999999999},{\"label\":\"Straight to Work\",\"x\":13,\"y\":137,\"xPercent\":2.090032154340836,\"yPercent\":27.400000000000002},{\"label\":\"Transition\",\"x\":32,\"y\":71,\"xPercent\":5.144694533762058,\"yPercent\":14.2},{\"label\":\"Approach\",\"x\":49,\"y\":52,\"xPercent\":7.877813504823152,\"yPercent\":10.4},{\"label\":\"Layout\",\"x\":69,\"y\":50,\"xPercent\":11.093247588424438,\"yPercent\":10},{\"label\":\"Diagnostics\",\"x\":90,\"y\":62,\"xPercent\":14.469453376205788,\"yPercent\":12.4},{\"label\":\"Evaluation\",\"x\":89,\"y\":128,\"xPercent\":14.308681672025724,\"yPercent\":25.6},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":112,\"y\":49,\"xPercent\":18.006430868167204,\"yPercent\":9.8},{\"label\":\"System\",\"x\":133,\"y\":67,\"xPercent\":21.382636655948552,\"yPercent\":13.4},{\"label\":\"Installation\",\"x\":154,\"y\":52,\"xPercent\":24.758842443729904,\"yPercent\":10.4},{\"label\":\"Training\",\"x\":156,\"y\":134,\"xPercent\":25.080385852090032,\"yPercent\":26.8},{\"label\":\"Audit\",\"x\":175,\"y\":53,\"xPercent\":28.135048231511256,\"yPercent\":10.6},{\"label\":\"Aftercare\",\"x\":198,\"y\":64,\"xPercent\":31.832797427652732,\"yPercent\":12.8}]",
+        "is_correct": 1,
+        "points_earned": 5
+      },
+      {
+        "id": 34,
+        "attempt_id": 8,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": "[\"46\",\"47\",\"48\",\"49\",\"50\",\"51\",\"52\",\"53\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 35,
+        "attempt_id": 8,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": "{\"Need\":\"Install the necessary skills and process to improve availability\",\"Scope\":\"Industry remains very competitive\",\"Measures\":\"Commit & Install (week 9-12)\",\"Roles\":\"External factors (supply, demand, cost increases...)\",\"Vision\":\"Sponsor: Mr Brown\",\"Risk\":\"Supervisory training and on-the-job coaching\",\"Timeline\":\"OTIF in Packaging\",\"Accountability\":\"I hearby assume accountability..\"}",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 36,
+        "attempt_id": 8,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": "[\"Base\",\"Value\",\"Mechanism\",\"Value Driver\",\"KPIs\",\"Opportunity\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 37,
+        "attempt_id": 8,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"managing\",\"project\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 38,
+        "attempt_id": 8,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": "[\"Transition & Approach\",\"Layout\",\"Mid-Implementation\",\"SIM\",\"Completion\",\"Pre-SIM\",\"Pre-Implementation\",\"Analysis Operations Consultation\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 39,
+        "attempt_id": 8,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "6",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 40,
+        "attempt_id": 8,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 41,
+        "attempt_id": 9,
+        "question_id": 4,
+        "answer_option_id": 33,
+        "answer_text": "33",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 42,
+        "attempt_id": 9,
+        "question_id": 6,
+        "answer_option_id": 37,
+        "answer_text": "37",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 43,
+        "attempt_id": 9,
+        "question_id": 8,
+        "answer_option_id": 39,
+        "answer_text": "39",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 44,
+        "attempt_id": 9,
+        "question_id": 9,
+        "answer_option_id": null,
+        "answer_text": "[\"Control\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 45,
+        "attempt_id": 10,
+        "question_id": 4,
+        "answer_option_id": 33,
+        "answer_text": "33",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 46,
+        "attempt_id": 10,
+        "question_id": 6,
+        "answer_option_id": 37,
+        "answer_text": "37",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 47,
+        "attempt_id": 10,
+        "question_id": 8,
+        "answer_option_id": 39,
+        "answer_text": "39",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 48,
+        "attempt_id": 10,
+        "question_id": 9,
+        "answer_option_id": null,
+        "answer_text": "[\"Control\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 49,
+        "attempt_id": 11,
+        "question_id": 4,
+        "answer_option_id": 33,
+        "answer_text": "33",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 50,
+        "attempt_id": 11,
+        "question_id": 6,
+        "answer_option_id": 37,
+        "answer_text": "37",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 51,
+        "attempt_id": 11,
+        "question_id": 8,
+        "answer_option_id": 40,
+        "answer_text": "40",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 52,
+        "attempt_id": 11,
+        "question_id": 9,
+        "answer_option_id": null,
+        "answer_text": "[\"controls\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 53,
+        "attempt_id": 12,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"41\",\"42\",\"43\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 54,
+        "attempt_id": 12,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis\",\"Focus Process\",\"Governance\",\"Implementation\",\"Development\",\"Sustainability\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 55,
+        "attempt_id": 12,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":82,\"y\":150,\"xPercent\":9.35005701254276,\"yPercent\":30},{\"label\":\"Straight to Work\",\"x\":68,\"y\":185,\"xPercent\":7.753705815279361,\"yPercent\":37},{\"label\":\"Transition\",\"x\":159,\"y\":149,\"xPercent\":18.129988597491447,\"yPercent\":29.799999999999997},{\"label\":\"Approach\",\"x\":232,\"y\":141,\"xPercent\":26.45381984036488,\"yPercent\":28.199999999999996},{\"label\":\"Layout\",\"x\":283,\"y\":156,\"xPercent\":32.2690992018244,\"yPercent\":31.2},{\"label\":\"Diagnostics\",\"x\":378,\"y\":131,\"xPercent\":43.10148232611174,\"yPercent\":26.200000000000003},{\"label\":\"Evaluation\",\"x\":362,\"y\":197,\"xPercent\":41.27708095781072,\"yPercent\":39.4},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":465,\"y\":129,\"xPercent\":53.02166476624858,\"yPercent\":25.8},{\"label\":\"System\",\"x\":570,\"y\":153,\"xPercent\":64.99429874572405,\"yPercent\":30.599999999999998},{\"label\":\"Installation\",\"x\":668,\"y\":146,\"xPercent\":76.16875712656784,\"yPercent\":29.2},{\"label\":\"Training\",\"x\":629,\"y\":206,\"xPercent\":71.72177879133409,\"yPercent\":41.199999999999996},{\"label\":\"Audit\",\"x\":741,\"y\":146,\"xPercent\":84.49258836944128,\"yPercent\":29.2},{\"label\":\"Aftercare\",\"x\":817,\"y\":144,\"xPercent\":93.15849486887116,\"yPercent\":28.799999999999997}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 56,
+        "attempt_id": 12,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": "[\"46\",\"47\",\"48\",\"49\",\"50\",\"51\",\"52\",\"53\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 57,
+        "attempt_id": 12,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": "{\"Need\":\"Industry remains very competitive\",\"Scope\":\"Supervisory training and on-the-job coaching\",\"Measures\":\"OTIF in Packaging\",\"Roles\":\"I hearby assume accountability..\",\"Vision\":\"Sponsor: Mr Brown\",\"Risk\":\"Commit & Install (week 9-12)\",\"Timeline\":\"Install the necessary skills and process to improve availability\",\"Accountability\":\"External factors (supply, demand, cost increases...)\"}",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 58,
+        "attempt_id": 12,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": "[\"Value\",\"Mechanism\",\"Opportunity\",\"KPIs\",\"Value Driver\",\"Base\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 59,
+        "attempt_id": 12,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"management\",\"process\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 60,
+        "attempt_id": 12,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": "[\"Completion\",\"Pre-SIM\",\"Layout\",\"Transition & Approach\",\"Pre-Implementation\",\"Analysis Operations Consultation\",\"Mid-Implementation\",\"SIM\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 61,
+        "attempt_id": 12,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "6",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 62,
+        "attempt_id": 12,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 63,
+        "attempt_id": 13,
+        "question_id": 4,
+        "answer_option_id": 33,
+        "answer_text": "33",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 64,
+        "attempt_id": 13,
+        "question_id": 6,
+        "answer_option_id": 36,
+        "answer_text": "36",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 65,
+        "attempt_id": 13,
+        "question_id": 8,
+        "answer_option_id": 39,
+        "answer_text": "39",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 66,
+        "attempt_id": 13,
+        "question_id": 9,
+        "answer_option_id": null,
+        "answer_text": "[\"Control\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 67,
+        "attempt_id": 14,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"41\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 68,
+        "attempt_id": 14,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis\",\"Focus Process\",\"Governance\",\"Development\",\"Implementation\",\"Sustainability\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 69,
+        "attempt_id": 14,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":49,\"y\":180,\"xPercent\":6.9306930693069315,\"yPercent\":36},{\"label\":\"Straight to Work\",\"x\":393,\"y\":161,\"xPercent\":55.58698727015559,\"yPercent\":32.2},{\"label\":\"Audit\",\"x\":598,\"y\":168,\"xPercent\":84.58274398868458,\"yPercent\":33.6},{\"label\":\"Aftercare\",\"x\":677,\"y\":180,\"xPercent\":95.75671852899575,\"yPercent\":36},{\"label\":\"Training\",\"x\":516,\"y\":202,\"xPercent\":72.98444130127298,\"yPercent\":40.400000000000006},{\"label\":\"Transition\",\"x\":134,\"y\":175,\"xPercent\":18.95332390381895,\"yPercent\":35},{\"label\":\"Approach\",\"x\":177,\"y\":171,\"xPercent\":25.035360678925034,\"yPercent\":34.2},{\"label\":\"Layout\",\"x\":246,\"y\":157,\"xPercent\":34.794908062234796,\"yPercent\":31.4},{\"label\":\"Diagnostics\",\"x\":308,\"y\":157,\"xPercent\":43.56435643564357,\"yPercent\":31.4},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":340,\"y\":198,\"xPercent\":48.090523338048094,\"yPercent\":39.6},{\"label\":\"Installation\",\"x\":505,\"y\":171,\"xPercent\":71.42857142857143,\"yPercent\":34.2},{\"label\":\"System\",\"x\":420,\"y\":172,\"xPercent\":59.4059405940594,\"yPercent\":34.4},{\"label\":\"Evaluation\",\"x\":444,\"y\":150,\"xPercent\":62.800565770862804,\"yPercent\":30}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 70,
+        "attempt_id": 14,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": "[\"51\",\"53\",\"54\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 71,
+        "attempt_id": 14,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": "{\"Need\":\"Supervisory training and on-the-job coaching\",\"Scope\":\"OTIF in Packaging\",\"Measures\":\"External factors (supply, demand, cost increases...)\",\"Roles\":\"Sponsor: Mr Brown\",\"Vision\":\"Install the necessary skills and process to improve availability\",\"Risk\":\"Industry remains very competitive\",\"Timeline\":\"Commit & Install (week 9-12)\",\"Accountability\":\"I hearby assume accountability..\"}",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 72,
+        "attempt_id": 14,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": "[\"Base\",\"KPIs\",\"Opportunity\",\"Value\",\"Mechanism\",\"Value Driver\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 73,
+        "attempt_id": 14,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"management\",\"practice\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 74,
+        "attempt_id": 14,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": "[\"Transition & Approach\",\"Analysis Operations Consultation\",\"Pre-SIM\",\"SIM\",\"Layout\",\"Pre-Implementation\",\"Mid-Implementation\",\"Completion\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 75,
+        "attempt_id": 14,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "4",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 76,
+        "attempt_id": 14,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 77,
+        "attempt_id": 15,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"41\",\"43\",\"45\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 78,
+        "attempt_id": 15,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis\",\"Governance\",\"Focus Process\",\"Development\",\"Implementation\",\"Sustainability\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 79,
+        "attempt_id": 15,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":26,\"y\":152,\"xPercent\":3.6775106082036775,\"yPercent\":30.4},{\"label\":\"Diagnostics\",\"x\":101,\"y\":172,\"xPercent\":14.285714285714285,\"yPercent\":34.4},{\"label\":\"Approach\",\"x\":329,\"y\":166,\"xPercent\":46.53465346534654,\"yPercent\":33.2},{\"label\":\"Evaluation\",\"x\":449,\"y\":179,\"xPercent\":63.5077793493635,\"yPercent\":35.8},{\"label\":\"Aftercare\",\"x\":661,\"y\":171,\"xPercent\":93.49363507779348,\"yPercent\":34.2},{\"label\":\"Audit\",\"x\":581,\"y\":183,\"xPercent\":82.17821782178217,\"yPercent\":36.6},{\"label\":\"System\",\"x\":474,\"y\":155,\"xPercent\":67.04384724186704,\"yPercent\":31},{\"label\":\"Installation\",\"x\":541,\"y\":168,\"xPercent\":76.52050919377652,\"yPercent\":33.6},{\"label\":\"Training\",\"x\":532,\"y\":201,\"xPercent\":75.24752475247524,\"yPercent\":40.2},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":311,\"y\":202,\"xPercent\":43.988684582743986,\"yPercent\":40.400000000000006},{\"label\":\"Layout\",\"x\":231,\"y\":159,\"xPercent\":32.67326732673268,\"yPercent\":31.8},{\"label\":\"Straight to Work\",\"x\":205,\"y\":167,\"xPercent\":28.995756718528998,\"yPercent\":33.4},{\"label\":\"Transition\",\"x\":381,\"y\":163,\"xPercent\":53.88967468175389,\"yPercent\":32.6}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 80,
+        "attempt_id": 15,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": "[\"46\",\"47\",\"48\",\"49\",\"50\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 81,
+        "attempt_id": 15,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": "{\"Need\":\"Industry remains very competitive\",\"Scope\":\"Supervisory training and on-the-job coaching\",\"Measures\":\"OTIF in Packaging\",\"Roles\":\"Sponsor: Mr Brown\",\"Vision\":\"Install the necessary skills and process to improve availability\",\"Risk\":\"External factors (supply, demand, cost increases...)\",\"Timeline\":\"Commit & Install (week 9-12)\",\"Accountability\":\"I hearby assume accountability..\"}",
+        "is_correct": 1,
+        "points_earned": 5
+      },
+      {
+        "id": 82,
+        "attempt_id": 15,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": "[\"Value\",\"Mechanism\",\"Value Driver\",\"Opportunity\",\"KPIs\",\"Base\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 83,
+        "attempt_id": 15,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"milestone\",\"plan\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 84,
+        "attempt_id": 15,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis Operations Consultation\",\"Transition & Approach\",\"Layout\",\"Pre-SIM\",\"SIM\",\"Pre-Implementation\",\"Mid-Implementation\",\"Completion\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 85,
+        "attempt_id": 16,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"41\",\"43\",\"45\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 86,
+        "attempt_id": 15,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "7",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 87,
+        "attempt_id": 16,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis\",\"Governance\",\"Focus Process\",\"Development\",\"Implementation\",\"Sustainability\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 88,
+        "attempt_id": 15,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 89,
+        "attempt_id": 16,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":26,\"y\":152,\"xPercent\":3.6775106082036775,\"yPercent\":30.4},{\"label\":\"Diagnostics\",\"x\":101,\"y\":172,\"xPercent\":14.285714285714285,\"yPercent\":34.4},{\"label\":\"Approach\",\"x\":329,\"y\":166,\"xPercent\":46.53465346534654,\"yPercent\":33.2},{\"label\":\"Evaluation\",\"x\":449,\"y\":179,\"xPercent\":63.5077793493635,\"yPercent\":35.8},{\"label\":\"Aftercare\",\"x\":661,\"y\":171,\"xPercent\":93.49363507779348,\"yPercent\":34.2},{\"label\":\"Audit\",\"x\":581,\"y\":183,\"xPercent\":82.17821782178217,\"yPercent\":36.6},{\"label\":\"System\",\"x\":474,\"y\":155,\"xPercent\":67.04384724186704,\"yPercent\":31},{\"label\":\"Installation\",\"x\":541,\"y\":168,\"xPercent\":76.52050919377652,\"yPercent\":33.6},{\"label\":\"Training\",\"x\":532,\"y\":201,\"xPercent\":75.24752475247524,\"yPercent\":40.2},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":311,\"y\":202,\"xPercent\":43.988684582743986,\"yPercent\":40.400000000000006},{\"label\":\"Layout\",\"x\":231,\"y\":159,\"xPercent\":32.67326732673268,\"yPercent\":31.8},{\"label\":\"Straight to Work\",\"x\":205,\"y\":167,\"xPercent\":28.995756718528998,\"yPercent\":33.4},{\"label\":\"Transition\",\"x\":381,\"y\":163,\"xPercent\":53.88967468175389,\"yPercent\":32.6}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 90,
+        "attempt_id": 16,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": "[\"46\",\"47\",\"48\",\"49\",\"50\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 91,
+        "attempt_id": 16,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": "{\"Need\":\"Industry remains very competitive\",\"Scope\":\"Supervisory training and on-the-job coaching\",\"Measures\":\"OTIF in Packaging\",\"Roles\":\"Sponsor: Mr Brown\",\"Vision\":\"Install the necessary skills and process to improve availability\",\"Risk\":\"External factors (supply, demand, cost increases...)\",\"Timeline\":\"Commit & Install (week 9-12)\",\"Accountability\":\"I hearby assume accountability..\"}",
+        "is_correct": 1,
+        "points_earned": 5
+      },
+      {
+        "id": 92,
+        "attempt_id": 16,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": "[\"Value\",\"Mechanism\",\"Value Driver\",\"Opportunity\",\"KPIs\",\"Base\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 93,
+        "attempt_id": 16,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"milestone\",\"plan\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 94,
+        "attempt_id": 16,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis Operations Consultation\",\"Transition & Approach\",\"Layout\",\"Pre-SIM\",\"SIM\",\"Pre-Implementation\",\"Mid-Implementation\",\"Completion\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 95,
+        "attempt_id": 16,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "7",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 96,
+        "attempt_id": 16,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 97,
+        "attempt_id": 17,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"41\",\"43\",\"45\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 98,
+        "attempt_id": 17,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis\",\"Governance\",\"Focus Process\",\"Development\",\"Implementation\",\"Sustainability\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 99,
+        "attempt_id": 17,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":41,\"y\":137,\"xPercent\":4.67502850627138,\"yPercent\":27.400000000000002},{\"label\":\"Straight to Work\",\"x\":68,\"y\":200,\"xPercent\":7.753705815279361,\"yPercent\":40},{\"label\":\"Transition\",\"x\":148,\"y\":147,\"xPercent\":16.875712656784494,\"yPercent\":29.4},{\"label\":\"Approach\",\"x\":238,\"y\":151,\"xPercent\":27.137970353477765,\"yPercent\":30.2},{\"label\":\"Layout\",\"x\":315,\"y\":135,\"xPercent\":35.91790193842645,\"yPercent\":27},{\"label\":\"Diagnostics\",\"x\":408,\"y\":142,\"xPercent\":46.52223489167617,\"yPercent\":28.4},{\"label\":\"Evaluation\",\"x\":378,\"y\":222,\"xPercent\":43.10148232611174,\"yPercent\":44.4},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":474,\"y\":135,\"xPercent\":54.0478905359179,\"yPercent\":27},{\"label\":\"System\",\"x\":566,\"y\":143,\"xPercent\":64.5381984036488,\"yPercent\":28.599999999999998},{\"label\":\"Installation\",\"x\":646,\"y\":132,\"xPercent\":73.66020524515393,\"yPercent\":26.400000000000002},{\"label\":\"Training\",\"x\":639,\"y\":196,\"xPercent\":72.86202964652223,\"yPercent\":39.2},{\"label\":\"Audit\",\"x\":759,\"y\":137,\"xPercent\":86.54503990877993,\"yPercent\":27.400000000000002},{\"label\":\"Aftercare\",\"x\":840,\"y\":157,\"xPercent\":95.78107183580387,\"yPercent\":31.4}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 100,
+        "attempt_id": 17,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": "[\"46\",\"47\",\"48\",\"49\",\"50\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 101,
+        "attempt_id": 17,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": "{\"Need\":\"Industry remains very competitive\",\"Scope\":\"Supervisory training and on-the-job coaching\",\"Measures\":\"OTIF in Packaging\",\"Roles\":\"Sponsor: Mr Brown\",\"Vision\":\"Install the necessary skills and process to improve availability\",\"Risk\":\"External factors (supply, demand, cost increases...)\",\"Timeline\":\"Commit & Install (week 9-12)\",\"Accountability\":\"I hearby assume accountability..\"}",
+        "is_correct": 1,
+        "points_earned": 5
+      },
+      {
+        "id": 102,
+        "attempt_id": 17,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": "[\"Value\",\"Mechanism\",\"Value Driver\",\"Opportunity\",\"KPIs\",\"Base\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 103,
+        "attempt_id": 17,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"milestone\",\"plan\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 104,
+        "attempt_id": 17,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis Operations Consultation\",\"Transition & Approach\",\"Layout\",\"Pre-SIM\",\"SIM\",\"Pre-Implementation\",\"Mid-Implementation\",\"Completion\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 105,
+        "attempt_id": 17,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "7",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 106,
+        "attempt_id": 17,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 107,
+        "attempt_id": 18,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"41\",\"43\",\"45\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 108,
+        "attempt_id": 18,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis\",\"Governance\",\"Focus Process\",\"Development\",\"Implementation\",\"Sustainability\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 109,
+        "attempt_id": 18,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":29,\"y\":125,\"xPercent\":3.30672748004561,\"yPercent\":25},{\"label\":\"Straight to Work\",\"x\":9,\"y\":221,\"xPercent\":1.0262257696693273,\"yPercent\":44.2},{\"label\":\"Transition\",\"x\":156,\"y\":130,\"xPercent\":17.787913340935006,\"yPercent\":26},{\"label\":\"Approach\",\"x\":234,\"y\":158,\"xPercent\":26.68187001140251,\"yPercent\":31.6},{\"label\":\"Layout\",\"x\":298,\"y\":147,\"xPercent\":33.97947548460662,\"yPercent\":29.4},{\"label\":\"Diagnostics\",\"x\":398,\"y\":123,\"xPercent\":45.38198403648803,\"yPercent\":24.6},{\"label\":\"Evaluation\",\"x\":394,\"y\":206,\"xPercent\":44.925883694412775,\"yPercent\":41.199999999999996},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":494,\"y\":137,\"xPercent\":56.32839224629419,\"yPercent\":27.400000000000002},{\"label\":\"System\",\"x\":571,\"y\":151,\"xPercent\":65.10832383124287,\"yPercent\":30.2},{\"label\":\"Installation\",\"x\":640,\"y\":136,\"xPercent\":72.97605473204105,\"yPercent\":27.200000000000003},{\"label\":\"Training\",\"x\":633,\"y\":201,\"xPercent\":72.17787913340935,\"yPercent\":40.2},{\"label\":\"Audit\",\"x\":753,\"y\":137,\"xPercent\":85.86088939566704,\"yPercent\":27.400000000000002},{\"label\":\"Aftercare\",\"x\":788,\"y\":153,\"xPercent\":89.85176738882555,\"yPercent\":30.599999999999998}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 110,
+        "attempt_id": 18,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": "[\"46\",\"47\",\"48\",\"49\",\"50\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 111,
+        "attempt_id": 18,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": "{\"Need\":\"Industry remains very competitive\",\"Scope\":\"Supervisory training and on-the-job coaching\",\"Measures\":\"OTIF in Packaging\",\"Roles\":\"Sponsor: Mr Brown\",\"Vision\":\"Install the necessary skills and process to improve availability\",\"Risk\":\"External factors (supply, demand, cost increases...)\",\"Timeline\":\"Commit & Install (week 9-12)\",\"Accountability\":\"I hearby assume accountability..\"}",
+        "is_correct": 1,
+        "points_earned": 5
+      },
+      {
+        "id": 112,
+        "attempt_id": 18,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": "[\"Value\",\"Mechanism\",\"Value Driver\",\"Opportunity\",\"KPIs\",\"Base\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 113,
+        "attempt_id": 18,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"milestone\",\"plsn\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 114,
+        "attempt_id": 18,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis Operations Consultation\",\"Transition & Approach\",\"Layout\",\"Pre-SIM\",\"SIM\",\"Pre-Implementation\",\"Mid-Implementation\",\"Completion\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 115,
+        "attempt_id": 18,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "7",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 116,
+        "attempt_id": 18,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 117,
+        "attempt_id": 19,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 118,
+        "attempt_id": 19,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 119,
+        "attempt_id": 19,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 120,
+        "attempt_id": 19,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 121,
+        "attempt_id": 19,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 122,
+        "attempt_id": 19,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 123,
+        "attempt_id": 19,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"milestone\",\"plan\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 124,
+        "attempt_id": 19,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 125,
+        "attempt_id": 19,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "7",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 126,
+        "attempt_id": 19,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 127,
+        "attempt_id": 20,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"41\",\"43\",\"45\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 128,
+        "attempt_id": 20,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis\",\"Governance\",\"Focus Process\",\"Development\",\"Implementation\",\"Sustainability\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 129,
+        "attempt_id": 20,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":64,\"y\":152,\"xPercent\":7.297605473204105,\"yPercent\":30.4},{\"label\":\"Straight to Work\",\"x\":50,\"y\":192,\"xPercent\":5.701254275940707,\"yPercent\":38.4},{\"label\":\"Transition\",\"x\":158,\"y\":138,\"xPercent\":18.015963511972636,\"yPercent\":27.6},{\"label\":\"Approach\",\"x\":250,\"y\":137,\"xPercent\":28.506271379703534,\"yPercent\":27.400000000000002},{\"label\":\"Layout\",\"x\":284,\"y\":145,\"xPercent\":32.383124287343215,\"yPercent\":28.999999999999996},{\"label\":\"Diagnostics\",\"x\":371,\"y\":137,\"xPercent\":42.30330672748004,\"yPercent\":27.400000000000002},{\"label\":\"Evaluation\",\"x\":390,\"y\":198,\"xPercent\":44.469783352337515,\"yPercent\":39.6},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":483,\"y\":146,\"xPercent\":55.074116305587225,\"yPercent\":29.2},{\"label\":\"System\",\"x\":558,\"y\":127,\"xPercent\":63.625997719498294,\"yPercent\":25.4},{\"label\":\"Installation\",\"x\":666,\"y\":150,\"xPercent\":75.94070695553022,\"yPercent\":30},{\"label\":\"Training\",\"x\":666,\"y\":187,\"xPercent\":75.94070695553022,\"yPercent\":37.4},{\"label\":\"Audit\",\"x\":738,\"y\":128,\"xPercent\":84.15051311288484,\"yPercent\":25.6},{\"label\":\"Aftercare\",\"x\":825,\"y\":136,\"xPercent\":94.07069555302166,\"yPercent\":27.200000000000003}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 130,
+        "attempt_id": 20,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": "[\"46\",\"47\",\"48\",\"49\",\"50\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 131,
+        "attempt_id": 20,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": "{\"Need\":\"Industry remains very competitive\",\"Scope\":\"Supervisory training and on-the-job coaching\",\"Measures\":\"OTIF in Packaging\",\"Roles\":\"Sponsor: Mr Brown\",\"Vision\":\"Install the necessary skills and process to improve availability\",\"Risk\":\"External factors (supply, demand, cost increases...)\",\"Timeline\":\"Commit & Install (week 9-12)\",\"Accountability\":\"I hearby assume accountability..\"}",
+        "is_correct": 1,
+        "points_earned": 5
+      },
+      {
+        "id": 132,
+        "attempt_id": 20,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": "[\"Value\",\"Mechanism\",\"Value Driver\",\"Opportunity\",\"KPIs\",\"Base\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 133,
+        "attempt_id": 20,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"Milestone\",\"Plan\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 134,
+        "attempt_id": 20,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 135,
+        "attempt_id": 20,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "7",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 136,
+        "attempt_id": 20,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 137,
+        "attempt_id": 21,
+        "question_id": 4,
+        "answer_option_id": 33,
+        "answer_text": "33",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 138,
+        "attempt_id": 21,
+        "question_id": 6,
+        "answer_option_id": 37,
+        "answer_text": "37",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 139,
+        "attempt_id": 21,
+        "question_id": 8,
+        "answer_option_id": 39,
+        "answer_text": "39",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 140,
+        "attempt_id": 21,
+        "question_id": 9,
+        "answer_option_id": null,
+        "answer_text": "[\"Control\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 141,
+        "attempt_id": 22,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"219\",\"220\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 142,
+        "attempt_id": 22,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis\",\"Development\",\"Sales\",\"Governance\",\"Implementation\",\"Focus Process\",\"Sustainability\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 143,
+        "attempt_id": 22,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Straight to Work\",\"x\":196,\"y\":103,\"xPercent\":22.34891676168757,\"yPercent\":20.599999999999998}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 144,
+        "attempt_id": 22,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": "[\"236\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 145,
+        "attempt_id": 22,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": "{\"Vision\":\"External factors (supply, demand, cost increases...)\"}",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 146,
+        "attempt_id": 22,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": "[\"Opportunity\",\"Value\",\"Base\",\"Value Driver\",\"Mechanism\",\"KPIs\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 147,
+        "attempt_id": 22,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"ads\",\"asd\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 148,
+        "attempt_id": 22,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": "[\"Mid-Implementation\",\"Analysis Operations Consultation\",\"SIM\",\"Layout\",\"Completion\",\"Transition & Approach\",\"Pre-Implementation\",\"Pre-SIM\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 149,
+        "attempt_id": 22,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "2",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 150,
+        "attempt_id": 22,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 151,
+        "attempt_id": 23,
+        "question_id": 4,
+        "answer_option_id": 33,
+        "answer_text": "33",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 152,
+        "attempt_id": 23,
+        "question_id": 6,
+        "answer_option_id": 37,
+        "answer_text": "37",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 153,
+        "attempt_id": 23,
+        "question_id": 8,
+        "answer_option_id": 39,
+        "answer_text": "39",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 154,
+        "attempt_id": 23,
+        "question_id": 9,
+        "answer_option_id": null,
+        "answer_text": "[\"Control\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 155,
+        "attempt_id": 24,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"219\",\"221\",\"223\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 156,
+        "attempt_id": 24,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": "[\"Sales\",\"Analysis\",\"Governance\",\"Focus Process\",\"Development\",\"Implementation\",\"Sustainability\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 157,
+        "attempt_id": 24,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":53,\"y\":37,\"xPercent\":6.0295790671217295,\"yPercent\":12.457912457912458},{\"label\":\"Straight to Work\",\"x\":49,\"y\":98,\"xPercent\":5.5745164960182025,\"yPercent\":32.996632996633},{\"label\":\"Transition\",\"x\":150,\"y\":42,\"xPercent\":17.064846416382252,\"yPercent\":14.14141414141414},{\"label\":\"Approach\",\"x\":235,\"y\":42,\"xPercent\":26.7349260523322,\"yPercent\":14.14141414141414},{\"label\":\"Layout\",\"x\":307,\"y\":46,\"xPercent\":34.92605233219568,\"yPercent\":15.488215488215488},{\"label\":\"Diagnostics\",\"x\":383,\"y\":43,\"xPercent\":43.57224118316269,\"yPercent\":14.47811447811448},{\"label\":\"Evaluation\",\"x\":386,\"y\":91,\"xPercent\":43.91353811149033,\"yPercent\":30.63973063973064},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":476,\"y\":40,\"xPercent\":54.152445961319685,\"yPercent\":13.468013468013467},{\"label\":\"System\",\"x\":561,\"y\":42,\"xPercent\":63.82252559726962,\"yPercent\":14.14141414141414},{\"label\":\"Installation\",\"x\":653,\"y\":43,\"xPercent\":74.28896473265074,\"yPercent\":14.47811447811448},{\"label\":\"Training\",\"x\":649,\"y\":89,\"xPercent\":73.83390216154721,\"yPercent\":29.96632996632997},{\"label\":\"Audit\",\"x\":746,\"y\":40,\"xPercent\":84.86916951080774,\"yPercent\":13.468013468013467},{\"label\":\"Aftercare\",\"x\":823,\"y\":44,\"xPercent\":93.62912400455062,\"yPercent\":14.814814814814813}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 158,
+        "attempt_id": 24,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": "[\"233\",\"234\",\"235\",\"236\",\"237\",\"238\",\"239\",\"240\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 159,
+        "attempt_id": 24,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": "{\"Need\":\"Industry remains very competitive\",\"Scope\":\"OTIF in Packaging\",\"Measures\":\"Supervisory training and on-the-job coaching\",\"Roles\":\"Install the necessary skills and process to improve availability\",\"Vision\":\"Commit & Install (week 9-12)\",\"Risk\":\"External factors (supply, demand, cost increases...)\",\"Timeline\":\"I hearby assume accountability..\",\"Accountability\":\"Sponsor: Mr Brown\"}",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 160,
+        "attempt_id": 24,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 161,
+        "attempt_id": 24,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"Milestone\",\"Process\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 162,
+        "attempt_id": 24,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis Operations Consultation\",\"Transition & Approach\",\"Layout\",\"Pre-SIM\",\"SIM\",\"Pre-Implementation\",\"Mid-Implementation\",\"Completion\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 163,
+        "attempt_id": 24,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "7",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 164,
+        "attempt_id": 24,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 165,
+        "attempt_id": 25,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 166,
+        "attempt_id": 25,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 167,
+        "attempt_id": 25,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":48,\"y\":55,\"xPercent\":5.473204104903079,\"yPercent\":18.51851851851852},{\"label\":\"Straight to Work\",\"x\":43,\"y\":96,\"xPercent\":4.903078677309008,\"yPercent\":32.323232323232325},{\"label\":\"Transition\",\"x\":145,\"y\":53,\"xPercent\":16.53363740022805,\"yPercent\":17.845117845117844},{\"label\":\"Approach\",\"x\":228,\"y\":42,\"xPercent\":25.997719498289623,\"yPercent\":14.14141414141414},{\"label\":\"Layout\",\"x\":307,\"y\":42,\"xPercent\":35.00570125427594,\"yPercent\":14.14141414141414},{\"label\":\"Diagnostics\",\"x\":395,\"y\":45,\"xPercent\":45.03990877993159,\"yPercent\":15.151515151515152},{\"label\":\"Evaluation\",\"x\":377,\"y\":98,\"xPercent\":42.98745724059293,\"yPercent\":32.996632996633},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":478,\"y\":39,\"xPercent\":54.50399087799316,\"yPercent\":13.131313131313133},{\"label\":\"System\",\"x\":562,\"y\":32,\"xPercent\":64.08209806157355,\"yPercent\":10.774410774410773},{\"label\":\"Installation\",\"x\":651,\"y\":45,\"xPercent\":74.230330672748,\"yPercent\":15.151515151515152},{\"label\":\"Training\",\"x\":660,\"y\":104,\"xPercent\":75.25655644241733,\"yPercent\":35.01683501683502},{\"label\":\"Audit\",\"x\":737,\"y\":46,\"xPercent\":84.03648802736602,\"yPercent\":15.488215488215488},{\"label\":\"Aftercare\",\"x\":813,\"y\":36,\"xPercent\":92.7023945267959,\"yPercent\":12.121212121212121}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 168,
+        "attempt_id": 25,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 169,
+        "attempt_id": 25,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 170,
+        "attempt_id": 25,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 171,
+        "attempt_id": 25,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\".,\",\".,m\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 172,
+        "attempt_id": 25,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 173,
+        "attempt_id": 25,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "0",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 174,
+        "attempt_id": 25,
+        "question_id": 19,
+        "answer_option_id": 55,
+        "answer_text": "55",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 175,
+        "attempt_id": 26,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"219\",\"221\",\"223\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 176,
+        "attempt_id": 26,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis\",\"Governance\",\"Focus Process\",\"Development\",\"Implementation\",\"Sustainability\",\"Sales\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 177,
+        "attempt_id": 26,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":45,\"y\":32,\"xPercent\":5.131128848346636,\"yPercent\":10.774410774410773},{\"label\":\"Straight to Work\",\"x\":38,\"y\":96,\"xPercent\":4.3329532497149374,\"yPercent\":32.323232323232325},{\"label\":\"Transition\",\"x\":146,\"y\":48,\"xPercent\":16.647662485746864,\"yPercent\":16.161616161616163},{\"label\":\"Approach\",\"x\":243,\"y\":48,\"xPercent\":27.708095781071833,\"yPercent\":16.161616161616163},{\"label\":\"Layout\",\"x\":304,\"y\":35,\"xPercent\":34.6636259977195,\"yPercent\":11.784511784511785},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":478,\"y\":35,\"xPercent\":54.50399087799316,\"yPercent\":11.784511784511785},{\"label\":\"System\",\"x\":570,\"y\":35,\"xPercent\":64.99429874572405,\"yPercent\":11.784511784511785},{\"label\":\"Diagnostics\",\"x\":393,\"y\":62,\"xPercent\":44.81185860889396,\"yPercent\":20.875420875420875},{\"label\":\"Evaluation\",\"x\":388,\"y\":91,\"xPercent\":44.241733181299885,\"yPercent\":30.63973063973064},{\"label\":\"Installation\",\"x\":663,\"y\":62,\"xPercent\":75.59863169897378,\"yPercent\":20.875420875420875},{\"label\":\"Training\",\"x\":659,\"y\":96,\"xPercent\":75.14253135689853,\"yPercent\":32.323232323232325},{\"label\":\"Audit\",\"x\":750,\"y\":43,\"xPercent\":85.5188141391106,\"yPercent\":14.47811447811448},{\"label\":\"Aftercare\",\"x\":813,\"y\":37,\"xPercent\":92.7023945267959,\"yPercent\":12.457912457912458}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 178,
+        "attempt_id": 26,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": "[\"233\",\"235\",\"237\",\"239\",\"240\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 179,
+        "attempt_id": 26,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": "{\"Need\":\"Industry remains very competitive\",\"Scope\":\"Supervisory training and on-the-job coaching\",\"Measures\":\"OTIF in Packaging\",\"Roles\":\"Sponsor: Mr Brown\",\"Vision\":\"Install the necessary skills and process to improve availability\",\"Risk\":\"External factors (supply, demand, cost increases...)\",\"Timeline\":\"Commit & Install (week 9-12)\",\"Accountability\":\"I hearby assume accountability..\"}",
+        "is_correct": 1,
+        "points_earned": 5
+      },
+      {
+        "id": 180,
+        "attempt_id": 26,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": "[\"Value\",\"Mechanism\",\"Value Driver\",\"Opportunity\",\"KPIs\",\"Base\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 181,
+        "attempt_id": 26,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"Milestone\",\"Plan\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 182,
+        "attempt_id": 26,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis Operations Consultation\",\"Transition & Approach\",\"Layout\",\"Pre-SIM\",\"SIM\",\"Pre-Implementation\",\"Mid-Implementation\",\"Completion\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 183,
+        "attempt_id": 26,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "7",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 184,
+        "attempt_id": 26,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 185,
+        "attempt_id": 27,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"219\",\"221\",\"223\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 186,
+        "attempt_id": 27,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis\",\"Governance\",\"Focus Process\",\"Development\",\"Implementation\",\"Sustainability\",\"Sales\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 187,
+        "attempt_id": 27,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":54,\"y\":37,\"xPercent\":6.1573546180159635,\"yPercent\":12.457912457912458},{\"label\":\"Straight to Work\",\"x\":47,\"y\":91,\"xPercent\":5.359179019384264,\"yPercent\":30.63973063973064},{\"label\":\"Transition\",\"x\":150,\"y\":46,\"xPercent\":17.103762827822123,\"yPercent\":15.488215488215488},{\"label\":\"Approach\",\"x\":240,\"y\":47,\"xPercent\":27.366020524515395,\"yPercent\":15.824915824915825},{\"label\":\"Layout\",\"x\":305,\"y\":44,\"xPercent\":34.77765108323831,\"yPercent\":14.814814814814813},{\"label\":\"Diagnostics\",\"x\":377,\"y\":42,\"xPercent\":42.98745724059293,\"yPercent\":14.14141414141414},{\"label\":\"Evaluation\",\"x\":387,\"y\":96,\"xPercent\":44.127708095781074,\"yPercent\":32.323232323232325},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":489,\"y\":36,\"xPercent\":55.75826681870011,\"yPercent\":12.121212121212121},{\"label\":\"System\",\"x\":564,\"y\":33,\"xPercent\":64.31014823261117,\"yPercent\":11.11111111111111},{\"label\":\"Installation\",\"x\":652,\"y\":39,\"xPercent\":74.34435575826683,\"yPercent\":13.131313131313133},{\"label\":\"Training\",\"x\":644,\"y\":91,\"xPercent\":73.4321550741163,\"yPercent\":30.63973063973064},{\"label\":\"Audit\",\"x\":743,\"y\":39,\"xPercent\":84.72063854047892,\"yPercent\":13.131313131313133},{\"label\":\"Aftercare\",\"x\":825,\"y\":41,\"xPercent\":94.07069555302166,\"yPercent\":13.804713804713806}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 188,
+        "attempt_id": 27,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": "[\"233\",\"235\",\"237\",\"239\",\"240\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 189,
+        "attempt_id": 27,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": "{\"Need\":\"Industry remains very competitive\",\"Scope\":\"Supervisory training and on-the-job coaching\",\"Measures\":\"OTIF in Packaging\",\"Roles\":\"Sponsor: Mr Brown\",\"Vision\":\"Install the necessary skills and process to improve availability\",\"Risk\":\"External factors (supply, demand, cost increases...)\",\"Timeline\":\"Commit & Install (week 9-12)\",\"Accountability\":\"I hearby assume accountability..\"}",
+        "is_correct": 1,
+        "points_earned": 5
+      },
+      {
+        "id": 190,
+        "attempt_id": 27,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": "[\"Value\",\"Mechanism\",\"Value Driver\",\"Opportunity\",\"KPIs\",\"Base\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 191,
+        "attempt_id": 27,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"Milestone\",\"Plan\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 192,
+        "attempt_id": 27,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis Operations Consultation\",\"Transition & Approach\",\"Layout\",\"Pre-SIM\",\"SIM\",\"Pre-Implementation\",\"Mid-Implementation\",\"Completion\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 193,
+        "attempt_id": 27,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "7",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 194,
+        "attempt_id": 27,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 195,
+        "attempt_id": 28,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"219\",\"221\",\"223\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 196,
+        "attempt_id": 28,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis\",\"Governance\",\"Focus Process\",\"Development\",\"Implementation\",\"Sustainability\",\"Sales\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 197,
+        "attempt_id": 28,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":54,\"y\":37,\"xPercent\":6.1573546180159635,\"yPercent\":12.457912457912458},{\"label\":\"Straight to Work\",\"x\":47,\"y\":91,\"xPercent\":5.359179019384264,\"yPercent\":30.63973063973064},{\"label\":\"Transition\",\"x\":150,\"y\":46,\"xPercent\":17.103762827822123,\"yPercent\":15.488215488215488},{\"label\":\"Approach\",\"x\":240,\"y\":47,\"xPercent\":27.366020524515395,\"yPercent\":15.824915824915825},{\"label\":\"Layout\",\"x\":305,\"y\":44,\"xPercent\":34.77765108323831,\"yPercent\":14.814814814814813},{\"label\":\"Diagnostics\",\"x\":377,\"y\":42,\"xPercent\":42.98745724059293,\"yPercent\":14.14141414141414},{\"label\":\"Evaluation\",\"x\":387,\"y\":96,\"xPercent\":44.127708095781074,\"yPercent\":32.323232323232325},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":489,\"y\":36,\"xPercent\":55.75826681870011,\"yPercent\":12.121212121212121},{\"label\":\"System\",\"x\":564,\"y\":33,\"xPercent\":64.31014823261117,\"yPercent\":11.11111111111111},{\"label\":\"Installation\",\"x\":652,\"y\":39,\"xPercent\":74.34435575826683,\"yPercent\":13.131313131313133},{\"label\":\"Training\",\"x\":644,\"y\":91,\"xPercent\":73.4321550741163,\"yPercent\":30.63973063973064},{\"label\":\"Audit\",\"x\":743,\"y\":39,\"xPercent\":84.72063854047892,\"yPercent\":13.131313131313133},{\"label\":\"Aftercare\",\"x\":825,\"y\":41,\"xPercent\":94.07069555302166,\"yPercent\":13.804713804713806}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 198,
+        "attempt_id": 28,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": "[\"233\",\"235\",\"237\",\"239\",\"240\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 199,
+        "attempt_id": 28,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": "{\"Need\":\"Industry remains very competitive\",\"Scope\":\"Supervisory training and on-the-job coaching\",\"Measures\":\"OTIF in Packaging\",\"Roles\":\"Sponsor: Mr Brown\",\"Vision\":\"Install the necessary skills and process to improve availability\",\"Risk\":\"External factors (supply, demand, cost increases...)\",\"Timeline\":\"Commit & Install (week 9-12)\",\"Accountability\":\"I hearby assume accountability..\"}",
+        "is_correct": 1,
+        "points_earned": 5
+      },
+      {
+        "id": 200,
+        "attempt_id": 28,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": "[\"Value\",\"Mechanism\",\"Value Driver\",\"Opportunity\",\"KPIs\",\"Base\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 201,
+        "attempt_id": 28,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"Milestone\",\"Plan\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 202,
+        "attempt_id": 28,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis Operations Consultation\",\"Transition & Approach\",\"Layout\",\"Pre-SIM\",\"SIM\",\"Pre-Implementation\",\"Mid-Implementation\",\"Completion\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 203,
+        "attempt_id": 28,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "7",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 204,
+        "attempt_id": 28,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 205,
+        "attempt_id": 29,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"290\",\"292\",\"294\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 206,
+        "attempt_id": 29,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis\",\"Governance\",\"Focus Process\",\"Development\",\"Implementation\",\"Sustainability\",\"Sales\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 207,
+        "attempt_id": 29,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":45,\"y\":32,\"xPercent\":5.131128848346636,\"yPercent\":10.774410774410773},{\"label\":\"Transition\",\"x\":136,\"y\":32,\"xPercent\":15.507411630558723,\"yPercent\":10.774410774410773},{\"label\":\"Straight to Work\",\"x\":54,\"y\":95,\"xPercent\":6.1573546180159635,\"yPercent\":31.986531986531986},{\"label\":\"Approach\",\"x\":216,\"y\":44,\"xPercent\":24.629418472063854,\"yPercent\":14.814814814814813},{\"label\":\"Layout\",\"x\":311,\"y\":45,\"xPercent\":35.461801596351194,\"yPercent\":15.151515151515152},{\"label\":\"Diagnostics\",\"x\":375,\"y\":37,\"xPercent\":42.7594070695553,\"yPercent\":12.457912457912458},{\"label\":\"Evaluation\",\"x\":391,\"y\":101,\"xPercent\":44.58380843785633,\"yPercent\":34.00673400673401},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":482,\"y\":36,\"xPercent\":54.96009122006842,\"yPercent\":12.121212121212121},{\"label\":\"Installation\",\"x\":647,\"y\":39,\"xPercent\":73.77423033067275,\"yPercent\":13.131313131313133},{\"label\":\"System\",\"x\":565,\"y\":32,\"xPercent\":64.42417331812999,\"yPercent\":10.774410774410773},{\"label\":\"Training\",\"x\":657,\"y\":89,\"xPercent\":74.9144811858609,\"yPercent\":29.96632996632997},{\"label\":\"Audit\",\"x\":735,\"y\":50,\"xPercent\":83.80843785632838,\"yPercent\":16.835016835016837},{\"label\":\"Aftercare\",\"x\":825,\"y\":46,\"xPercent\":94.07069555302166,\"yPercent\":15.488215488215488}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 208,
+        "attempt_id": 29,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": "[\"233\",\"234\",\"235\",\"236\",\"237\",\"238\",\"239\",\"240\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 209,
+        "attempt_id": 29,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": "{\"Need\":\"Industry remains very competitive\",\"Scope\":\"Supervisory training and on-the-job coaching\",\"Measures\":\"OTIF in Packaging\",\"Roles\":\"Sponsor: Mr Brown\",\"Vision\":\"Install the necessary skills and process to improve availability\",\"Risk\":\"External factors (supply, demand, cost increases...)\",\"Timeline\":\"Commit & Install (week 9-12)\",\"Accountability\":\"I hearby assume accountability..\"}",
+        "is_correct": 1,
+        "points_earned": 5
+      },
+      {
+        "id": 210,
+        "attempt_id": 29,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 211,
+        "attempt_id": 29,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"why\",\"what\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 212,
+        "attempt_id": 29,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 213,
+        "attempt_id": 29,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "6",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 214,
+        "attempt_id": 29,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 215,
+        "attempt_id": 30,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"290\",\"292\",\"294\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 216,
+        "attempt_id": 30,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": "[\"Sales\",\"Analysis\",\"Governance\",\"Focus Process\",\"Development\",\"Implementation\",\"Sustainability\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 217,
+        "attempt_id": 30,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":43,\"y\":46,\"xPercent\":4.891922639362913,\"yPercent\":15.488215488215488},{\"label\":\"Straight to Work\",\"x\":32,\"y\":96,\"xPercent\":3.6405005688282137,\"yPercent\":32.323232323232325},{\"label\":\"Transition\",\"x\":131,\"y\":40,\"xPercent\":14.903299203640499,\"yPercent\":13.468013468013467},{\"label\":\"Approach\",\"x\":227,\"y\":38,\"xPercent\":25.82480091012514,\"yPercent\":12.794612794612794},{\"label\":\"Layout\",\"x\":317,\"y\":37,\"xPercent\":36.063708759954494,\"yPercent\":12.457912457912458},{\"label\":\"Diagnostics\",\"x\":394,\"y\":36,\"xPercent\":44.82366325369738,\"yPercent\":12.121212121212121},{\"label\":\"Evaluation\",\"x\":392,\"y\":98,\"xPercent\":44.59613196814562,\"yPercent\":32.996632996633},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":459,\"y\":38,\"xPercent\":52.218430034129696,\"yPercent\":12.794612794612794},{\"label\":\"System\",\"x\":557,\"y\":43,\"xPercent\":63.36746302616609,\"yPercent\":14.47811447811448},{\"label\":\"Installation\",\"x\":647,\"y\":43,\"xPercent\":73.60637087599545,\"yPercent\":14.47811447811448},{\"label\":\"Training\",\"x\":654,\"y\":100,\"xPercent\":74.40273037542661,\"yPercent\":33.670033670033675},{\"label\":\"Audit\",\"x\":744,\"y\":50,\"xPercent\":84.64163822525597,\"yPercent\":16.835016835016837},{\"label\":\"Aftercare\",\"x\":819,\"y\":45,\"xPercent\":93.1740614334471,\"yPercent\":15.151515151515152}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 218,
+        "attempt_id": 30,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": "[\"233\",\"234\",\"235\",\"236\",\"237\",\"238\",\"239\",\"240\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 219,
+        "attempt_id": 30,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": "{\"Need\":\"Industry remains very competitive\",\"Scope\":\"Supervisory training and on-the-job coaching\",\"Measures\":\"OTIF in Packaging\",\"Roles\":\"Sponsor: Mr Brown\",\"Vision\":\"Install the necessary skills and process to improve availability\",\"Risk\":\"External factors (supply, demand, cost increases...)\",\"Timeline\":\"Commit & Install (week 9-12)\",\"Accountability\":\"I hearby assume accountability..\"}",
+        "is_correct": 1,
+        "points_earned": 5
+      },
+      {
+        "id": 220,
+        "attempt_id": 30,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": "[\"Value\",\"Mechanism\",\"Value Driver\",\"Opportunity\",\"KPIs\",\"Base\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 221,
+        "attempt_id": 30,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"Milestone\",\"Plan\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 222,
+        "attempt_id": 30,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis Operations Consultation\",\"Transition & Approach\",\"Layout\",\"Pre-SIM\",\"SIM\",\"Pre-Implementation\",\"Mid-Implementation\",\"Completion\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 223,
+        "attempt_id": 30,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "7",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 224,
+        "attempt_id": 30,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 225,
+        "attempt_id": 31,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"290\",\"292\",\"294\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 226,
+        "attempt_id": 31,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis\",\"Governance\",\"Focus Process\",\"Development\",\"Implementation\",\"Sustainability\",\"Sales\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 227,
+        "attempt_id": 31,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":49,\"y\":39,\"xPercent\":5.625717566016074,\"yPercent\":13.220338983050848},{\"label\":\"Straight to Work\",\"x\":42,\"y\":90,\"xPercent\":4.822043628013777,\"yPercent\":30.508474576271187},{\"label\":\"Transition\",\"x\":134,\"y\":45,\"xPercent\":15.384615384615385,\"yPercent\":15.254237288135593},{\"label\":\"Approach\",\"x\":223,\"y\":48,\"xPercent\":25.602755453501725,\"yPercent\":16.271186440677965},{\"label\":\"Layout\",\"x\":309,\"y\":44,\"xPercent\":35.47646383467279,\"yPercent\":14.915254237288137},{\"label\":\"Diagnostics\",\"x\":390,\"y\":44,\"xPercent\":44.776119402985074,\"yPercent\":14.915254237288137},{\"label\":\"Evaluation\",\"x\":375,\"y\":94,\"xPercent\":43.05396096440873,\"yPercent\":31.864406779661014},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":468,\"y\":48,\"xPercent\":53.73134328358209,\"yPercent\":16.271186440677965},{\"label\":\"System\",\"x\":559,\"y\":49,\"xPercent\":64.17910447761194,\"yPercent\":16.610169491525422},{\"label\":\"Installation\",\"x\":644,\"y\":45,\"xPercent\":73.93800229621125,\"yPercent\":15.254237288135593},{\"label\":\"Training\",\"x\":642,\"y\":86,\"xPercent\":73.70838117106774,\"yPercent\":29.152542372881356},{\"label\":\"Audit\",\"x\":728,\"y\":43,\"xPercent\":83.5820895522388,\"yPercent\":14.576271186440678},{\"label\":\"Aftercare\",\"x\":810,\"y\":40,\"xPercent\":92.99655568312285,\"yPercent\":13.559322033898304}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 228,
+        "attempt_id": 31,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": "[\"233\",\"235\",\"237\",\"239\",\"240\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 229,
+        "attempt_id": 31,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": "{\"Need\":\"Industry remains very competitive\",\"Scope\":\"Supervisory training and on-the-job coaching\",\"Measures\":\"OTIF in Packaging\",\"Roles\":\"Sponsor: Mr Brown\",\"Vision\":\"Install the necessary skills and process to improve availability\",\"Risk\":\"External factors (supply, demand, cost increases...)\",\"Timeline\":\"Commit & Install (week 9-12)\",\"Accountability\":\"I hearby assume accountability..\"}",
+        "is_correct": 1,
+        "points_earned": 5
+      },
+      {
+        "id": 230,
+        "attempt_id": 31,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": "[\"Value\",\"Mechanism\",\"Value Driver\",\"Opportunity\",\"KPIs\",\"Base\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 231,
+        "attempt_id": 31,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"Milestone\",\"Plan\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 232,
+        "attempt_id": 31,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis Operations Consultation\",\"Transition & Approach\",\"Layout\",\"Pre-SIM\",\"SIM\",\"Pre-Implementation\",\"Mid-Implementation\",\"Completion\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 233,
+        "attempt_id": 31,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "7",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 234,
+        "attempt_id": 31,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 235,
+        "attempt_id": 32,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"290\",\"292\",\"294\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 236,
+        "attempt_id": 32,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": "[\"Analysis\",\"Governance\",\"Focus Process\",\"Development\",\"Implementation\",\"Sustainability\",\"Sales\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 237,
+        "attempt_id": 32,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":38,\"y\":51,\"xPercent\":4.3628013777267505,\"yPercent\":17.28813559322034},{\"label\":\"Straight to Work\",\"x\":24,\"y\":97,\"xPercent\":2.755453501722158,\"yPercent\":32.88135593220339},{\"label\":\"Transition\",\"x\":132,\"y\":37,\"xPercent\":15.154994259471872,\"yPercent\":12.54237288135593},{\"label\":\"Approach\",\"x\":237,\"y\":36,\"xPercent\":27.210103329506314,\"yPercent\":12.203389830508476},{\"label\":\"Layout\",\"x\":310,\"y\":39,\"xPercent\":35.59127439724455,\"yPercent\":13.220338983050848},{\"label\":\"Diagnostics\",\"x\":375,\"y\":42,\"xPercent\":43.05396096440873,\"yPercent\":14.237288135593221},{\"label\":\"Evaluation\",\"x\":385,\"y\":94,\"xPercent\":44.20206659012629,\"yPercent\":31.864406779661014},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":471,\"y\":41,\"xPercent\":54.07577497129736,\"yPercent\":13.898305084745763},{\"label\":\"System\",\"x\":565,\"y\":41,\"xPercent\":64.86796785304249,\"yPercent\":13.898305084745763},{\"label\":\"Installation\",\"x\":645,\"y\":47,\"xPercent\":74.05281285878301,\"yPercent\":15.932203389830507},{\"label\":\"Training\",\"x\":640,\"y\":98,\"xPercent\":73.47876004592423,\"yPercent\":33.220338983050844},{\"label\":\"Audit\",\"x\":731,\"y\":48,\"xPercent\":83.92652123995407,\"yPercent\":16.271186440677965},{\"label\":\"Aftercare\",\"x\":807,\"y\":43,\"xPercent\":92.65212399540758,\"yPercent\":14.576271186440678}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 238,
+        "attempt_id": 32,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 239,
+        "attempt_id": 32,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": "{\"Need\":\"Commit & Install (week 9-12)\",\"Scope\":\"External factors (supply, demand, cost increases...)\",\"Measures\":\"Install the necessary skills and process to improve availability\",\"Roles\":\"I hearby assume accountability..\",\"Vision\":\"Supervisory training and on-the-job coaching\",\"Risk\":\"Industry remains very competitive\",\"Timeline\":\"OTIF in Packaging\",\"Accountability\":\"Sponsor: Mr Brown\"}",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 240,
+        "attempt_id": 32,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 241,
+        "attempt_id": 32,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"Milestone\",\"Plan\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 242,
+        "attempt_id": 32,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 243,
+        "attempt_id": 32,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "7",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 244,
+        "attempt_id": 32,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 245,
+        "attempt_id": 33,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"290\",\"292\",\"294\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 246,
+        "attempt_id": 33,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 247,
+        "attempt_id": 33,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":54,\"y\":43,\"xPercent\":6.199770378874857,\"yPercent\":14.576271186440678},{\"label\":\"Straight to Work\",\"x\":53,\"y\":93,\"xPercent\":6.084959816303099,\"yPercent\":31.52542372881356},{\"label\":\"Transition\",\"x\":136,\"y\":42,\"xPercent\":15.614236509758896,\"yPercent\":14.237288135593221},{\"label\":\"Approach\",\"x\":217,\"y\":38,\"xPercent\":24.913892078071182,\"yPercent\":12.88135593220339},{\"label\":\"Layout\",\"x\":311,\"y\":43,\"xPercent\":35.7060849598163,\"yPercent\":14.576271186440678},{\"label\":\"Diagnostics\",\"x\":379,\"y\":44,\"xPercent\":43.51320321469575,\"yPercent\":14.915254237288137},{\"label\":\"Evaluation\",\"x\":385,\"y\":89,\"xPercent\":44.20206659012629,\"yPercent\":30.16949152542373},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":477,\"y\":46,\"xPercent\":54.7646383467279,\"yPercent\":15.593220338983052},{\"label\":\"System\",\"x\":558,\"y\":40,\"xPercent\":64.06429391504018,\"yPercent\":13.559322033898304},{\"label\":\"Installation\",\"x\":646,\"y\":41,\"xPercent\":74.16762342135476,\"yPercent\":13.898305084745763},{\"label\":\"Training\",\"x\":642,\"y\":89,\"xPercent\":73.70838117106774,\"yPercent\":30.16949152542373},{\"label\":\"Audit\",\"x\":732,\"y\":44,\"xPercent\":84.04133180252583,\"yPercent\":14.915254237288137},{\"label\":\"Aftercare\",\"x\":809,\"y\":35,\"xPercent\":92.8817451205511,\"yPercent\":11.864406779661017}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 248,
+        "attempt_id": 33,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 249,
+        "attempt_id": 33,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 250,
+        "attempt_id": 33,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 251,
+        "attempt_id": 33,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"Milestone\",\"Plan\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 252,
+        "attempt_id": 33,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 253,
+        "attempt_id": 33,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "7",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 254,
+        "attempt_id": 33,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 255,
+        "attempt_id": 34,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"290\",\"292\",\"294\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 256,
+        "attempt_id": 34,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 257,
+        "attempt_id": 34,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":36,\"y\":30,\"xPercent\":5.815831987075929,\"yPercent\":14.285714285714285},{\"label\":\"Straight to Work\",\"x\":37,\"y\":71,\"xPercent\":5.977382875605816,\"yPercent\":33.80952380952381},{\"label\":\"Transition\",\"x\":91,\"y\":30,\"xPercent\":14.70113085621971,\"yPercent\":14.285714285714285},{\"label\":\"Approach\",\"x\":156,\"y\":36,\"xPercent\":25.20193861066236,\"yPercent\":17.142857142857142},{\"label\":\"Layout\",\"x\":211,\"y\":30,\"xPercent\":34.087237479806134,\"yPercent\":14.285714285714285},{\"label\":\"Diagnostics\",\"x\":259,\"y\":30,\"xPercent\":41.84168012924071,\"yPercent\":14.285714285714285},{\"label\":\"Evaluation\",\"x\":260,\"y\":69,\"xPercent\":42.003231017770595,\"yPercent\":32.857142857142854},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":336,\"y\":31,\"xPercent\":54.281098546042,\"yPercent\":14.761904761904763},{\"label\":\"System\",\"x\":389,\"y\":29,\"xPercent\":62.84329563812601,\"yPercent\":13.80952380952381},{\"label\":\"Installation\",\"x\":445,\"y\":30,\"xPercent\":71.89014539579968,\"yPercent\":14.285714285714285},{\"label\":\"Training\",\"x\":451,\"y\":66,\"xPercent\":72.859450726979,\"yPercent\":31.428571428571427},{\"label\":\"Audit\",\"x\":525,\"y\":28,\"xPercent\":84.81421647819063,\"yPercent\":13.333333333333334},{\"label\":\"Aftercare\",\"x\":572,\"y\":36,\"xPercent\":92.40710823909531,\"yPercent\":17.142857142857142}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 258,
+        "attempt_id": 34,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 259,
+        "attempt_id": 34,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 260,
+        "attempt_id": 34,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 261,
+        "attempt_id": 34,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"s\",\"m\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 262,
+        "attempt_id": 34,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 263,
+        "attempt_id": 34,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "7",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 264,
+        "attempt_id": 34,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 265,
+        "attempt_id": 35,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"290\",\"292\",\"294\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 266,
+        "attempt_id": 35,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 267,
+        "attempt_id": 35,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":22,\"y\":25,\"xPercent\":3.5541195476575123,\"yPercent\":11.904761904761903},{\"label\":\"Straight to Work\",\"x\":24,\"y\":66,\"xPercent\":3.877221324717286,\"yPercent\":31.428571428571427},{\"label\":\"Transition\",\"x\":87,\"y\":42,\"xPercent\":14.054927302100161,\"yPercent\":20},{\"label\":\"Approach\",\"x\":163,\"y\":37,\"xPercent\":26.33279483037157,\"yPercent\":17.61904761904762},{\"label\":\"Layout\",\"x\":203,\"y\":25,\"xPercent\":32.794830371567045,\"yPercent\":11.904761904761903},{\"label\":\"Diagnostics\",\"x\":272,\"y\":30,\"xPercent\":43.94184168012924,\"yPercent\":14.285714285714285},{\"label\":\"Evaluation\",\"x\":268,\"y\":66,\"xPercent\":43.29563812600969,\"yPercent\":31.428571428571427},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":332,\"y\":31,\"xPercent\":53.63489499192246,\"yPercent\":14.761904761904763},{\"label\":\"System\",\"x\":393,\"y\":29,\"xPercent\":63.48949919224556,\"yPercent\":13.80952380952381},{\"label\":\"Installation\",\"x\":456,\"y\":30,\"xPercent\":73.66720516962843,\"yPercent\":14.285714285714285},{\"label\":\"Training\",\"x\":463,\"y\":69,\"xPercent\":74.79806138933765,\"yPercent\":32.857142857142854},{\"label\":\"Audit\",\"x\":514,\"y\":31,\"xPercent\":83.03715670436188,\"yPercent\":14.761904761904763},{\"label\":\"Aftercare\",\"x\":574,\"y\":37,\"xPercent\":92.73021001615508,\"yPercent\":17.61904761904762}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 268,
+        "attempt_id": 35,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": "[\"241\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 269,
+        "attempt_id": 35,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 270,
+        "attempt_id": 35,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 271,
+        "attempt_id": 35,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"s\",\"m\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 272,
+        "attempt_id": 35,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 273,
+        "attempt_id": 35,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "7",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 274,
+        "attempt_id": 35,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 275,
+        "attempt_id": 36,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"290\",\"292\",\"294\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 276,
+        "attempt_id": 36,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 277,
+        "attempt_id": 36,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":37,\"y\":31,\"xPercent\":5.977382875605816,\"yPercent\":14.761904761904763},{\"label\":\"Straight to Work\",\"x\":14,\"y\":69,\"xPercent\":2.2617124394184165,\"yPercent\":32.857142857142854},{\"label\":\"Transition\",\"x\":101,\"y\":35,\"xPercent\":16.31663974151858,\"yPercent\":16.666666666666664},{\"label\":\"Approach\",\"x\":151,\"y\":40,\"xPercent\":24.394184168012924,\"yPercent\":19.047619047619047},{\"label\":\"Layout\",\"x\":215,\"y\":29,\"xPercent\":34.733441033925686,\"yPercent\":13.80952380952381},{\"label\":\"Diagnostics\",\"x\":251,\"y\":25,\"xPercent\":40.54927302100161,\"yPercent\":11.904761904761903},{\"label\":\"Evaluation\",\"x\":266,\"y\":69,\"xPercent\":42.972536348949916,\"yPercent\":32.857142857142854},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":326,\"y\":29,\"xPercent\":52.66558966074314,\"yPercent\":13.80952380952381},{\"label\":\"System\",\"x\":388,\"y\":34,\"xPercent\":62.68174474959613,\"yPercent\":16.19047619047619},{\"label\":\"Installation\",\"x\":463,\"y\":27,\"xPercent\":74.79806138933765,\"yPercent\":12.857142857142856},{\"label\":\"Training\",\"x\":448,\"y\":64,\"xPercent\":72.37479806138933,\"yPercent\":30.476190476190478},{\"label\":\"Audit\",\"x\":520,\"y\":22,\"xPercent\":84.00646203554119,\"yPercent\":10.476190476190476},{\"label\":\"Aftercare\",\"x\":586,\"y\":30,\"xPercent\":94.66882067851373,\"yPercent\":14.285714285714285}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 278,
+        "attempt_id": 36,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": "[\"241\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 279,
+        "attempt_id": 36,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 280,
+        "attempt_id": 36,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 281,
+        "attempt_id": 36,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"r\",\"r\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 282,
+        "attempt_id": 36,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 283,
+        "attempt_id": 36,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "7",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 284,
+        "attempt_id": 36,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 285,
+        "attempt_id": 37,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 286,
+        "attempt_id": 37,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 287,
+        "attempt_id": 37,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":52,\"y\":40,\"xPercent\":5.970149253731343,\"yPercent\":13.559322033898304},{\"label\":\"Straight to Work\",\"x\":34,\"y\":99,\"xPercent\":3.903559127439724,\"yPercent\":33.559322033898304},{\"label\":\"Transition\",\"x\":140,\"y\":51,\"xPercent\":16.073478760045926,\"yPercent\":17.28813559322034},{\"label\":\"Approach\",\"x\":233,\"y\":42,\"xPercent\":26.75086107921929,\"yPercent\":14.237288135593221},{\"label\":\"Layout\",\"x\":311,\"y\":42,\"xPercent\":35.7060849598163,\"yPercent\":14.237288135593221},{\"label\":\"Diagnostics\",\"x\":372,\"y\":36,\"xPercent\":42.70952927669345,\"yPercent\":12.203389830508476},{\"label\":\"Evaluation\",\"x\":379,\"y\":90,\"xPercent\":43.51320321469575,\"yPercent\":30.508474576271187},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":463,\"y\":36,\"xPercent\":53.157290470723304,\"yPercent\":12.203389830508476},{\"label\":\"System\",\"x\":553,\"y\":45,\"xPercent\":63.4902411021814,\"yPercent\":15.254237288135593},{\"label\":\"Installation\",\"x\":647,\"y\":44,\"xPercent\":74.28243398392652,\"yPercent\":14.915254237288137},{\"label\":\"Training\",\"x\":637,\"y\":100,\"xPercent\":73.13432835820896,\"yPercent\":33.89830508474576},{\"label\":\"Audit\",\"x\":741,\"y\":40,\"xPercent\":85.07462686567165,\"yPercent\":13.559322033898304},{\"label\":\"Aftercare\",\"x\":810,\"y\":44,\"xPercent\":92.99655568312285,\"yPercent\":14.915254237288137}]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 288,
+        "attempt_id": 37,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": "[\"241\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 289,
+        "attempt_id": 37,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 290,
+        "attempt_id": 37,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 291,
+        "attempt_id": 37,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"s\",\"p\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 292,
+        "attempt_id": 37,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 293,
+        "attempt_id": 37,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "7",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 294,
+        "attempt_id": 37,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 295,
+        "attempt_id": 38,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 296,
+        "attempt_id": 38,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 297,
+        "attempt_id": 38,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 298,
+        "attempt_id": 38,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 299,
+        "attempt_id": 38,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 300,
+        "attempt_id": 38,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 301,
+        "attempt_id": 38,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"aa\",\"aa\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 302,
+        "attempt_id": 38,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 303,
+        "attempt_id": 38,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "3",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 304,
+        "attempt_id": 38,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 305,
+        "attempt_id": 38,
+        "question_id": 103,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Plan\",\"x\":276,\"y\":33,\"xPercent\":31.470923603192702,\"yPercent\":10.679611650485436},{\"label\":\"Control\",\"x\":584,\"y\":43,\"xPercent\":66.59064994298745,\"yPercent\":13.915857605177994},{\"label\":\"Report\",\"x\":771,\"y\":41,\"xPercent\":87.9133409350057,\"yPercent\":13.268608414239482}]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 306,
+        "attempt_id": 39,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"294\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 307,
+        "attempt_id": 39,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 308,
+        "attempt_id": 39,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":54,\"y\":45,\"xPercent\":6.1573546180159635,\"yPercent\":15.151515151515152},{\"label\":\"Straight to Work\",\"x\":51,\"y\":102,\"xPercent\":5.815279361459521,\"yPercent\":34.34343434343434},{\"label\":\"Transition\",\"x\":165,\"y\":47,\"xPercent\":18.814139110604334,\"yPercent\":15.824915824915825},{\"label\":\"Approach\",\"x\":249,\"y\":47,\"xPercent\":28.39224629418472,\"yPercent\":15.824915824915825},{\"label\":\"Layout\",\"x\":329,\"y\":38,\"xPercent\":37.51425313568985,\"yPercent\":12.794612794612794},{\"label\":\"Diagnostics\",\"x\":394,\"y\":35,\"xPercent\":44.925883694412775,\"yPercent\":11.784511784511785},{\"label\":\"Evaluation\",\"x\":396,\"y\":96,\"xPercent\":45.1539338654504,\"yPercent\":32.323232323232325},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":459,\"y\":43,\"xPercent\":52.33751425313569,\"yPercent\":14.47811447811448},{\"label\":\"System\",\"x\":566,\"y\":50,\"xPercent\":64.5381984036488,\"yPercent\":16.835016835016837},{\"label\":\"Installation\",\"x\":663,\"y\":37,\"xPercent\":75.59863169897378,\"yPercent\":12.457912457912458},{\"label\":\"Training\",\"x\":638,\"y\":100,\"xPercent\":72.74800456100343,\"yPercent\":33.670033670033675},{\"label\":\"Audit\",\"x\":746,\"y\":52,\"xPercent\":85.06271379703534,\"yPercent\":17.50841750841751},{\"label\":\"Aftercare\",\"x\":833,\"y\":43,\"xPercent\":94.98289623717217,\"yPercent\":14.47811447811448}]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 309,
+        "attempt_id": 39,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 310,
+        "attempt_id": 40,
+        "question_id": 10,
+        "answer_option_id": null,
+        "answer_text": "[\"294\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 311,
+        "attempt_id": 39,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 312,
+        "attempt_id": 40,
+        "question_id": 11,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 313,
+        "attempt_id": 39,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 314,
+        "attempt_id": 40,
+        "question_id": 12,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Analysis\",\"x\":54,\"y\":45,\"xPercent\":6.1573546180159635,\"yPercent\":15.151515151515152},{\"label\":\"Straight to Work\",\"x\":51,\"y\":102,\"xPercent\":5.815279361459521,\"yPercent\":34.34343434343434},{\"label\":\"Transition\",\"x\":165,\"y\":47,\"xPercent\":18.814139110604334,\"yPercent\":15.824915824915825},{\"label\":\"Approach\",\"x\":249,\"y\":47,\"xPercent\":28.39224629418472,\"yPercent\":15.824915824915825},{\"label\":\"Layout\",\"x\":329,\"y\":38,\"xPercent\":37.51425313568985,\"yPercent\":12.794612794612794},{\"label\":\"Diagnostics\",\"x\":394,\"y\":35,\"xPercent\":44.925883694412775,\"yPercent\":11.784511784511785},{\"label\":\"Evaluation\",\"x\":396,\"y\":96,\"xPercent\":45.1539338654504,\"yPercent\":32.323232323232325},{\"label\":\"Strategic Integration Meeting (SIM)\",\"x\":459,\"y\":43,\"xPercent\":52.33751425313569,\"yPercent\":14.47811447811448},{\"label\":\"System\",\"x\":566,\"y\":50,\"xPercent\":64.5381984036488,\"yPercent\":16.835016835016837},{\"label\":\"Installation\",\"x\":663,\"y\":37,\"xPercent\":75.59863169897378,\"yPercent\":12.457912457912458},{\"label\":\"Training\",\"x\":638,\"y\":100,\"xPercent\":72.74800456100343,\"yPercent\":33.670033670033675},{\"label\":\"Audit\",\"x\":746,\"y\":52,\"xPercent\":85.06271379703534,\"yPercent\":17.50841750841751},{\"label\":\"Aftercare\",\"x\":833,\"y\":43,\"xPercent\":94.98289623717217,\"yPercent\":14.47811447811448}]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 315,
+        "attempt_id": 39,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"Milestone\",\"Plan\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 316,
+        "attempt_id": 40,
+        "question_id": 13,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 317,
+        "attempt_id": 39,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 318,
+        "attempt_id": 40,
+        "question_id": 14,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 319,
+        "attempt_id": 39,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "7",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 320,
+        "attempt_id": 40,
+        "question_id": 15,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 321,
+        "attempt_id": 39,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 322,
+        "attempt_id": 40,
+        "question_id": 16,
+        "answer_option_id": null,
+        "answer_text": "[\"Milestone\",\"Plan\"]",
+        "is_correct": 1,
+        "points_earned": 2
+      },
+      {
+        "id": 323,
+        "attempt_id": 39,
+        "question_id": 103,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Plan\",\"x\":224,\"y\":52,\"xPercent\":25.541619156214367,\"yPercent\":16.828478964401295}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 324,
+        "attempt_id": 40,
+        "question_id": 17,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 325,
+        "attempt_id": 40,
+        "question_id": 18,
+        "answer_option_id": null,
+        "answer_text": "7",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 326,
+        "attempt_id": 40,
+        "question_id": 19,
+        "answer_option_id": 56,
+        "answer_text": "56",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 327,
+        "attempt_id": 40,
+        "question_id": 103,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Plan\",\"x\":224,\"y\":52,\"xPercent\":25.541619156214367,\"yPercent\":16.828478964401295}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 328,
+        "attempt_id": 41,
+        "question_id": 20,
+        "answer_option_id": null,
+        "answer_text": "{\"Procedural Changes\":\"The Focus Process\",\"Behavioural Change\":\"The Implementation Process\"}",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 329,
+        "attempt_id": 41,
+        "question_id": 21,
+        "answer_option_id": null,
+        "answer_text": "[\"Focus\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 330,
+        "attempt_id": 41,
+        "question_id": 22,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Shock\",\"x\":124,\"y\":100,\"xPercent\":13.762486126526083,\"yPercent\":23.64066193853428},{\"label\":\"Denial\",\"x\":204,\"y\":315,\"xPercent\":22.641509433962266,\"yPercent\":74.46808510638297},{\"label\":\"Frustration\",\"x\":325,\"y\":134,\"xPercent\":36.07103218645949,\"yPercent\":31.678486997635936},{\"label\":\"Morale Dip\",\"x\":446,\"y\":248,\"xPercent\":49.50055493895672,\"yPercent\":58.62884160756501},{\"label\":\"Decisions\",\"x\":525,\"y\":104,\"xPercent\":58.26859045504994,\"yPercent\":24.58628841607565},{\"label\":\"Integration\",\"x\":784,\"y\":133,\"xPercent\":87.0144284128746,\"yPercent\":31.44208037825059},{\"label\":\"Depression\",\"x\":546,\"y\":348,\"xPercent\":60.599334073251946,\"yPercent\":82.26950354609929},{\"label\":\"Trial and Experimentation\",\"x\":702,\"y\":235,\"xPercent\":77.9134295227525,\"yPercent\":55.55555555555556}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 331,
+        "attempt_id": 41,
+        "question_id": 23,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Address Concerns\",\"x\":246,\"y\":112,\"xPercent\":49.101796407185624,\"yPercent\":26.60332541567696},{\"label\":\"High Contact\",\"x\":381,\"y\":101,\"xPercent\":76.04790419161677,\"yPercent\":23.990498812351543},{\"label\":\"Keep Informed\",\"x\":209,\"y\":270,\"xPercent\":41.71656686626746,\"yPercent\":64.13301662707839},{\"label\":\"Medium Contact\",\"x\":409,\"y\":272,\"xPercent\":81.63672654690619,\"yPercent\":64.60807600950119}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 332,
+        "attempt_id": 42,
+        "question_id": 20,
+        "answer_option_id": null,
+        "answer_text": "{\"Procedural Changes\":\"The Focus Process\",\"Behavioural Change\":\"The Implementation Process\"}",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 333,
+        "attempt_id": 42,
+        "question_id": 21,
+        "answer_option_id": null,
+        "answer_text": "[\"Focus\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 334,
+        "attempt_id": 42,
+        "question_id": 22,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 335,
+        "attempt_id": 42,
+        "question_id": 23,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Address Concerns\",\"x\":216,\"y\":116,\"xPercent\":43.11377245508982,\"yPercent\":27.55344418052256},{\"label\":\"High Contact\",\"x\":385,\"y\":122,\"xPercent\":76.84630738522954,\"yPercent\":28.978622327790976},{\"label\":\"Keep Informed\",\"x\":206,\"y\":275,\"xPercent\":41.11776447105788,\"yPercent\":65.32066508313538},{\"label\":\"Medium Contact\",\"x\":410,\"y\":283,\"xPercent\":81.83632734530939,\"yPercent\":67.2209026128266}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 336,
+        "attempt_id": 43,
+        "question_id": 20,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 337,
+        "attempt_id": 43,
+        "question_id": 21,
+        "answer_option_id": null,
+        "answer_text": "[\"FOcus\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 338,
+        "attempt_id": 43,
+        "question_id": 22,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Shock\",\"x\":124,\"y\":110,\"xPercent\":13.762486126526083,\"yPercent\":26.004728132387704},{\"label\":\"Denial\",\"x\":214,\"y\":303,\"xPercent\":23.751387347391788,\"yPercent\":71.63120567375887},{\"label\":\"Frustration\",\"x\":362,\"y\":144,\"xPercent\":40.17758046614872,\"yPercent\":34.04255319148936},{\"label\":\"Morale Dip\",\"x\":415,\"y\":257,\"xPercent\":46.05993340732519,\"yPercent\":60.7565011820331},{\"label\":\"Depression\",\"x\":556,\"y\":354,\"xPercent\":61.70921198668147,\"yPercent\":83.68794326241135},{\"label\":\"Decisions\",\"x\":536,\"y\":130,\"xPercent\":59.48945615982242,\"yPercent\":30.73286052009456},{\"label\":\"Trial and Experimentation\",\"x\":684,\"y\":237,\"xPercent\":75.91564927857935,\"yPercent\":56.02836879432624},{\"label\":\"Integration\",\"x\":775,\"y\":134,\"xPercent\":86.01553829078802,\"yPercent\":31.678486997635936}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 339,
+        "attempt_id": 43,
+        "question_id": 23,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 340,
+        "attempt_id": 44,
+        "question_id": 20,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 341,
+        "attempt_id": 44,
+        "question_id": 21,
+        "answer_option_id": null,
+        "answer_text": "[\"FOCUs\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 342,
+        "attempt_id": 44,
+        "question_id": 22,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Shock\",\"x\":101,\"y\":99,\"xPercent\":11.20976692563818,\"yPercent\":23.404255319148938},{\"label\":\"Denial\",\"x\":224,\"y\":297,\"xPercent\":24.861265260821312,\"yPercent\":70.2127659574468},{\"label\":\"Frustration\",\"x\":331,\"y\":159,\"xPercent\":36.736958934517205,\"yPercent\":37.5886524822695},{\"label\":\"Morale Dip\",\"x\":426,\"y\":245,\"xPercent\":47.28079911209767,\"yPercent\":57.919621749408975},{\"label\":\"Decisions\",\"x\":549,\"y\":98,\"xPercent\":60.9322974472808,\"yPercent\":23.167848699763592},{\"label\":\"Integration\",\"x\":721,\"y\":122,\"xPercent\":80.02219755826859,\"yPercent\":28.841607565011824},{\"label\":\"Trial and Experimentation\",\"x\":689,\"y\":244,\"xPercent\":76.47058823529412,\"yPercent\":57.68321513002365},{\"label\":\"Depression\",\"x\":532,\"y\":350,\"xPercent\":59.04550499445062,\"yPercent\":82.74231678486997}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 343,
+        "attempt_id": 44,
+        "question_id": 23,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 344,
+        "attempt_id": 45,
+        "question_id": 20,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 345,
+        "attempt_id": 45,
+        "question_id": 21,
+        "answer_option_id": null,
+        "answer_text": "[\"FOCUs\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 346,
+        "attempt_id": 45,
+        "question_id": 22,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 347,
+        "attempt_id": 45,
+        "question_id": 23,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 348,
+        "attempt_id": 46,
+        "question_id": 20,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 349,
+        "attempt_id": 46,
+        "question_id": 21,
+        "answer_option_id": null,
+        "answer_text": "[\"FOCUs\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 350,
+        "attempt_id": 46,
+        "question_id": 22,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 351,
+        "attempt_id": 46,
+        "question_id": 23,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 352,
+        "attempt_id": 47,
+        "question_id": 20,
+        "answer_option_id": null,
+        "answer_text": "{\"Procedural Changes\":\"The Focus Process\",\"Behavioural Change\":\"The Implementation Process\"}",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 353,
+        "attempt_id": 47,
+        "question_id": 21,
+        "answer_option_id": null,
+        "answer_text": "[\"Focus\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 354,
+        "attempt_id": 47,
+        "question_id": 22,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Shock\",\"x\":74,\"y\":84,\"xPercent\":12.231404958677686,\"yPercent\":29.577464788732392},{\"label\":\"Denial\",\"x\":131,\"y\":187,\"xPercent\":21.65289256198347,\"yPercent\":65.84507042253522},{\"label\":\"Frustration\",\"x\":224,\"y\":101,\"xPercent\":37.02479338842975,\"yPercent\":35.563380281690144},{\"label\":\"Morale Dip\",\"x\":275,\"y\":166,\"xPercent\":45.45454545454545,\"yPercent\":58.45070422535211},{\"label\":\"Depression\",\"x\":379,\"y\":238,\"xPercent\":62.64462809917355,\"yPercent\":83.80281690140845},{\"label\":\"Decisions\",\"x\":368,\"y\":71,\"xPercent\":60.82644628099173,\"yPercent\":25},{\"label\":\"Integration\",\"x\":460,\"y\":174,\"xPercent\":76.03305785123968,\"yPercent\":61.267605633802816},{\"label\":\"Trial and Experimentation\",\"x\":508,\"y\":84,\"xPercent\":83.96694214876032,\"yPercent\":29.577464788732392}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 355,
+        "attempt_id": 47,
+        "question_id": 23,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Address Concerns\",\"x\":371,\"y\":282,\"xPercent\":74.05189620758483,\"yPercent\":66.9833729216152},{\"label\":\"Keep Informed\",\"x\":202,\"y\":280,\"xPercent\":40.31936127744511,\"yPercent\":66.5083135391924},{\"label\":\"High Contact\",\"x\":204,\"y\":110,\"xPercent\":40.7185628742515,\"yPercent\":26.128266033254157},{\"label\":\"Medium Contact\",\"x\":381,\"y\":118,\"xPercent\":76.04790419161677,\"yPercent\":28.028503562945367}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 356,
+        "attempt_id": 48,
+        "question_id": 20,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 357,
+        "attempt_id": 48,
+        "question_id": 21,
+        "answer_option_id": null,
+        "answer_text": "[\"Nuts\"]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 358,
+        "attempt_id": 48,
+        "question_id": 22,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 359,
+        "attempt_id": 48,
+        "question_id": 23,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Address Concerns\",\"x\":197,\"y\":283,\"xPercent\":39.321357285429144,\"yPercent\":67.2209026128266},{\"label\":\"High Contact\",\"x\":180,\"y\":95,\"xPercent\":35.92814371257485,\"yPercent\":22.565320665083135},{\"label\":\"Keep Informed\",\"x\":387,\"y\":86,\"xPercent\":77.24550898203593,\"yPercent\":20.42755344418052},{\"label\":\"Medium Contact\",\"x\":400,\"y\":272,\"xPercent\":79.84031936127745,\"yPercent\":64.60807600950119}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 360,
+        "attempt_id": 49,
+        "question_id": 20,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 361,
+        "attempt_id": 49,
+        "question_id": 21,
+        "answer_option_id": null,
+        "answer_text": "[\"Focus\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 362,
+        "attempt_id": 49,
+        "question_id": 22,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 363,
+        "attempt_id": 49,
+        "question_id": 23,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Address Concerns\",\"x\":386,\"y\":298,\"xPercent\":77.04590818363273,\"yPercent\":70.78384798099762},{\"label\":\"High Contact\",\"x\":195,\"y\":287,\"xPercent\":38.92215568862276,\"yPercent\":68.17102137767222},{\"label\":\"Keep Informed\",\"x\":210,\"y\":121,\"xPercent\":41.91616766467065,\"yPercent\":28.741092636579573},{\"label\":\"Medium Contact\",\"x\":361,\"y\":122,\"xPercent\":72.0558882235529,\"yPercent\":28.978622327790976}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 364,
+        "attempt_id": 50,
+        "question_id": 21,
+        "answer_option_id": null,
+        "answer_text": "[\"Focus\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 365,
+        "attempt_id": 50,
+        "question_id": 23,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Address Concerns\",\"x\":385,\"y\":111,\"xPercent\":76.84630738522954,\"yPercent\":26.365795724465556},{\"label\":\"High Contact\",\"x\":214,\"y\":274,\"xPercent\":42.71457085828344,\"yPercent\":65.08313539192399},{\"label\":\"Keep Informed\",\"x\":381,\"y\":296,\"xPercent\":76.04790419161677,\"yPercent\":70.30878859857482},{\"label\":\"Medium Contact\",\"x\":221,\"y\":97,\"xPercent\":44.11177644710579,\"yPercent\":23.040380047505938}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 366,
+        "attempt_id": 50,
+        "question_id": 20,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 367,
+        "attempt_id": 50,
+        "question_id": 22,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 368,
+        "attempt_id": 51,
+        "question_id": 21,
+        "answer_option_id": null,
+        "answer_text": "[\"Focus\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 369,
+        "attempt_id": 51,
+        "question_id": 23,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Address Concerns\",\"x\":197,\"y\":90,\"xPercent\":39.243027888446214,\"yPercent\":21.32701421800948},{\"label\":\"High Contact\",\"x\":387,\"y\":94,\"xPercent\":77.09163346613546,\"yPercent\":22.274881516587676},{\"label\":\"Keep Informed\",\"x\":199,\"y\":295,\"xPercent\":39.6414342629482,\"yPercent\":69.90521327014217},{\"label\":\"Medium Contact\",\"x\":377,\"y\":294,\"xPercent\":75.0996015936255,\"yPercent\":69.66824644549763}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 370,
+        "attempt_id": 51,
+        "question_id": 20,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 371,
+        "attempt_id": 51,
+        "question_id": 22,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 372,
+        "attempt_id": 52,
+        "question_id": 21,
+        "answer_option_id": null,
+        "answer_text": "[\"focus\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 373,
+        "attempt_id": 52,
+        "question_id": 23,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Address Concerns\",\"x\":208,\"y\":155,\"xPercent\":41.43426294820717,\"yPercent\":36.72985781990521},{\"label\":\"High Contact\",\"x\":362,\"y\":140,\"xPercent\":72.11155378486056,\"yPercent\":33.175355450236964},{\"label\":\"Keep Informed\",\"x\":207,\"y\":310,\"xPercent\":41.235059760956176,\"yPercent\":73.45971563981043},{\"label\":\"Medium Contact\",\"x\":384,\"y\":331,\"xPercent\":76.49402390438247,\"yPercent\":78.43601895734598}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 374,
+        "attempt_id": 52,
+        "question_id": 20,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 375,
+        "attempt_id": 52,
+        "question_id": 22,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 376,
+        "attempt_id": 53,
+        "question_id": 21,
+        "answer_option_id": null,
+        "answer_text": "[\"focus\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 377,
+        "attempt_id": 53,
+        "question_id": 23,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Address Concerns\",\"x\":210,\"y\":164,\"xPercent\":41.832669322709165,\"yPercent\":38.862559241706165},{\"label\":\"High Contact\",\"x\":372,\"y\":160,\"xPercent\":74.10358565737052,\"yPercent\":37.91469194312796},{\"label\":\"Keep Informed\",\"x\":202,\"y\":340,\"xPercent\":40.23904382470119,\"yPercent\":80.56872037914692},{\"label\":\"Medium Contact\",\"x\":383,\"y\":323,\"xPercent\":76.29482071713147,\"yPercent\":76.54028436018957}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 378,
+        "attempt_id": 53,
+        "question_id": 20,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 379,
+        "attempt_id": 53,
+        "question_id": 22,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 380,
+        "attempt_id": 54,
+        "question_id": 21,
+        "answer_option_id": null,
+        "answer_text": "[\"Focus\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 381,
+        "attempt_id": 54,
+        "question_id": 23,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Address Concerns\",\"x\":212,\"y\":88,\"xPercent\":42.23107569721115,\"yPercent\":20.85308056872038},{\"label\":\"High Contact\",\"x\":382,\"y\":94,\"xPercent\":76.09561752988047,\"yPercent\":22.274881516587676},{\"label\":\"Keep Informed\",\"x\":203,\"y\":265,\"xPercent\":40.438247011952186,\"yPercent\":62.796208530805686},{\"label\":\"Medium Contact\",\"x\":389,\"y\":278,\"xPercent\":77.49003984063745,\"yPercent\":65.87677725118483}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 382,
+        "attempt_id": 54,
+        "question_id": 20,
+        "answer_option_id": null,
+        "answer_text": "{\"Procedural Changes\":\"The Focus Process\",\"Behavioural Change\":\"The Implementation Process\"}",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 383,
+        "attempt_id": 54,
+        "question_id": 22,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Shock\",\"x\":137,\"y\":154,\"xPercent\":12.309074573225516,\"yPercent\":29.50191570881226},{\"label\":\"Denial\",\"x\":225,\"y\":384,\"xPercent\":20.21563342318059,\"yPercent\":73.5632183908046},{\"label\":\"Frustration\",\"x\":412,\"y\":174,\"xPercent\":37.01707097933513,\"yPercent\":33.33333333333333},{\"label\":\"Morale Dip\",\"x\":512,\"y\":314,\"xPercent\":46.00179694519318,\"yPercent\":60.15325670498084},{\"label\":\"Decisions\",\"x\":653,\"y\":134,\"xPercent\":58.67026055705301,\"yPercent\":25.67049808429119},{\"label\":\"Integration\",\"x\":944,\"y\":164,\"xPercent\":84.81581311769992,\"yPercent\":31.417624521072796},{\"label\":\"Depression\",\"x\":672,\"y\":432,\"xPercent\":60.37735849056604,\"yPercent\":82.75862068965517},{\"label\":\"Trial and Experimentation\",\"x\":868,\"y\":303,\"xPercent\":77.9874213836478,\"yPercent\":58.04597701149425}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 384,
+        "attempt_id": 55,
+        "question_id": 21,
+        "answer_option_id": null,
+        "answer_text": "[\"focus\"]",
+        "is_correct": 1,
+        "points_earned": 1
+      },
+      {
+        "id": 385,
+        "attempt_id": 55,
+        "question_id": 23,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Address Concerns\",\"x\":196,\"y\":105,\"xPercent\":39.2,\"yPercent\":25},{\"label\":\"High Contact\",\"x\":391,\"y\":109,\"xPercent\":78.2,\"yPercent\":25.952380952380956},{\"label\":\"Keep Informed\",\"x\":222,\"y\":271,\"xPercent\":44.4,\"yPercent\":64.52380952380953},{\"label\":\"Medium Contact\",\"x\":406,\"y\":280,\"xPercent\":81.2,\"yPercent\":66.66666666666666}]",
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 386,
+        "attempt_id": 55,
+        "question_id": 20,
+        "answer_option_id": null,
+        "answer_text": null,
+        "is_correct": 0,
+        "points_earned": 0
+      },
+      {
+        "id": 387,
+        "attempt_id": 55,
+        "question_id": 22,
+        "answer_option_id": null,
+        "answer_text": "[{\"label\":\"Morale Dip\",\"x\":624,\"y\":376,\"xPercent\":45.64740307242136,\"yPercent\":58.75},{\"label\":\"Integration\",\"x\":1138,\"y\":179,\"xPercent\":83.24798829553768,\"yPercent\":27.968749999999996},{\"label\":\"Trial and Experimentation\",\"x\":1066,\"y\":341,\"xPercent\":77.98098024871982,\"yPercent\":53.28125},{\"label\":\"Shock\",\"x\":187,\"y\":169,\"xPercent\":13.679590343818582,\"yPercent\":26.406249999999996},{\"label\":\"Denial\",\"x\":324,\"y\":455,\"xPercent\":23.70153621068032,\"yPercent\":71.09375},{\"label\":\"Frustration\",\"x\":525,\"y\":244,\"xPercent\":38.40526700804682,\"yPercent\":38.125},{\"label\":\"Depression\",\"x\":757,\"y\":564,\"xPercent\":55.37673738112655,\"yPercent\":88.125},{\"label\":\"Decisions\",\"x\":814,\"y\":159,\"xPercent\":59.54645208485735,\"yPercent\":24.84375}]",
+        "is_correct": 0,
+        "points_earned": 0
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "ENAM",
+      "served_by_colo": "EWR",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 1.9235
+      },
+      "duration": 1.9235,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 2318336,
+      "rows_read": 377,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

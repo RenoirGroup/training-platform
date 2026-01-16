@@ -1,0 +1,69 @@
+[
+  {
+    "results": [
+      {
+        "id": 1,
+        "cohort_id": 1,
+        "pathway_id": 1,
+        "deadline": null,
+        "assigned_at": "2025-12-02 12:40:40",
+        "assigned_by": null,
+        "active": 1
+      },
+      {
+        "id": 2,
+        "cohort_id": 1,
+        "pathway_id": 2,
+        "deadline": null,
+        "assigned_at": "2025-12-08 03:34:15",
+        "assigned_by": null,
+        "active": 1
+      },
+      {
+        "id": 3,
+        "cohort_id": 1,
+        "pathway_id": 5,
+        "deadline": null,
+        "assigned_at": "2025-12-08 02:12:45",
+        "assigned_by": null,
+        "active": 1
+      },
+      {
+        "id": 4,
+        "cohort_id": 1,
+        "pathway_id": 6,
+        "deadline": null,
+        "assigned_at": "2025-12-08 07:52:49",
+        "assigned_by": null,
+        "active": 1
+      },
+      {
+        "id": 5,
+        "cohort_id": 1,
+        "pathway_id": 7,
+        "deadline": null,
+        "assigned_at": "2026-01-15 13:58:51",
+        "assigned_by": null,
+        "active": 1
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "ENAM",
+      "served_by_colo": "EWR",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.2006
+      },
+      "duration": 0.2006,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 2318336,
+      "rows_read": 5,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

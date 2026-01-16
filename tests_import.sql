@@ -1,0 +1,11 @@
+INSERT INTO tests (id, level_id, title, description, pass_percentage, time_limit_minutes, created_at) VALUES (4, 6, 'Introduction & Product Knowledge', NULL, 80, NULL, '2025-10-29 00:11:30');
+INSERT INTO tests (id, level_id, title, description, pass_percentage, time_limit_minutes, created_at) VALUES (12, 7, 'Project Management Test One', NULL, 80, NULL, '2025-10-29 04:34:53');
+INSERT INTO tests (id, level_id, title, description, pass_percentage, time_limit_minutes, created_at) VALUES (13, 9, 'Change Management - Test 1', NULL, 80, NULL, '2025-10-29 05:52:01');
+INSERT INTO tests (id, level_id, title, description, pass_percentage, time_limit_minutes, created_at) VALUES (14, 18, 'Renoir Strategy', NULL, 80, NULL, '2025-10-31 03:34:02');
+INSERT INTO tests (id, level_id, title, description, pass_percentage, time_limit_minutes, created_at) VALUES (15, 10, 'Client Management', NULL, 80, NULL, '2025-10-31 09:49:55');
+INSERT INTO tests (id, level_id, title, description, pass_percentage, time_limit_minutes, created_at) VALUES (16, 11, 'Resource Analysis', NULL, 80, NULL, '2025-10-31 13:40:30');
+INSERT INTO tests (id, level_id, title, description, pass_percentage, time_limit_minutes, created_at) VALUES (17, 12, 'Renoir Process Mapping', NULL, 80, NULL, '2025-11-01 05:04:22');
+INSERT INTO tests (id, level_id, title, description, pass_percentage, time_limit_minutes, created_at) VALUES (18, 13, 'Management Control System (MCS)', NULL, 80, NULL, '2025-11-01 06:30:42');
+INSERT INTO tests (id, level_id, title, description, pass_percentage, time_limit_minutes, created_at) VALUES (19, 14, 'Renoir Structures', NULL, 80, NULL, '2025-11-01 07:45:07');
+INSERT INTO tests (id, level_id, title, description, pass_percentage, time_limit_minutes, created_at) VALUES (20, 16, 'Renoir Bases and Evaluation', NULL, 80, NULL, '2025-11-03 02:33:27');
+INSERT INTO tests (id, level_id, title, description, pass_percentage, time_limit_minutes, created_at) VALUES (21, 17, 'Data Analytics - Business Intelligence', NULL, 80, NULL, '2025-11-03 03:20:43');

@@ -1,0 +1,66 @@
+[
+  {
+    "results": [
+      {
+        "id": 1,
+        "cohort_id": 1,
+        "user_id": 3,
+        "joined_at": "2025-12-02 12:40:40",
+        "active": 1
+      },
+      {
+        "id": 2,
+        "cohort_id": 1,
+        "user_id": 4,
+        "joined_at": "2025-12-02 12:40:40",
+        "active": 1
+      },
+      {
+        "id": 3,
+        "cohort_id": 1,
+        "user_id": 8,
+        "joined_at": "2025-12-02 12:40:40",
+        "active": 1
+      },
+      {
+        "id": 4,
+        "cohort_id": 1,
+        "user_id": 11,
+        "joined_at": "2025-12-02 12:40:40",
+        "active": 1
+      },
+      {
+        "id": 6,
+        "cohort_id": 1,
+        "user_id": 1,
+        "joined_at": "2025-12-08 02:12:45",
+        "active": 1
+      },
+      {
+        "id": 7,
+        "cohort_id": 1,
+        "user_id": 2,
+        "joined_at": "2025-12-08 02:31:48",
+        "active": 1
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "ENAM",
+      "served_by_colo": "EWR",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.1159
+      },
+      "duration": 0.1159,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 2318336,
+      "rows_read": 6,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

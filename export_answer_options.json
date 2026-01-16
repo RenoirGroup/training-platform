@@ -1,0 +1,1102 @@
+[
+  {
+    "results": [
+      {
+        "id": 31,
+        "question_id": 4,
+        "option_text": "Technical Excellence",
+        "is_correct": 0,
+        "order_index": 1
+      },
+      {
+        "id": 32,
+        "question_id": 4,
+        "option_text": "Strategic Advicve",
+        "is_correct": 0,
+        "order_index": 2
+      },
+      {
+        "id": 33,
+        "question_id": 4,
+        "option_text": "Operational Excellence",
+        "is_correct": 1,
+        "order_index": 3
+      },
+      {
+        "id": 34,
+        "question_id": 6,
+        "option_text": "Optimum Equipment Effectiveness",
+        "is_correct": 0,
+        "order_index": 1
+      },
+      {
+        "id": 35,
+        "question_id": 6,
+        "option_text": "Output Effectiveness Evaluation",
+        "is_correct": 0,
+        "order_index": 2
+      },
+      {
+        "id": 36,
+        "question_id": 6,
+        "option_text": "Operational Equipment Efficiency",
+        "is_correct": 0,
+        "order_index": 3
+      },
+      {
+        "id": 37,
+        "question_id": 6,
+        "option_text": "Overall Equipment Effectiveness",
+        "is_correct": 1,
+        "order_index": 4
+      },
+      {
+        "id": 38,
+        "question_id": 6,
+        "option_text": "Overly Elaborate Explanation",
+        "is_correct": 0,
+        "order_index": 5
+      },
+      {
+        "id": 39,
+        "question_id": 8,
+        "option_text": "True",
+        "is_correct": 1,
+        "order_index": 1
+      },
+      {
+        "id": 40,
+        "question_id": 8,
+        "option_text": "False",
+        "is_correct": 0,
+        "order_index": 2
+      },
+      {
+        "id": 55,
+        "question_id": 19,
+        "option_text": "True",
+        "is_correct": 0,
+        "order_index": 1
+      },
+      {
+        "id": 56,
+        "question_id": 19,
+        "option_text": "False",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 70,
+        "question_id": 27,
+        "option_text": "True",
+        "is_correct": 0,
+        "order_index": 1
+      },
+      {
+        "id": 71,
+        "question_id": 27,
+        "option_text": "False",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 82,
+        "question_id": 41,
+        "option_text": "Communicate progress transparently and show milestones ahead",
+        "is_correct": 1,
+        "order_index": 1
+      },
+      {
+        "id": 83,
+        "question_id": 41,
+        "option_text": "Re-set expectations to align with realistic timelines",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 84,
+        "question_id": 41,
+        "option_text": "Promise immediate results to ease tension",
+        "is_correct": 0,
+        "order_index": 3
+      },
+      {
+        "id": 85,
+        "question_id": 41,
+        "option_text": "Avoid contact until results appear",
+        "is_correct": 0,
+        "order_index": 4
+      },
+      {
+        "id": 90,
+        "question_id": 35,
+        "option_text": "Be prepared, make sure there are no inconsistencies in your materials, and that the examples  and data you use are relevant.",
+        "is_correct": 1,
+        "order_index": 1
+      },
+      {
+        "id": 91,
+        "question_id": 35,
+        "option_text": " Having a clear intention - not knowing where you want to go with your discussion is a disaster.",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 92,
+        "question_id": 35,
+        "option_text": "Show off your knowledge often to establish authority",
+        "is_correct": 0,
+        "order_index": 3
+      },
+      {
+        "id": 93,
+        "question_id": 35,
+        "option_text": "Be honest, and say “I don’t know” when appropriate",
+        "is_correct": 1,
+        "order_index": 4
+      },
+      {
+        "id": 94,
+        "question_id": 35,
+        "option_text": "Practice leads to competence, competence leads to confidence.",
+        "is_correct": 1,
+        "order_index": 5
+      },
+      {
+        "id": 95,
+        "question_id": 38,
+        "option_text": "Say what you’ll do, and do what you say",
+        "is_correct": 1,
+        "order_index": 1
+      },
+      {
+        "id": 96,
+        "question_id": 38,
+        "option_text": "Always pre-present to key stakeholders",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 97,
+        "question_id": 38,
+        "option_text": "Avoid escalation and never admit fault",
+        "is_correct": 0,
+        "order_index": 3
+      },
+      {
+        "id": 98,
+        "question_id": 38,
+        "option_text": "Reconfirm events and solve problems quickly",
+        "is_correct": 1,
+        "order_index": 4
+      },
+      {
+        "id": 99,
+        "question_id": 38,
+        "option_text": "Use excuses when delays occur",
+        "is_correct": 0,
+        "order_index": 5
+      },
+      {
+        "id": 104,
+        "question_id": 45,
+        "option_text": "Count Not Working / Count Present",
+        "is_correct": 0,
+        "order_index": 1
+      },
+      {
+        "id": 105,
+        "question_id": 45,
+        "option_text": "Count Working / Total Count",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 106,
+        "question_id": 45,
+        "option_text": "Productive Time / Available Time",
+        "is_correct": 0,
+        "order_index": 3
+      },
+      {
+        "id": 107,
+        "question_id": 45,
+        "option_text": "Total Output / Total Time",
+        "is_correct": 0,
+        "order_index": 4
+      },
+      {
+        "id": 108,
+        "question_id": 44,
+        "option_text": "Sweat-shop environments: >75%",
+        "is_correct": 1,
+        "order_index": 1
+      },
+      {
+        "id": 109,
+        "question_id": 44,
+        "option_text": "Manufacturing: 45%-75%",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 110,
+        "question_id": 44,
+        "option_text": "Service: 35%-65%",
+        "is_correct": 1,
+        "order_index": 3
+      },
+      {
+        "id": 111,
+        "question_id": 44,
+        "option_text": "Maintenance / Construction / O&G: 15%–40%",
+        "is_correct": 1,
+        "order_index": 4
+      },
+      {
+        "id": 112,
+        "question_id": 49,
+        "option_text": "True",
+        "is_correct": 0,
+        "order_index": 1
+      },
+      {
+        "id": 113,
+        "question_id": 49,
+        "option_text": "False",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 114,
+        "question_id": 53,
+        "option_text": "Recommend immediate 30% headcount reduction to match the 32% reading",
+        "is_correct": 0,
+        "order_index": 1
+      },
+      {
+        "id": 115,
+        "question_id": 53,
+        "option_text": "Explain that 32% falls within the typical 15%-40% range for maintenance/construction/oil & gas, but conduct a Wrench Time study to identify which delays are impactable",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 116,
+        "question_id": 53,
+        "option_text": "Suggest switching to OEE measurement to get a higher-looking number",
+        "is_correct": 0,
+        "order_index": 3
+      },
+      {
+        "id": 117,
+        "question_id": 53,
+        "option_text": "Acknowledge the poor performance and recommend process outsourcing",
+        "is_correct": 0,
+        "order_index": 4
+      },
+      {
+        "id": 118,
+        "question_id": 54,
+        "option_text": "Produce and deliver products and services",
+        "is_correct": 0,
+        "order_index": 1
+      },
+      {
+        "id": 119,
+        "question_id": 54,
+        "option_text": "Manage improvement and change",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 120,
+        "question_id": 54,
+        "option_text": "Market and sell",
+        "is_correct": 0,
+        "order_index": 3
+      },
+      {
+        "id": 121,
+        "question_id": 54,
+        "option_text": "Invoice and service customers",
+        "is_correct": 0,
+        "order_index": 4
+      },
+      {
+        "id": 122,
+        "question_id": 55,
+        "option_text": "A Process Group can contain multiple Functions",
+        "is_correct": 0,
+        "order_index": 1
+      },
+      {
+        "id": 123,
+        "question_id": 55,
+        "option_text": "A Function (e.g., Sales) can contain multiple Process Groups (e.g., Delivery)",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 124,
+        "question_id": 55,
+        "option_text": "A Process can be broken down into Activities/Tasks",
+        "is_correct": 1,
+        "order_index": 3
+      },
+      {
+        "id": 125,
+        "question_id": 55,
+        "option_text": "Activities are the lowest level of granularity possible in the Work Taxonomy",
+        "is_correct": 0,
+        "order_index": 4
+      },
+      {
+        "id": 126,
+        "question_id": 56,
+        "option_text": "True",
+        "is_correct": 0,
+        "order_index": 1
+      },
+      {
+        "id": 127,
+        "question_id": 56,
+        "option_text": "False",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 128,
+        "question_id": 61,
+        "option_text": "Use actual life-sized copies of documents and computer interface screenshots pasted directly on the brown paper",
+        "is_correct": 1,
+        "order_index": 1
+      },
+      {
+        "id": 129,
+        "question_id": 61,
+        "option_text": "Always include every page of multi-page documents to maintain complete documentation",
+        "is_correct": 0,
+        "order_index": 2
+      },
+      {
+        "id": 130,
+        "question_id": 61,
+        "option_text": "Write document names in large letters using marker pen for readability during presentations",
+        "is_correct": 1,
+        "order_index": 3
+      },
+      {
+        "id": 131,
+        "question_id": 61,
+        "option_text": " Use PostIt Notes for critiques so they can be grouped by affinity later",
+        "is_correct": 1,
+        "order_index": 4
+      },
+      {
+        "id": 132,
+        "question_id": 61,
+        "option_text": "Verify that documents are \"live\" (current/recently used) and have history, not magically produced after your arrival",
+        "is_correct": 1,
+        "order_index": 5
+      },
+      {
+        "id": 133,
+        "question_id": 61,
+        "option_text": "Use a single sheet of brown paper to keep the presentation compact and professional",
+        "is_correct": 0,
+        "order_index": 6
+      },
+      {
+        "id": 134,
+        "question_id": 63,
+        "option_text": "Value Adding (VA); because it produces a necessary output",
+        "is_correct": 0,
+        "order_index": 1
+      },
+      {
+        "id": 135,
+        "question_id": 63,
+        "option_text": "Partially Value Adding (PVA); because some portions add value",
+        "is_correct": 0,
+        "order_index": 2
+      },
+      {
+        "id": 136,
+        "question_id": 63,
+        "option_text": "Non-Value Adding (NVA); specifically, duplication of data (Operation type)",
+        "is_correct": 1,
+        "order_index": 3
+      },
+      {
+        "id": 137,
+        "question_id": 63,
+        "option_text": "Non-Value Adding (NVA); specifically, multiple manual manipulations (Movement type)",
+        "is_correct": 0,
+        "order_index": 4
+      },
+      {
+        "id": 138,
+        "question_id": 64,
+        "option_text": "True",
+        "is_correct": 0,
+        "order_index": 1
+      },
+      {
+        "id": 139,
+        "question_id": 64,
+        "option_text": "False",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 140,
+        "question_id": 65,
+        "option_text": "Feedback loops are used to measure how happy employees are with their work",
+        "is_correct": 0,
+        "order_index": 1
+      },
+      {
+        "id": 141,
+        "question_id": 65,
+        "option_text": "If you are unhappy with system outputs, you need feedback on performance to adjust inputs until you are happy with outputs",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 142,
+        "question_id": 65,
+        "option_text": "Feedback loops are primarily used to communicate bad news to senior management",
+        "is_correct": 0,
+        "order_index": 3
+      },
+      {
+        "id": 143,
+        "question_id": 65,
+        "option_text": "Feedback loops eliminate the need for planning because real-time adjustments make plans obsolete",
+        "is_correct": 0,
+        "order_index": 4
+      },
+      {
+        "id": 148,
+        "question_id": 68,
+        "option_text": "True",
+        "is_correct": 1,
+        "order_index": 1
+      },
+      {
+        "id": 149,
+        "question_id": 68,
+        "option_text": "False",
+        "is_correct": 0,
+        "order_index": 2
+      },
+      {
+        "id": 150,
+        "question_id": 69,
+        "option_text": "Classroom theory training only",
+        "is_correct": 0,
+        "order_index": 1
+      },
+      {
+        "id": 151,
+        "question_id": 69,
+        "option_text": "Direct interventions in the workplace showing how to do the job properly",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 152,
+        "question_id": 69,
+        "option_text": "Annual performance reviews only",
+        "is_correct": 0,
+        "order_index": 3
+      },
+      {
+        "id": 153,
+        "question_id": 69,
+        "option_text": "Assigning disciplinary actions to poor performers",
+        "is_correct": 0,
+        "order_index": 4
+      },
+      {
+        "id": 154,
+        "question_id": 73,
+        "option_text": "Organisation Development and Process Mapping",
+        "is_correct": 0,
+        "order_index": 1
+      },
+      {
+        "id": 155,
+        "question_id": 73,
+        "option_text": "Organisation Design (Procedural) and Organisation Development (Behavioural)",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 156,
+        "question_id": 73,
+        "option_text": "Job Design and Centralisation",
+        "is_correct": 0,
+        "order_index": 3
+      },
+      {
+        "id": 157,
+        "question_id": 73,
+        "option_text": "Policy Deployment and Talent Management",
+        "is_correct": 0,
+        "order_index": 4
+      },
+      {
+        "id": 158,
+        "question_id": 76,
+        "option_text": "True",
+        "is_correct": 1,
+        "order_index": 1
+      },
+      {
+        "id": 159,
+        "question_id": 76,
+        "option_text": "False",
+        "is_correct": 0,
+        "order_index": 2
+      },
+      {
+        "id": 160,
+        "question_id": 77,
+        "option_text": "Improve customer satisfaction",
+        "is_correct": 1,
+        "order_index": 1
+      },
+      {
+        "id": 161,
+        "question_id": 77,
+        "option_text": "Increase bureaucracy",
+        "is_correct": 0,
+        "order_index": 2
+      },
+      {
+        "id": 162,
+        "question_id": 77,
+        "option_text": "Reduce hierarchical layers",
+        "is_correct": 1,
+        "order_index": 3
+      },
+      {
+        "id": 163,
+        "question_id": 77,
+        "option_text": "Increase span of control",
+        "is_correct": 1,
+        "order_index": 4
+      },
+      {
+        "id": 164,
+        "question_id": 77,
+        "option_text": "Low risk of adverse side effects",
+        "is_correct": 1,
+        "order_index": 5
+      },
+      {
+        "id": 165,
+        "question_id": 79,
+        "option_text": "True",
+        "is_correct": 1,
+        "order_index": 1
+      },
+      {
+        "id": 166,
+        "question_id": 79,
+        "option_text": "False",
+        "is_correct": 0,
+        "order_index": 2
+      },
+      {
+        "id": 167,
+        "question_id": 84,
+        "option_text": "Check source and verify accuracy of data",
+        "is_correct": 1,
+        "order_index": 1
+      },
+      {
+        "id": 168,
+        "question_id": 84,
+        "option_text": "Aim for at least 30 measurements in any sample",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 169,
+        "question_id": 84,
+        "option_text": "Identify and investigate outliers (>1.5 times IQR from quartiles)",
+        "is_correct": 1,
+        "order_index": 3
+      },
+      {
+        "id": 170,
+        "question_id": 84,
+        "option_text": "Accept all data regardless of inconsistencies",
+        "is_correct": 0,
+        "order_index": 4
+      },
+      {
+        "id": 171,
+        "question_id": 84,
+        "option_text": "Use Excel Descriptive Statistics to check for normality",
+        "is_correct": 1,
+        "order_index": 5
+      },
+      {
+        "id": 172,
+        "question_id": 84,
+        "option_text": "Always remove any data that doesn't fit your hypothesis",
+        "is_correct": 0,
+        "order_index": 6
+      },
+      {
+        "id": 173,
+        "question_id": 87,
+        "option_text": "True",
+        "is_correct": 0,
+        "order_index": 1
+      },
+      {
+        "id": 174,
+        "question_id": 87,
+        "option_text": "False",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 175,
+        "question_id": 89,
+        "option_text": "Direct payroll",
+        "is_correct": 1,
+        "order_index": 1
+      },
+      {
+        "id": 176,
+        "question_id": 89,
+        "option_text": "National insurance/government tax paid by employer",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 177,
+        "question_id": 89,
+        "option_text": "Recruitment",
+        "is_correct": 1,
+        "order_index": 3
+      },
+      {
+        "id": 178,
+        "question_id": 89,
+        "option_text": "Office building rent",
+        "is_correct": 0,
+        "order_index": 4
+      },
+      {
+        "id": 179,
+        "question_id": 89,
+        "option_text": "Training",
+        "is_correct": 1,
+        "order_index": 5
+      },
+      {
+        "id": 180,
+        "question_id": 89,
+        "option_text": "Paid sick leave",
+        "is_correct": 1,
+        "order_index": 6
+      },
+      {
+        "id": 181,
+        "question_id": 90,
+        "option_text": "Extracting, Transforming, Loading (ETL)",
+        "is_correct": 1,
+        "order_index": 1
+      },
+      {
+        "id": 182,
+        "question_id": 90,
+        "option_text": "Sourcing, Organizing, Reporting",
+        "is_correct": 0,
+        "order_index": 2
+      },
+      {
+        "id": 183,
+        "question_id": 90,
+        "option_text": "Collecting, Cleaning, Visualizing",
+        "is_correct": 0,
+        "order_index": 3
+      },
+      {
+        "id": 184,
+        "question_id": 90,
+        "option_text": "Planning, Implementing, Monitoring",
+        "is_correct": 0,
+        "order_index": 4
+      },
+      {
+        "id": 185,
+        "question_id": 93,
+        "option_text": "Fixing null (missing) values",
+        "is_correct": 0,
+        "order_index": 1
+      },
+      {
+        "id": 186,
+        "question_id": 93,
+        "option_text": "Using raw data, not pre-existing reports",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 187,
+        "question_id": 93,
+        "option_text": "Ensuring measurement methods are repeatable and reproducible",
+        "is_correct": 1,
+        "order_index": 3
+      },
+      {
+        "id": 188,
+        "question_id": 93,
+        "option_text": "Accepting all data regardless of inconsistencies",
+        "is_correct": 0,
+        "order_index": 4
+      },
+      {
+        "id": 189,
+        "question_id": 93,
+        "option_text": "Identifying and investigating outliers",
+        "is_correct": 1,
+        "order_index": 5
+      },
+      {
+        "id": 190,
+        "question_id": 93,
+        "option_text": "Using descriptive statistics to test for normality",
+        "is_correct": 1,
+        "order_index": 6
+      },
+      {
+        "id": 191,
+        "question_id": 95,
+        "option_text": "True",
+        "is_correct": 0,
+        "order_index": 1
+      },
+      {
+        "id": 192,
+        "question_id": 95,
+        "option_text": "False",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 193,
+        "question_id": 96,
+        "option_text": "The lack of affordable BI tools",
+        "is_correct": 0,
+        "order_index": 1
+      },
+      {
+        "id": 194,
+        "question_id": 96,
+        "option_text": "The data that is NOT measured",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 195,
+        "question_id": 96,
+        "option_text": "Poor data visualization techniques",
+        "is_correct": 0,
+        "order_index": 3
+      },
+      {
+        "id": 196,
+        "question_id": 96,
+        "option_text": "Insufficient IT infrastructure",
+        "is_correct": 0,
+        "order_index": 4
+      },
+      {
+        "id": 197,
+        "question_id": 97,
+        "option_text": "Speeds up report and chart preparation",
+        "is_correct": 1,
+        "order_index": 1
+      },
+      {
+        "id": 198,
+        "question_id": 97,
+        "option_text": "Builds a common data language",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 199,
+        "question_id": 97,
+        "option_text": "Centralises data from disparate silos/systems to a single digital platform",
+        "is_correct": 1,
+        "order_index": 3
+      },
+      {
+        "id": 200,
+        "question_id": 97,
+        "option_text": "Eliminates all need for data governance",
+        "is_correct": 0,
+        "order_index": 4
+      },
+      {
+        "id": 201,
+        "question_id": 97,
+        "option_text": "Highlights current inefficiencies in business and data processes",
+        "is_correct": 1,
+        "order_index": 5
+      },
+      {
+        "id": 202,
+        "question_id": 97,
+        "option_text": "Establishes data foundations for more powerful BI",
+        "is_correct": 1,
+        "order_index": 6
+      },
+      {
+        "id": 233,
+        "question_id": 13,
+        "option_text": "Agreement to Proceed",
+        "is_correct": 1,
+        "order_index": 1
+      },
+      {
+        "id": 234,
+        "question_id": 13,
+        "option_text": "Reference letters",
+        "is_correct": 0,
+        "order_index": 2
+      },
+      {
+        "id": 235,
+        "question_id": 13,
+        "option_text": "PM Reports",
+        "is_correct": 1,
+        "order_index": 3
+      },
+      {
+        "id": 236,
+        "question_id": 13,
+        "option_text": "Close out reports",
+        "is_correct": 0,
+        "order_index": 4
+      },
+      {
+        "id": 237,
+        "question_id": 13,
+        "option_text": "Consultant Training",
+        "is_correct": 1,
+        "order_index": 5
+      },
+      {
+        "id": 238,
+        "question_id": 13,
+        "option_text": "Steps to Milestone document",
+        "is_correct": 0,
+        "order_index": 6
+      },
+      {
+        "id": 239,
+        "question_id": 13,
+        "option_text": "More work scope",
+        "is_correct": 1,
+        "order_index": 7
+      },
+      {
+        "id": 240,
+        "question_id": 13,
+        "option_text": "Client change requests",
+        "is_correct": 1,
+        "order_index": 8
+      },
+      {
+        "id": 241,
+        "question_id": 13,
+        "option_text": "Strategic Integration Meeting Map",
+        "is_correct": 0,
+        "order_index": 9
+      },
+      {
+        "id": 256,
+        "question_id": 26,
+        "option_text": "True",
+        "is_correct": 0,
+        "order_index": 1
+      },
+      {
+        "id": 257,
+        "question_id": 26,
+        "option_text": "False",
+        "is_correct": 1,
+        "order_index": 2
+      },
+      {
+        "id": 262,
+        "question_id": 24,
+        "option_text": "Designing new strategy frameworks",
+        "is_correct": 0,
+        "order_index": 1
+      },
+      {
+        "id": 263,
+        "question_id": 24,
+        "option_text": "Better financial ratios",
+        "is_correct": 0,
+        "order_index": 2
+      },
+      {
+        "id": 264,
+        "question_id": 24,
+        "option_text": "People behaving differently",
+        "is_correct": 1,
+        "order_index": 3
+      },
+      {
+        "id": 265,
+        "question_id": 24,
+        "option_text": "Improved control systems",
+        "is_correct": 0,
+        "order_index": 4
+      },
+      {
+        "id": 278,
+        "question_id": 25,
+        "option_text": "Strategy",
+        "is_correct": 0,
+        "order_index": 1
+      },
+      {
+        "id": 279,
+        "question_id": 25,
+        "option_text": "Structure",
+        "is_correct": 0,
+        "order_index": 2
+      },
+      {
+        "id": 280,
+        "question_id": 25,
+        "option_text": "Shared Values",
+        "is_correct": 1,
+        "order_index": 3
+      },
+      {
+        "id": 281,
+        "question_id": 25,
+        "option_text": "Skills",
+        "is_correct": 1,
+        "order_index": 4
+      },
+      {
+        "id": 282,
+        "question_id": 25,
+        "option_text": "Systems",
+        "is_correct": 0,
+        "order_index": 5
+      },
+      {
+        "id": 283,
+        "question_id": 25,
+        "option_text": "Staff",
+        "is_correct": 1,
+        "order_index": 6
+      },
+      {
+        "id": 284,
+        "question_id": 25,
+        "option_text": "Style",
+        "is_correct": 1,
+        "order_index": 7
+      },
+      {
+        "id": 290,
+        "question_id": 10,
+        "option_text": "Client Management",
+        "is_correct": 1,
+        "order_index": 1
+      },
+      {
+        "id": 291,
+        "question_id": 10,
+        "option_text": "People Management",
+        "is_correct": 0,
+        "order_index": 2
+      },
+      {
+        "id": 292,
+        "question_id": 10,
+        "option_text": "Change Management",
+        "is_correct": 1,
+        "order_index": 3
+      },
+      {
+        "id": 293,
+        "question_id": 10,
+        "option_text": "Sales Management",
+        "is_correct": 0,
+        "order_index": 4
+      },
+      {
+        "id": 294,
+        "question_id": 10,
+        "option_text": "Project Management",
+        "is_correct": 1,
+        "order_index": 5
+      },
+      {
+        "id": 299,
+        "question_id": 34,
+        "option_text": "(Credibility + Reliability + Intimacy) ÷ Self-Orientation",
+        "is_correct": 1,
+        "order_index": 1
+      },
+      {
+        "id": 300,
+        "question_id": 34,
+        "option_text": "(Credibility + Intimacy) × Reliability × Self-Orientation",
+        "is_correct": 0,
+        "order_index": 2
+      },
+      {
+        "id": 301,
+        "question_id": 34,
+        "option_text": "(Credibility × Reliability × Intimacy) ÷ Self-Orientation",
+        "is_correct": 0,
+        "order_index": 3
+      },
+      {
+        "id": 302,
+        "question_id": 34,
+        "option_text": "(Credibility × Intimacy) ÷ Reliability × Self-Orientation",
+        "is_correct": 0,
+        "order_index": 4
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "ENAM",
+      "served_by_colo": "EWR",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.4187
+      },
+      "duration": 0.4187,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 2318336,
+      "rows_read": 154,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

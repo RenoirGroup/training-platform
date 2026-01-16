@@ -1,0 +1,26 @@
+-- COMPLETE DATABASE EXPORT FROM OLD PRODUCTION
+-- Generated: Fri Jan 16 07:40:56 UTC 2026
+
+-- Table: users
+-- Table: achievements
+-- Table: user_achievements
+-- Table: levels
+-- Table: training_materials
+-- Table: tests
+-- Table: questions
+-- Table: answer_options
+-- Table: boss_level_tasks
+-- Table: user_streaks
+-- Table: leaderboard
+-- Table: activity_log
+-- Table: pathways
+-- Table: pathway_levels
+-- Table: pathway_enrollments
+-- Table: cohort_groups
+-- Table: cohort_members
+-- Table: cohort_pathways
+-- Table: user_progress
+-- Table: signoff_requests
+-- Table: test_attempts
+-- Table: user_answers
+-- Table: boss_consultant_relationships
