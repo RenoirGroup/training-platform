@@ -75,9 +75,14 @@
             <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-bold">User Management</h2>
-                    <button onclick="showCreateUserModal()" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded transition-colors">
-                        <i class="fas fa-plus mr-2"></i>Create User
-                    </button>
+                    <div class="flex space-x-2">
+                        <button onclick="showBulkUploadModal()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition-colors">
+                            <i class="fas fa-file-upload mr-2"></i>Bulk Upload CSV
+                        </button>
+                        <button onclick="showCreateUserModal()" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded transition-colors">
+                            <i class="fas fa-plus mr-2"></i>Create User
+                        </button>
+                    </div>
                 </div>
                 <div id="users-list" class="overflow-x-auto"></div>
             </div>
@@ -149,6 +154,20 @@
                     <i class="fas fa-route mr-2 text-blue-600"></i>Pathway Analytics
                 </h3>
                 <div id="pathway-analytics"></div>
+            </div>
+
+            <!-- Hierarchical Cohort Progress Report -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <h3 class="text-xl font-bold mb-4">
+                    <i class="fas fa-users-cog mr-2 text-green-600"></i>Cohort Progress Report
+                </h3>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Select Cohort</label>
+                    <select id="cohort-report-select" class="w-full px-3 py-2 border rounded" onchange="loadCohortProgressReport()">
+                        <option value="">-- Select a Cohort --</option>
+                    </select>
+                </div>
+                <div id="cohort-progress-report"></div>
             </div>
             
             <!-- Original Reports -->
@@ -968,6 +987,66 @@
         </div>
     </div>
 
+    <!-- Bulk Upload Users Modal -->
+    <div id="bulk-upload-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" style="display: none;">
+        <div class="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <h3 class="text-2xl font-bold mb-4"><i class="fas fa-file-upload mr-2"></i>Bulk Upload Users from CSV</h3>
+            
+            <!-- Instructions -->
+            <div class="bg-blue-50 border border-blue-200 rounded p-4 mb-4">
+                <h4 class="font-bold mb-2"><i class="fas fa-info-circle mr-2"></i>CSV Format Instructions</h4>
+                <p class="text-sm mb-2">Your CSV file should have the following columns (header row required):</p>
+                <ul class="text-sm list-disc list-inside space-y-1">
+                    <li><strong>name</strong> - Full name (required)</li>
+                    <li><strong>email</strong> - Email address (required, must be unique)</li>
+                    <li><strong>role</strong> - User role (optional, defaults to "consultant")</li>
+                    <li><strong>division</strong> - Division/Department (optional)</li>
+                    <li><strong>region</strong> - Region (optional)</li>
+                    <li><strong>location</strong> - Office location (optional)</li>
+                    <li><strong>title</strong> - Job title (optional)</li>
+                </ul>
+                <p class="text-sm mt-2"><strong>Default Password:</strong> Welcome123! (users must change on first login)</p>
+                <button onclick="downloadCSVTemplate()" class="mt-2 text-sm text-blue-600 hover:text-blue-800 underline">
+                    <i class="fas fa-download mr-1"></i>Download CSV Template
+                </button>
+            </div>
+
+            <!-- Cohort Selection -->
+            <div class="mb-4">
+                <label class="block text-gray-700 font-bold mb-2">Assign to Cohort (Optional)</label>
+                <select id="bulk-upload-cohort" class="w-full px-3 py-2 border rounded">
+                    <option value="">-- No Cohort Assignment --</option>
+                </select>
+                <p class="text-sm text-gray-600 mt-1">Select a cohort to automatically add all uploaded users</p>
+            </div>
+
+            <!-- File Upload -->
+            <div class="mb-4">
+                <label class="block text-gray-700 font-bold mb-2">Select CSV File</label>
+                <input type="file" id="csv-file-input" accept=".csv" class="w-full px-3 py-2 border rounded" onchange="previewCSV()" />
+            </div>
+
+            <!-- Preview Section -->
+            <div id="csv-preview-section" class="hidden mb-4">
+                <h4 class="font-bold mb-2">Preview (First 5 Rows)</h4>
+                <div id="csv-preview" class="overflow-x-auto max-h-64 border rounded"></div>
+                <p class="text-sm text-gray-600 mt-2">
+                    Total rows: <span id="csv-row-count" class="font-bold">0</span>
+                </p>
+            </div>
+
+            <!-- Upload Results -->
+            <div id="upload-results" class="hidden mb-4"></div>
+
+            <div class="flex justify-end space-x-2">
+                <button type="button" onclick="closeBulkUploadModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
+                <button onclick="processBulkUpload()" id="upload-btn" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded" disabled>
+                    <i class="fas fa-upload mr-2"></i>Upload Users
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
     <script>
         const token = localStorage.getItem('token');
@@ -1019,7 +1098,10 @@
                 loadEnrollmentRequests();
             }
             if (tab === 'relationships') loadRelationships();
-            if (tab === 'reports') loadReports();
+            if (tab === 'reports') {
+                loadReports();
+                loadCohortsForReport();
+            }
         }
 
         async function loadUsers() {
@@ -4535,6 +4617,328 @@
                 }
             } catch (error) {
                 console.error('Error loading managers:', error);
+            }
+        }
+
+        // ============================================
+        // BULK USER UPLOAD FUNCTIONS
+        // ============================================
+
+        let csvData = [];
+
+        function showBulkUploadModal() {
+            // Load cohorts for dropdown
+            loadCohortsForBulkUpload();
+            document.getElementById('bulk-upload-modal').style.display = 'flex';
+        }
+
+        function closeBulkUploadModal() {
+            document.getElementById('bulk-upload-modal').style.display = 'none';
+            document.getElementById('csv-file-input').value = '';
+            document.getElementById('csv-preview-section').classList.add('hidden');
+            document.getElementById('upload-results').classList.add('hidden');
+            document.getElementById('upload-btn').disabled = true;
+            csvData = [];
+        }
+
+        async function loadCohortsForBulkUpload() {
+            try {
+                const response = await axios.get('/api/admin/cohorts');
+                const cohorts = response.data.cohorts;
+                
+                const select = document.getElementById('bulk-upload-cohort');
+                select.innerHTML = '<option value="">-- No Cohort Assignment --</option>' +
+                    cohorts.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            } catch (error) {
+                console.error('Error loading cohorts:', error);
+            }
+        }
+
+        function downloadCSVTemplate() {
+            const template = 'name,email,role,division,region,location,title\n' +
+                'John Smith,john.smith@company.com,consultant,Finance,North America,New York,Senior Consultant\n' +
+                'Jane Doe,jane.doe@company.com,consultant,Operations,Europe,London,Consultant';
+            
+            const blob = new Blob([template], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'user_upload_template.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        function previewCSV() {
+            const fileInput = document.getElementById('csv-file-input');
+            const file = fileInput.files[0];
+            
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const lines = text.split('\n').filter(line => line.trim());
+                
+                if (lines.length < 2) {
+                    alert('CSV file must have at least a header row and one data row');
+                    return;
+                }
+
+                // Parse CSV
+                const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+                csvData = [];
+
+                for (let i = 1; i < lines.length; i++) {
+                    const values = lines[i].split(',').map(v => v.trim());
+                    const row = {};
+                    
+                    headers.forEach((header, index) => {
+                        row[header] = values[index] || '';
+                    });
+                    
+                    csvData.push(row);
+                }
+
+                // Show preview
+                displayCSVPreview(headers, csvData.slice(0, 5));
+                document.getElementById('csv-row-count').textContent = csvData.length;
+                document.getElementById('csv-preview-section').classList.remove('hidden');
+                document.getElementById('upload-btn').disabled = false;
+            };
+            
+            reader.readAsText(file);
+        }
+
+        function displayCSVPreview(headers, data) {
+            const previewEl = document.getElementById('csv-preview');
+            
+            let html = '<table class="min-w-full bg-white border"><thead class="bg-gray-100"><tr>';
+            headers.forEach(header => {
+                html += `<th class="px-4 py-2 text-left text-sm">${header}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+            
+            data.forEach(row => {
+                html += '<tr class="border-t">';
+                headers.forEach(header => {
+                    html += `<td class="px-4 py-2 text-sm">${row[header] || ''}</td>`;
+                });
+                html += '</tr>';
+            });
+            
+            html += '</tbody></table>';
+            previewEl.innerHTML = html;
+        }
+
+        async function processBulkUpload() {
+            if (csvData.length === 0) {
+                alert('Please select a CSV file first');
+                return;
+            }
+
+            const uploadBtn = document.getElementById('upload-btn');
+            const cohortId = document.getElementById('bulk-upload-cohort').value || null;
+            
+            // Show loading state
+            uploadBtn.disabled = true;
+            uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Uploading...';
+
+            try {
+                const response = await axios.post('/api/admin/users/bulk-upload', {
+                    users: csvData,
+                    cohort_id: cohortId
+                });
+
+                const results = response.data.results;
+                displayUploadResults(results, response.data.default_password);
+                
+                // Reload users list
+                await loadUsers();
+
+            } catch (error) {
+                console.error('Error uploading users:', error);
+                alert('Error uploading users: ' + (error.response?.data?.error || error.message));
+            } finally {
+                uploadBtn.disabled = false;
+                uploadBtn.innerHTML = '<i class="fas fa-upload mr-2"></i>Upload Users';
+            }
+        }
+
+        function displayUploadResults(results, defaultPassword) {
+            const resultsEl = document.getElementById('upload-results');
+            
+            let html = '<div class="border rounded p-4">';
+            html += `<h4 class="font-bold mb-2">Upload Results</h4>`;
+            html += `<p class="mb-2">Total: ${results.total} | Success: ${results.success.length} | Errors: ${results.errors.length}</p>`;
+            
+            if (results.success.length > 0) {
+                html += '<div class="bg-green-50 border border-green-200 rounded p-3 mb-3">';
+                html += `<p class="font-bold text-green-800 mb-2"><i class="fas fa-check-circle mr-2"></i>Successfully Processed (${results.success.length})</p>`;
+                html += `<p class="text-sm text-green-700 mb-2"><strong>Default Password:</strong> ${defaultPassword}</p>`;
+                html += '<div class="max-h-40 overflow-y-auto text-sm">';
+                results.success.forEach(item => {
+                    html += `<p>✓ Row ${item.row}: ${item.name} (${item.email}) - ${item.action}</p>`;
+                });
+                html += '</div></div>';
+            }
+            
+            if (results.errors.length > 0) {
+                html += '<div class="bg-red-50 border border-red-200 rounded p-3">';
+                html += `<p class="font-bold text-red-800 mb-2"><i class="fas fa-exclamation-circle mr-2"></i>Errors (${results.errors.length})</p>`;
+                html += '<div class="max-h-40 overflow-y-auto text-sm">';
+                results.errors.forEach(item => {
+                    html += `<p class="text-red-700">✗ Row ${item.row}: ${item.email} - ${item.error}</p>`;
+                });
+                html += '</div></div>';
+            }
+            
+            html += '</div>';
+            resultsEl.innerHTML = html;
+            resultsEl.classList.remove('hidden');
+        }
+
+        // ============================================
+        // HIERARCHICAL COHORT PROGRESS REPORT
+        // ============================================
+
+        async function loadCohortsForReport() {
+            try {
+                const response = await axios.get('/api/admin/cohorts');
+                const cohorts = response.data.cohorts;
+                
+                const select = document.getElementById('cohort-report-select');
+                select.innerHTML = '<option value="">-- Select a Cohort --</option>' +
+                    cohorts.map(c => `<option value="${c.id}">${c.name} (${c.member_count} members)</option>`).join('');
+            } catch (error) {
+                console.error('Error loading cohorts for report:', error);
+            }
+        }
+
+        async function loadCohortProgressReport() {
+            const cohortId = document.getElementById('cohort-report-select').value;
+            const reportEl = document.getElementById('cohort-progress-report');
+            
+            if (!cohortId) {
+                reportEl.innerHTML = '<p class="text-gray-500">Select a cohort to view progress report</p>';
+                return;
+            }
+
+            try {
+                // Get cohort details
+                const cohortRes = await axios.get(`/api/admin/cohorts/${cohortId}`);
+                const cohort = cohortRes.data.cohort;
+                
+                // Get cohort progress summary
+                const progressRes = await axios.get(`/api/admin/cohorts/${cohortId}/progress`);
+                const pathways = progressRes.data.pathways;
+                
+                if (pathways.length === 0) {
+                    reportEl.innerHTML = '<p class="text-gray-500">No learning paths assigned to this cohort yet.</p>';
+                    return;
+                }
+
+                // Build hierarchical report
+                let html = `
+                    <div class="mb-4">
+                        <h4 class="text-lg font-bold">${cohort.name}</h4>
+                        <p class="text-sm text-gray-600">${cohort.description || 'No description'}</p>
+                        <p class="text-sm text-gray-600 mt-1">Manager: ${cohort.manager_name || 'None'}</p>
+                    </div>
+                `;
+
+                // Pathway cards
+                html += '<div class="space-y-4">';
+                
+                for (const pathway of pathways) {
+                    const completionRate = pathway.total_members > 0 
+                        ? Math.round((pathway.completed_members / pathway.total_members) * 100)
+                        : 0;
+
+                    html += `
+                        <div class="border rounded-lg p-4" style="border-left: 4px solid ${pathway.color_primary || '#7CB342'};">
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="flex-1">
+                                    <h5 class="text-lg font-bold flex items-center">
+                                        <i class="${pathway.icon} mr-2" style="color: ${pathway.color_primary || '#7CB342'};"></i>
+                                        ${pathway.title}
+                                    </h5>
+                                    ${pathway.deadline ? `
+                                        <p class="text-sm text-gray-600 mt-1">
+                                            <i class="fas fa-calendar-alt mr-1"></i>
+                                            Deadline: ${new Date(pathway.deadline).toLocaleDateString()}
+                                            ${new Date(pathway.deadline) < new Date() ? '<span class="text-red-600 font-bold ml-1">(OVERDUE)</span>' : ''}
+                                        </p>
+                                    ` : ''}
+                                </div>
+                                <button onclick="viewPathwayDetails(${cohortId}, ${pathway.id})" 
+                                        class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                                    <i class="fas fa-eye mr-1"></i>View Details
+                                </button>
+                            </div>
+                            
+                            <div class="grid grid-cols-4 gap-4 mb-3">
+                                <div class="text-center p-2 bg-gray-50 rounded">
+                                    <p class="text-2xl font-bold text-gray-800">${pathway.total_members}</p>
+                                    <p class="text-xs text-gray-600">Total Members</p>
+                                </div>
+                                <div class="text-center p-2 bg-blue-50 rounded">
+                                    <p class="text-2xl font-bold text-blue-600">${pathway.enrolled_members}</p>
+                                    <p class="text-xs text-gray-600">Enrolled</p>
+                                </div>
+                                <div class="text-center p-2 bg-green-50 rounded">
+                                    <p class="text-2xl font-bold text-green-600">${pathway.completed_members}</p>
+                                    <p class="text-xs text-gray-600">Completed</p>
+                                </div>
+                                <div class="text-center p-2 bg-yellow-50 rounded">
+                                    <p class="text-2xl font-bold text-yellow-600">${pathway.total_levels}</p>
+                                    <p class="text-xs text-gray-600">Total Levels</p>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span>Completion Rate</span>
+                                    <span class="font-bold">${completionRate}%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-4">
+                                    <div class="bg-green-600 h-4 rounded-full transition-all" style="width: ${completionRate}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                html += '</div>';
+                reportEl.innerHTML = html;
+
+            } catch (error) {
+                console.error('Error loading cohort progress report:', error);
+                reportEl.innerHTML = '<p class="text-red-500">Error loading report. Please try again.</p>';
+            }
+        }
+
+        async function viewPathwayDetails(cohortId, pathwayId) {
+            // Open the manage cohort modal in progress tab
+            currentCohortId = cohortId;
+            
+            try {
+                const response = await axios.get(`/api/admin/cohorts/${cohortId}`);
+                const cohort = response.data.cohort;
+                
+                document.getElementById('manage-cohort-id').value = cohort.id;
+                document.getElementById('manage-cohort-name').textContent = cohort.name;
+                document.getElementById('manage-cohort-modal').style.display = 'flex';
+                
+                // Show progress tab
+                await showCohortTab('progress');
+                
+                // Select the pathway
+                document.getElementById('progress-pathway-select').value = pathwayId;
+                await loadCohortPathwayProgress();
+                
+            } catch (error) {
+                console.error('Error viewing pathway details:', error);
+                alert('Failed to load pathway details');
             }
         }
 

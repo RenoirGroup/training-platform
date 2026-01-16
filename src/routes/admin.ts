@@ -149,6 +149,145 @@ admin.delete('/users/:id', async (c) => {
   return c.json({ message: 'User deleted' });
 });
 
+// Bulk upload users from CSV
+admin.post('/users/bulk-upload', async (c) => {
+  try {
+    const { users, cohort_id } = await c.req.json();
+
+    if (!users || !Array.isArray(users) || users.length === 0) {
+      return c.json({ error: 'Invalid data: users array is required' }, 400);
+    }
+
+    const results = {
+      success: [],
+      errors: [],
+      total: users.length
+    };
+
+    const defaultPassword = 'Welcome123!'; // Users must change on first login
+    const hashedDefaultPassword = await hashPassword(defaultPassword);
+
+    for (let i = 0; i < users.length; i++) {
+      const user = users[i];
+      const rowNum = i + 2; // CSV row number (accounting for header)
+
+      try {
+        // Validate required fields
+        if (!user.name || !user.email) {
+          results.errors.push({
+            row: rowNum,
+            email: user.email || 'N/A',
+            error: 'Missing required fields (name and email are required)'
+          });
+          continue;
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(user.email)) {
+          results.errors.push({
+            row: rowNum,
+            email: user.email,
+            error: 'Invalid email format'
+          });
+          continue;
+        }
+
+        // Check if user already exists
+        const existingUser = await c.env.DB.prepare(
+          'SELECT id FROM users WHERE email = ?'
+        ).bind(user.email).first();
+
+        let userId;
+
+        if (existingUser) {
+          // Update existing user
+          userId = (existingUser as any).id;
+          
+          await c.env.DB.prepare(`
+            UPDATE users 
+            SET name = ?, 
+                role = ?, 
+                division = ?, 
+                region = ?, 
+                location = ?, 
+                title = ?
+            WHERE id = ?
+          `).bind(
+            user.name,
+            user.role || 'consultant',
+            user.division || null,
+            user.region || null,
+            user.location || null,
+            user.title || null,
+            userId
+          ).run();
+
+          results.success.push({
+            row: rowNum,
+            email: user.email,
+            name: user.name,
+            action: 'updated'
+          });
+        } else {
+          // Create new user
+          const result = await c.env.DB.prepare(`
+            INSERT INTO users (email, password, name, role, division, region, location, title, active)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)
+          `).bind(
+            user.email,
+            hashedDefaultPassword,
+            user.name,
+            user.role || 'consultant',
+            user.division || null,
+            user.region || null,
+            user.location || null,
+            user.title || null
+          ).run();
+
+          userId = result.meta.last_row_id;
+
+          results.success.push({
+            row: rowNum,
+            email: user.email,
+            name: user.name,
+            action: 'created'
+          });
+        }
+
+        // Add to cohort if cohort_id provided
+        if (cohort_id && userId) {
+          await c.env.DB.prepare(`
+            INSERT OR IGNORE INTO cohort_members (cohort_id, user_id)
+            VALUES (?, ?)
+          `).bind(cohort_id, userId).run();
+        }
+
+      } catch (error: any) {
+        console.error(`Error processing user at row ${rowNum}:`, error);
+        results.errors.push({
+          row: rowNum,
+          email: user.email || 'N/A',
+          error: error.message || 'Unknown error'
+        });
+      }
+    }
+
+    return c.json({
+      message: 'Bulk upload completed',
+      results,
+      default_password: defaultPassword
+    });
+
+  } catch (error: any) {
+    console.error('Error in bulk upload:', error);
+    return c.json({ 
+      error: 'Bulk upload failed', 
+      details: error.message 
+    }, 500);
+  }
+});
+
 // ===== LEVEL MANAGEMENT =====
 
 // Get all levels
