@@ -6,4 +6,4 @@ compatibility_flags = ["nodejs_compat"]
 [[ d1_databases ]]
 binding = "DB"
 database_name = "training-platform-production"
-database_id = "e11032ed-0a53-4ffb-86c4-6a0ef9b9fed3"
+database_id = "7ecb2e4d-fc5a-4c2d-b008-68a533708cf1"
