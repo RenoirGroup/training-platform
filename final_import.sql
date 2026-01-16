@@ -645,19 +645,19 @@ INSERT INTO cohort_groups (id, name, description, manager_id, created_at, update
 INSERT INTO cohort_groups (id, name, description, manager_id, created_at, updated_at, active) VALUES (2, 'Intensive Training 2026Q1', 'New associates and analysts in MSD who joined between Oct and Dec 2025', 1, '2026-01-16 05:50:34', '2026-01-16 05:50:34', 1);
 
 -- Table: cohort_members (6 rows)
-INSERT INTO cohort_members (id, cohort_id, user_id, joined_at, active) VALUES (1, 1, 3, '2025-12-02 12:40:40', 1);
-INSERT INTO cohort_members (id, cohort_id, user_id, joined_at, active) VALUES (2, 1, 4, '2025-12-02 12:40:40', 1);
-INSERT INTO cohort_members (id, cohort_id, user_id, joined_at, active) VALUES (3, 1, 8, '2025-12-02 12:40:40', 1);
-INSERT INTO cohort_members (id, cohort_id, user_id, joined_at, active) VALUES (4, 1, 11, '2025-12-02 12:40:40', 1);
-INSERT INTO cohort_members (id, cohort_id, user_id, joined_at, active) VALUES (6, 1, 1, '2025-12-08 02:12:45', 1);
-INSERT INTO cohort_members (id, cohort_id, user_id, joined_at, active) VALUES (7, 1, 2, '2025-12-08 02:31:48', 1);
+INSERT INTO cohort_members (cohort_id, user_id, joined_at) VALUES (1, 3, '2025-12-02 12:40:40');
+INSERT INTO cohort_members (cohort_id, user_id, joined_at) VALUES (1, 4, '2025-12-02 12:40:40');
+INSERT INTO cohort_members (cohort_id, user_id, joined_at) VALUES (1, 8, '2025-12-02 12:40:40');
+INSERT INTO cohort_members (cohort_id, user_id, joined_at) VALUES (1, 11, '2025-12-02 12:40:40');
+INSERT INTO cohort_members (cohort_id, user_id, joined_at) VALUES (1, 1, '2025-12-08 02:12:45');
+INSERT INTO cohort_members (cohort_id, user_id, joined_at) VALUES (1, 2, '2025-12-08 02:31:48');
 
 -- Table: cohort_pathways (5 rows)
-INSERT INTO cohort_pathways (id, cohort_id, pathway_id, deadline, assigned_at, assigned_by, active) VALUES (1, 1, 1, NULL, '2025-12-02 12:40:40', NULL, 1);
-INSERT INTO cohort_pathways (id, cohort_id, pathway_id, deadline, assigned_at, assigned_by, active) VALUES (2, 1, 2, NULL, '2025-12-08 03:34:15', NULL, 1);
-INSERT INTO cohort_pathways (id, cohort_id, pathway_id, deadline, assigned_at, assigned_by, active) VALUES (3, 1, 5, NULL, '2025-12-08 02:12:45', NULL, 1);
-INSERT INTO cohort_pathways (id, cohort_id, pathway_id, deadline, assigned_at, assigned_by, active) VALUES (4, 1, 6, NULL, '2025-12-08 07:52:49', NULL, 1);
-INSERT INTO cohort_pathways (id, cohort_id, pathway_id, deadline, assigned_at, assigned_by, active) VALUES (5, 1, 7, NULL, '2026-01-15 13:58:51', NULL, 1);
+INSERT INTO cohort_pathways (id, cohort_id, pathway_id, deadline, assigned_at, active) VALUES (1, 1, 1, NULL, '2025-12-02 12:40:40', 1);
+INSERT INTO cohort_pathways (id, cohort_id, pathway_id, deadline, assigned_at, active) VALUES (2, 1, 2, NULL, '2025-12-08 03:34:15', 1);
+INSERT INTO cohort_pathways (id, cohort_id, pathway_id, deadline, assigned_at, active) VALUES (3, 1, 5, NULL, '2025-12-08 02:12:45', 1);
+INSERT INTO cohort_pathways (id, cohort_id, pathway_id, deadline, assigned_at, active) VALUES (4, 1, 6, NULL, '2025-12-08 07:52:49', 1);
+INSERT INTO cohort_pathways (id, cohort_id, pathway_id, deadline, assigned_at, active) VALUES (5, 1, 7, NULL, '2026-01-15 13:58:51', 1);
 
 -- Table: boss_consultant_relationships (3 rows)
 INSERT INTO boss_consultant_relationships (id, boss_id, consultant_id, project_name, active, created_at) VALUES (1, 2, 3, NULL, 1, '2025-10-28 12:40:19');

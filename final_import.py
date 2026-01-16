@@ -19,6 +19,13 @@ COLUMN_MAPPINGS = {
         'reviewed_at': None,  # Skip
         'reviewed_by': None,  # Skip
         'active': None,  # Skip
+    },
+    'cohort_members': {
+        'id': None,  # Skip - composite primary key
+        'active': None,  # Skip - not in new schema
+    },
+    'cohort_pathways': {
+        'assigned_by': None,  # Skip - not in new schema
     }
 }
 

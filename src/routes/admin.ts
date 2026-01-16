@@ -26,7 +26,7 @@ admin.get('/users', async (c) => {
         SELECT cg.id, cg.name
         FROM cohort_members cm
         JOIN cohort_groups cg ON cm.cohort_id = cg.id
-        WHERE cm.user_id = ? AND cm.active = 1 AND cg.active = 1
+        WHERE cm.user_id = ? AND cg.active = 1
         ORDER BY cg.name
       `).bind(user.id).all();
       

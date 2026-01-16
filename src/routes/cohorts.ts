@@ -33,7 +33,7 @@ cohorts.get('/admin/cohorts', async (c) => {
         COUNT(DISTINCT cp.pathway_id) as pathway_count
       FROM cohort_groups cg
       LEFT JOIN users u ON cg.manager_id = u.id
-      LEFT JOIN cohort_members cm ON cg.id = cm.cohort_id AND cm.active = 1
+      LEFT JOIN cohort_members cm ON cg.id = cm.cohort_id AND 1=1
       LEFT JOIN cohort_pathways cp ON cg.id = cp.cohort_id AND cp.active = 1
       WHERE cg.active = 1
       GROUP BY cg.id
@@ -84,7 +84,7 @@ cohorts.get('/admin/cohorts/:id', async (c) => {
         cm.joined_at
       FROM cohort_members cm
       JOIN users u ON cm.user_id = u.id
-      WHERE cm.cohort_id = ? AND cm.active = 1
+      WHERE cm.cohort_id = ? AND 1=1
       ORDER BY u.name
     `).bind(cohortId).all()
 
@@ -468,7 +468,7 @@ cohorts.get('/admin/cohorts/:id/pathways/:pathwayId/progress', async (c) => {
       JOIN users u ON cm.user_id = u.id
       LEFT JOIN pathway_enrollments pe ON u.id = pe.user_id AND pe.pathway_id = ? AND pe.cohort_id = ?
       LEFT JOIN user_progress up ON u.id = up.user_id AND up.pathway_id = ? AND up.cohort_id = ?
-      WHERE cm.cohort_id = ? AND cm.active = 1
+      WHERE cm.cohort_id = ? AND 1=1
       GROUP BY u.id
       ORDER BY completion_percentage DESC, u.name
     `).bind(
@@ -515,7 +515,7 @@ cohorts.get('/admin/cohorts/:id/progress', async (c) => {
       FROM cohort_pathways cp
       JOIN pathways p ON cp.pathway_id = p.id
       LEFT JOIN pathway_levels pl ON p.id = pl.pathway_id
-      LEFT JOIN cohort_members cm ON cp.cohort_id = cm.cohort_id AND cm.active = 1
+      LEFT JOIN cohort_members cm ON cp.cohort_id = cm.cohort_id AND 1=1
       LEFT JOIN pathway_enrollments pe ON cm.user_id = pe.user_id AND p.id = pe.pathway_id AND pe.cohort_id = ?
       LEFT JOIN user_progress up ON cm.user_id = up.user_id AND p.id = up.pathway_id AND up.cohort_id = ?
       WHERE cp.cohort_id = ? AND cp.active = 1
