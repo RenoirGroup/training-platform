@@ -24,7 +24,7 @@ pathways.get('/admin/pathways', async (c) => {
            COUNT(DISTINCT pe.user_id) as enrolled_count,
            COUNT(DISTINCT pl.level_id) as level_count
     FROM pathways p
-    LEFT JOIN pathway_enrollments pe ON p.id = pe.pathway_id AND pe.status = 'approved'
+    LEFT JOIN pathway_enrollments pe ON p.id = pe.pathway_id AND pe.enrollment_status = 'approved'
     LEFT JOIN pathway_levels pl ON p.id = pl.pathway_id
     GROUP BY p.id
     ORDER BY p.order_index
@@ -73,7 +73,7 @@ pathways.get('/admin/pathways/analytics', async (c) => {
           SELECT COUNT(DISTINCT pe.user_id) as count
           FROM pathway_enrollments pe
           WHERE pe.pathway_id = ? 
-            AND pe.status = 'approved'
+            AND pe.enrollment_status = 'approved'
             AND (
               SELECT COUNT(DISTINCT up.level_id)
               FROM user_progress up
@@ -92,7 +92,7 @@ pathways.get('/admin/pathways/analytics', async (c) => {
           SELECT COUNT(DISTINCT pe.user_id) as count
           FROM pathway_enrollments pe
           WHERE pe.pathway_id = ? 
-            AND pe.status = 'approved'
+            AND pe.enrollment_status = 'approved'
             AND EXISTS (
               SELECT 1
               FROM user_progress up
@@ -216,7 +216,7 @@ pathways.delete('/admin/pathways/:id', async (c) => {
 
   // Check if pathway has enrolled users
   const enrollments = await c.env.DB.prepare(
-    'SELECT COUNT(*) as count FROM pathway_enrollments WHERE pathway_id = ? AND status = ?'
+    'SELECT COUNT(*) as count FROM pathway_enrollments WHERE pathway_id = ? AND enrollment_status = ?'
   ).bind(pathwayId, 'approved').first();
 
   if (enrollments && (enrollments.count as number) > 0) {
@@ -323,7 +323,7 @@ pathways.get('/consultant/pathways/available', async (c) => {
   const result = await c.env.DB.prepare(`
     SELECT p.*,
            pe.id as enrollment_id,
-           pe.status as enrollment_status,
+           pe.enrollment_status as enrollment_status,
            pe.request_note,
            pe.response_note,
            pe.requested_at,
@@ -347,7 +347,7 @@ pathways.get('/consultant/pathways/enrolled', async (c) => {
     SELECT p.*,
            pe.requested_at,
            pe.reviewed_at,
-           pe.status as enrollment_status,
+           pe.enrollment_status as enrollment_status,
            pe.id as enrollment_id,
            pe.pathway_id,
            pe.cohort_id,
@@ -359,7 +359,7 @@ pathways.get('/consultant/pathways/enrolled', async (c) => {
     LEFT JOIN cohort_pathways cp ON pe.cohort_id = cp.cohort_id AND p.id = cp.pathway_id
     LEFT JOIN pathway_levels pl ON p.id = pl.pathway_id
     LEFT JOIN user_progress up ON pl.level_id = up.level_id AND up.user_id = ? AND up.pathway_id = p.id
-    WHERE pe.user_id = ? AND pe.status = 'approved' AND p.active = 1
+    WHERE pe.user_id = ? AND pe.enrollment_status = 'approved' AND p.active = 1
     GROUP BY p.id
     ORDER BY p.order_index
   `).bind(user.userId, user.userId).all();
@@ -393,7 +393,7 @@ pathways.post('/consultant/pathways/:id/request', async (c) => {
 
   // Create enrollment request
   await c.env.DB.prepare(
-    'INSERT INTO pathway_enrollments (user_id, pathway_id, status, request_note, enrolled_by) VALUES (?, ?, ?, ?, ?)'
+    'INSERT INTO pathway_enrollments (user_id, pathway_id, enrollment_status, request_note, enrolled_by) VALUES (?, ?, ?, ?, ?)'
   ).bind(user.userId, pathwayId, 'pending', request_note || null, user.userId).run();
 
   return c.json({ message: 'Enrollment request submitted successfully' }, 201);
@@ -439,7 +439,7 @@ pathways.get('/boss/enrollment-requests', async (c) => {
     FROM pathway_enrollments pe
     JOIN users u ON pe.user_id = u.id
     JOIN pathways p ON pe.pathway_id = p.id
-    WHERE u.boss_id = ? AND pe.status = 'pending'
+    WHERE u.boss_id = ? AND pe.enrollment_status = 'pending'
     ORDER BY pe.requested_at DESC
   `).bind(user.userId).all();
 
@@ -466,7 +466,7 @@ pathways.post('/boss/enrollment-requests/:id/approve', async (c) => {
 
   // Approve request
   await c.env.DB.prepare(
-    'UPDATE pathway_enrollments SET status = ?, response_note = ?, reviewed_at = CURRENT_TIMESTAMP, reviewed_by = ? WHERE id = ?'
+    'UPDATE pathway_enrollments SET enrollment_status = ?, response_note = ?, reviewed_at = CURRENT_TIMESTAMP, reviewed_by = ? WHERE id = ?'
   ).bind('approved', response_note || null, user.userId, requestId).run();
 
   // Unlock first level in pathway for the consultant
@@ -506,7 +506,7 @@ pathways.post('/boss/enrollment-requests/:id/reject', async (c) => {
 
   // Reject request
   await c.env.DB.prepare(
-    'UPDATE pathway_enrollments SET status = ?, response_note = ?, reviewed_at = CURRENT_TIMESTAMP, reviewed_by = ? WHERE id = ?'
+    'UPDATE pathway_enrollments SET enrollment_status = ?, response_note = ?, reviewed_at = CURRENT_TIMESTAMP, reviewed_by = ? WHERE id = ?'
   ).bind('rejected', response_note || null, user.userId, requestId).run();
 
   return c.json({ message: 'Enrollment rejected' });
@@ -542,7 +542,7 @@ pathways.get('/admin/enrollment-requests', async (c) => {
     JOIN users u ON pe.user_id = u.id
     JOIN pathways p ON pe.pathway_id = p.id
     LEFT JOIN users b ON u.boss_id = b.id
-    WHERE pe.status = 'pending'
+    WHERE pe.enrollment_status = 'pending'
     ORDER BY pe.requested_at DESC
   `).all();
 
@@ -576,7 +576,7 @@ pathways.post('/admin/enrollment-requests/:id/approve', async (c) => {
   }
 
   await c.env.DB.prepare(
-    'UPDATE pathway_enrollments SET status = ?, response_note = ?, reviewed_at = CURRENT_TIMESTAMP, reviewed_by = ? WHERE id = ?'
+    'UPDATE pathway_enrollments SET enrollment_status = ?, response_note = ?, reviewed_at = CURRENT_TIMESTAMP, reviewed_by = ? WHERE id = ?'
   ).bind('approved', response_note, user.userId, requestId).run();
 
   return c.json({ message: 'Enrollment approved' });
@@ -601,7 +601,7 @@ pathways.post('/admin/enrollment-requests/:id/reject', async (c) => {
   }
 
   await c.env.DB.prepare(
-    'UPDATE pathway_enrollments SET status = ?, response_note = ?, reviewed_at = CURRENT_TIMESTAMP, reviewed_by = ? WHERE id = ?'
+    'UPDATE pathway_enrollments SET enrollment_status = ?, response_note = ?, reviewed_at = CURRENT_TIMESTAMP, reviewed_by = ? WHERE id = ?'
   ).bind('rejected', response_note || null, user.userId, requestId).run();
 
   return c.json({ message: 'Enrollment rejected' });
@@ -639,7 +639,7 @@ pathways.get('/admin/pathways/:pathwayId/available-users', async (c) => {
           FROM pathway_enrollments pe 
           WHERE pe.user_id = u.id 
             AND pe.pathway_id = ?
-            AND pe.status = 'approved'
+            AND pe.enrollment_status = 'approved'
         )
       ORDER BY u.name
     `).bind(pathwayId).all();
@@ -681,13 +681,13 @@ pathways.get('/admin/pathways/:pathwayId/enrolled', async (c) => {
         COALESCE(u.location, '') as location,
         COALESCE(u.title, '') as title,
         pe.requested_at as enrolled_at,
-        pe.status,
+        pe.enrollment_status,
         enroller.name as enrolled_by_name
       FROM pathway_enrollments pe
       JOIN users u ON pe.user_id = u.id
       LEFT JOIN users enroller ON pe.enrolled_by = enroller.id
       WHERE pe.pathway_id = ?
-        AND pe.status = 'approved'
+        AND pe.enrollment_status = 'approved'
       ORDER BY pe.requested_at DESC
     `).bind(pathwayId).all();
 
@@ -722,7 +722,7 @@ pathways.get('/boss/team/pathway/:pathwayId', async (c) => {
     JOIN pathway_enrollments pe ON u.id = pe.user_id
     LEFT JOIN pathway_levels pl ON pe.pathway_id = pl.pathway_id
     LEFT JOIN user_progress up ON pl.level_id = up.level_id AND up.user_id = u.id AND up.pathway_id = pe.pathway_id
-    WHERE u.boss_id = ? AND pe.pathway_id = ? AND pe.status = 'approved'
+    WHERE u.boss_id = ? AND pe.pathway_id = ? AND pe.enrollment_status = 'approved'
     GROUP BY u.id
     ORDER BY u.name
   `).bind(user.userId, pathwayId).all();

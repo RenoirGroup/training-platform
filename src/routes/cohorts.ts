@@ -510,7 +510,7 @@ cohorts.get('/admin/cohorts/:id/progress', async (c) => {
         cp.deadline,
         COUNT(DISTINCT pl.level_id) as total_levels,
         COUNT(DISTINCT cm.user_id) as total_members,
-        COUNT(DISTINCT CASE WHEN pe.status = 'approved' THEN pe.user_id END) as enrolled_members,
+        COUNT(DISTINCT CASE WHEN pe.enrollment_status = 'approved' THEN pe.user_id END) as enrolled_members,
         COUNT(DISTINCT CASE WHEN up.status = 'completed' THEN up.user_id END) as completed_members
       FROM cohort_pathways cp
       JOIN pathways p ON cp.pathway_id = p.id
