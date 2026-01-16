@@ -1530,6 +1530,13 @@
             const orderIndex = parseInt(document.getElementById('level-order').value);
             const isBossLevel = document.getElementById('level-is-boss').checked;
             
+            // Show loading state
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Creating...';
+            document.body.style.cursor = 'wait';
+            
             try {
                 await axios.post('/api/admin/levels', {
                     title,
@@ -1543,6 +1550,10 @@
                 alert('Level created successfully!');
             } catch (error) {
                 alert('Error creating level: ' + (error.response?.data?.error || 'Unknown error'));
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+                document.body.style.cursor = 'default';
             }
         }
 
@@ -3495,6 +3506,13 @@
             const orderIndex = document.getElementById('create-pathway-order').value;
             const active = document.getElementById('create-pathway-active').checked;
             
+            // Show loading state
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Creating...';
+            document.body.style.cursor = 'wait';
+            
             try {
                 await axios.post('/api/admin/pathways', {
                     title,
@@ -3511,6 +3529,10 @@
                 alert('Pathway created successfully!');
             } catch (error) {
                 alert('Error creating pathway: ' + (error.response?.data?.error || 'Unknown error'));
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+                document.body.style.cursor = 'default';
             }
         }
 

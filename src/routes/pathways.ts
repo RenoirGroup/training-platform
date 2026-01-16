@@ -350,10 +350,13 @@ pathways.get('/consultant/pathways/enrolled', async (c) => {
            pe.status as enrollment_status,
            pe.id as enrollment_id,
            pe.pathway_id,
+           pe.cohort_id,
+           cp.deadline,
            COUNT(DISTINCT pl.level_id) as level_count,
            COUNT(DISTINCT CASE WHEN up.status = 'completed' THEN up.level_id END) as completed_levels
     FROM pathways p
     JOIN pathway_enrollments pe ON p.id = pe.pathway_id
+    LEFT JOIN cohort_pathways cp ON pe.cohort_id = cp.cohort_id AND p.id = cp.pathway_id
     LEFT JOIN pathway_levels pl ON p.id = pl.pathway_id
     LEFT JOIN user_progress up ON pl.level_id = up.level_id AND up.user_id = ? AND up.pathway_id = p.id
     WHERE pe.user_id = ? AND pe.status = 'approved' AND p.active = 1
