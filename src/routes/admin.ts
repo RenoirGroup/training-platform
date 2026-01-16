@@ -19,7 +19,25 @@ admin.get('/users', async (c) => {
     ORDER BY u.created_at DESC
   `).all();
   
-  return c.json({ users: users.results });
+  // Get cohorts for each user
+  const usersWithCohorts = await Promise.all(
+    (users.results as any[]).map(async (user) => {
+      const cohorts = await c.env.DB.prepare(`
+        SELECT cg.id, cg.name
+        FROM cohort_members cm
+        JOIN cohort_groups cg ON cm.cohort_id = cg.id
+        WHERE cm.user_id = ? AND cm.active = 1 AND cg.active = 1
+        ORDER BY cg.name
+      `).bind(user.id).all();
+      
+      return {
+        ...user,
+        cohorts: cohorts.results
+      };
+    })
+  );
+  
+  return c.json({ users: usersWithCohorts });
 });
 
 // Create user
