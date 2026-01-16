@@ -893,9 +893,14 @@
             <div id="cohort-members-tab" class="cohort-tab-content">
                 <div class="flex justify-between items-center mb-4">
                     <h4 class="text-xl font-semibold">Cohort Members</h4>
-                    <button onclick="showAddMembersModal()" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded">
-                        <i class="fas fa-user-plus mr-2"></i>Add Members
-                    </button>
+                    <div class="space-x-2">
+                        <button onclick="showBulkAssignModal()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded">
+                            <i class="fas fa-users mr-2"></i>Bulk Assign
+                        </button>
+                        <button onclick="showAddMembersModal()" class="renoir-blue renoir-blue-hover text-white px-4 py-2 rounded">
+                            <i class="fas fa-user-plus mr-2"></i>Add Members
+                        </button>
+                    </div>
                 </div>
                 <div id="cohort-members-list" class="space-y-2"></div>
             </div>
@@ -955,6 +960,79 @@
                     <i class="fas fa-save mr-2"></i>Add Selected Members
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- Bulk Assign Modal -->
+    <div id="bulk-assign-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-[60]" style="display: none;">
+        <div class="bg-white rounded-lg p-6 max-w-2xl w-full">
+            <h3 class="text-2xl font-bold mb-4"><i class="fas fa-users mr-2"></i>Bulk Assign Users to Cohort</h3>
+            
+            <div class="bg-blue-50 border border-blue-200 rounded p-4 mb-4">
+                <p class="text-sm"><i class="fas fa-info-circle mr-2"></i><strong>Assign multiple users at once based on filters.</strong></p>
+                <p class="text-sm mt-2">Select one or more criteria below. Users matching ALL selected criteria will be added to the cohort.</p>
+            </div>
+
+            <form id="bulk-assign-form" onsubmit="bulkAssignUsers(event)">
+                <div class="space-y-4 mb-6">
+                    <!-- Title Filter -->
+                    <div>
+                        <label class="block text-gray-700 font-bold mb-2">Job Title</label>
+                        <select id="bulk-title" class="w-full px-3 py-2 border rounded">
+                            <option value="">-- Any Title --</option>
+                        </select>
+                    </div>
+
+                    <!-- Division Filter -->
+                    <div>
+                        <label class="block text-gray-700 font-bold mb-2">Division</label>
+                        <select id="bulk-division" class="w-full px-3 py-2 border rounded">
+                            <option value="">-- Any Division --</option>
+                        </select>
+                    </div>
+
+                    <!-- Region Filter -->
+                    <div>
+                        <label class="block text-gray-700 font-bold mb-2">Region</label>
+                        <select id="bulk-region" class="w-full px-3 py-2 border rounded">
+                            <option value="">-- Any Region --</option>
+                        </select>
+                    </div>
+
+                    <!-- Location Filter -->
+                    <div>
+                        <label class="block text-gray-700 font-bold mb-2">Location</label>
+                        <select id="bulk-location" class="w-full px-3 py-2 border rounded">
+                            <option value="">-- Any Location --</option>
+                        </select>
+                    </div>
+
+                    <!-- Role Filter -->
+                    <div>
+                        <label class="block text-gray-700 font-bold mb-2">Role</label>
+                        <select id="bulk-role" class="w-full px-3 py-2 border rounded">
+                            <option value="">-- Any Role --</option>
+                            <option value="consultant">Consultant</option>
+                            <option value="boss">Boss</option>
+                        </select>
+                    </div>
+
+                    <!-- Manager Filter -->
+                    <div>
+                        <label class="block text-gray-700 font-bold mb-2">Manager</label>
+                        <select id="bulk-manager" class="w-full px-3 py-2 border rounded">
+                            <option value="">-- Any Manager --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-2">
+                    <button type="button" onclick="closeBulkAssignModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
+                    <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded">
+                        <i class="fas fa-check mr-2"></i>Assign Users
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -4971,6 +5049,112 @@
             } catch (error) {
                 console.error('Error viewing pathway details:', error);
                 alert('Failed to load pathway details');
+            }
+        }
+
+        // Bulk Assign Functions
+        async function showBulkAssignModal() {
+            if (!currentCohort) {
+                alert('Please select a cohort first');
+                return;
+            }
+
+            try {
+                // Load filter options from existing users
+                const response = await axios.get('/api/admin/users', {
+                    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+                });
+
+                const users = response.data.users || [];
+
+                // Get unique values for filters
+                const titles = [...new Set(users.map(u => u.title).filter(Boolean))].sort();
+                const divisions = [...new Set(users.map(u => u.division).filter(Boolean))].sort();
+                const regions = [...new Set(users.map(u => u.region).filter(Boolean))].sort();
+                const locations = [...new Set(users.map(u => u.location).filter(Boolean))].sort();
+                
+                // Get unique managers (boss names)
+                const managers = [...new Set(users.map(u => u.boss_name).filter(Boolean))].sort();
+                const managerMap = {};
+                users.forEach(u => {
+                    if (u.boss_id && u.boss_name) {
+                        managerMap[u.boss_name] = u.boss_id;
+                    }
+                });
+
+                // Populate dropdowns
+                document.getElementById('bulk-title').innerHTML = '<option value="">-- Any Title --</option>' +
+                    titles.map(t => `<option value="${t}">${t}</option>`).join('');
+                
+                document.getElementById('bulk-division').innerHTML = '<option value="">-- Any Division --</option>' +
+                    divisions.map(d => `<option value="${d}">${d}</option>`).join('');
+                
+                document.getElementById('bulk-region').innerHTML = '<option value="">-- Any Region --</option>' +
+                    regions.map(r => `<option value="${r}">${r}</option>`).join('');
+                
+                document.getElementById('bulk-location').innerHTML = '<option value="">-- Any Location --</option>' +
+                    locations.map(l => `<option value="${l}">${l}</option>`).join('');
+                
+                document.getElementById('bulk-manager').innerHTML = '<option value="">-- Any Manager --</option>' +
+                    managers.map(m => `<option value="${managerMap[m]}">${m}</option>`).join('');
+
+                document.getElementById('bulk-assign-modal').style.display = 'flex';
+            } catch (error) {
+                console.error('Error loading bulk assign modal:', error);
+                alert('Failed to load filter options');
+            }
+        }
+
+        function closeBulkAssignModal() {
+            document.getElementById('bulk-assign-modal').style.display = 'none';
+            document.getElementById('bulk-assign-form').reset();
+        }
+
+        async function bulkAssignUsers(event) {
+            event.preventDefault();
+
+            const filters = {};
+            const title = document.getElementById('bulk-title').value;
+            const division = document.getElementById('bulk-division').value;
+            const region = document.getElementById('bulk-region').value;
+            const location = document.getElementById('bulk-location').value;
+            const role = document.getElementById('bulk-role').value;
+            const managerId = document.getElementById('bulk-manager').value;
+
+            if (title) filters.title = title;
+            if (division) filters.division = division;
+            if (region) filters.region = region;
+            if (location) filters.location = location;
+            if (role) filters.role = role;
+            if (managerId) filters.manager_id = managerId;
+
+            if (Object.keys(filters).length === 0) {
+                alert('Please select at least one filter criterion');
+                return;
+            }
+
+            // Confirm action
+            const filterDesc = Object.entries(filters)
+                .map(([key, value]) => `${key}: ${value}`)
+                .join(', ');
+            
+            if (!confirm(`Add all users matching these criteria to cohort?\n\n${filterDesc}\n\nThis will add multiple users at once.`)) {
+                return;
+            }
+
+            try {
+                const response = await axios.post(
+                    `/api/admin/cohorts/${currentCohort.id}/bulk-assign`,
+                    { filters },
+                    { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }}
+                );
+
+                alert(`Success! Added ${response.data.added} users to cohort (${response.data.matched} matched criteria)`);
+                closeBulkAssignModal();
+                await loadCohortMembers(currentCohort.id);
+            } catch (error) {
+                console.error('Error bulk assigning users:', error);
+                alert('Failed to bulk assign users: ' + (error.response?.data?.error || 'Unknown error'));
             }
         }
 
