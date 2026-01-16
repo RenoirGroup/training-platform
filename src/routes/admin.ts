@@ -229,7 +229,9 @@ admin.post('/users/bulk-upload', async (c) => {
                 division = ?, 
                 region = ?, 
                 location = ?, 
-                title = ?
+                title = ?,
+                employee_id = ?,
+                join_date = ?
             WHERE id = ?
           `).bind(
             user.name,
@@ -238,6 +240,8 @@ admin.post('/users/bulk-upload', async (c) => {
             user.region || null,
             user.location || null,
             user.title || null,
+            user.employee_id || user.eeid || null,
+            user.join_date || null,
             userId
           ).run();
 
@@ -250,8 +254,8 @@ admin.post('/users/bulk-upload', async (c) => {
         } else {
           // Create new user
           const result = await c.env.DB.prepare(`
-            INSERT INTO users (email, password, name, role, division, region, location, title, active)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)
+            INSERT INTO users (email, password_hash, name, role, division, region, location, title, employee_id, join_date, boss_id, active)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
           `).bind(
             user.email,
             hashedDefaultPassword,
@@ -260,7 +264,10 @@ admin.post('/users/bulk-upload', async (c) => {
             user.division || null,
             user.region || null,
             user.location || null,
-            user.title || null
+            user.title || null,
+            user.employee_id || user.eeid || null,
+            user.join_date || null,
+            user.boss_id || user.manager_id || null
           ).run();
 
           userId = result.meta.last_row_id;

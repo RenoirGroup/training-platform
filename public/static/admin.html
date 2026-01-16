@@ -1000,6 +1000,9 @@
                     <li><strong>name</strong> - Full name (required)</li>
                     <li><strong>email</strong> - Email address (required, must be unique)</li>
                     <li><strong>role</strong> - User role (optional, defaults to "consultant")</li>
+                    <li><strong>employee_id</strong> or <strong>eeid</strong> - Employee ID (optional)</li>
+                    <li><strong>join_date</strong> - Join date in YYYY-MM-DD format (optional)</li>
+                    <li><strong>manager_id</strong> or <strong>boss_id</strong> - Manager's user ID (optional)</li>
                     <li><strong>division</strong> - Division/Department (optional)</li>
                     <li><strong>region</strong> - Region (optional)</li>
                     <li><strong>location</strong> - Office location (optional)</li>
@@ -4684,9 +4687,9 @@
         }
 
         function downloadCSVTemplate() {
-            const template = 'name,email,role,division,region,location,title\n' +
-                'John Smith,john.smith@company.com,consultant,Finance,North America,New York,Senior Consultant\n' +
-                'Jane Doe,jane.doe@company.com,consultant,Operations,Europe,London,Consultant';
+            const template = 'name,email,role,employee_id,join_date,manager_id,division,region,location,title\n' +
+                'John Smith,john.smith@company.com,consultant,EMP001,2024-01-15,,Finance,North America,New York,Senior Consultant\n' +
+                'Jane Doe,jane.doe@company.com,consultant,EMP002,2024-02-01,,Operations,Europe,London,Consultant';
             
             const blob = new Blob([template], { type: 'text/csv' });
             const url = window.URL.createObjectURL(blob);

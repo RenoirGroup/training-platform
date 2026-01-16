@@ -530,4 +530,80 @@ cohorts.get('/admin/cohorts/:id/progress', async (c) => {
   }
 })
 
+// Bulk assign users to cohort based on filters
+cohorts.post('/admin/cohorts/:id/bulk-assign', async (c) => {
+  const user = c.get('user')
+  if (user.role !== 'admin') {
+    return c.json({ error: 'Unauthorized' }, 403)
+  }
+
+  try {
+    const cohortId = c.req.param('id')
+    const { filters } = await c.req.json()
+    
+    // Build WHERE clause based on filters
+    const conditions = []
+    const params = []
+    
+    if (filters.title) {
+      conditions.push('title = ?')
+      params.push(filters.title)
+    }
+    
+    if (filters.division) {
+      conditions.push('division = ?')
+      params.push(filters.division)
+    }
+    
+    if (filters.region) {
+      conditions.push('region = ?')
+      params.push(filters.region)
+    }
+    
+    if (filters.location) {
+      conditions.push('location = ?')
+      params.push(filters.location)
+    }
+    
+    if (filters.role) {
+      conditions.push('role = ?')
+      params.push(filters.role)
+    }
+    
+    if (filters.manager_id) {
+      conditions.push('boss_id = ?')
+      params.push(filters.manager_id)
+    }
+    
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : ''
+    
+    // Get matching users
+    const query = `SELECT id FROM users ${whereClause} AND active = 1`
+    const users = await c.env.DB.prepare(query).bind(...params).all()
+    
+    // Bulk insert into cohort_members
+    let addedCount = 0
+    for (const user of (users.results || [])) {
+      try {
+        await c.env.DB.prepare(`
+          INSERT OR IGNORE INTO cohort_members (cohort_id, user_id)
+          VALUES (?, ?)
+        `).bind(cohortId, (user as any).id).run()
+        addedCount++
+      } catch (err) {
+        console.error('Error adding user to cohort:', err)
+      }
+    }
+    
+    return c.json({
+      message: `Successfully added ${addedCount} users to cohort`,
+      matched: users.results?.length || 0,
+      added: addedCount
+    })
+  } catch (error: any) {
+    console.error('Error in bulk assign:', error)
+    return c.json({ error: 'Bulk assign failed', details: error.message }, 500)
+  }
+})
+
 export default cohorts
